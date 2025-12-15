@@ -16,6 +16,3 @@ export const db = drizzle(pool, { schema });
 
 // Export the pool for raw queries if needed
 export { pool };
-
-process.on('SIGINT', () => pool.end());
-process.on('SIGTERM', () => pool.end());
