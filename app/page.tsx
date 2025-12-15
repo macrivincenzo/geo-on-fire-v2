@@ -13,18 +13,18 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white pt-16 pb-24">
+      <section className="relative overflow-hidden bg-white dark:bg-gray-900 pt-16 pb-24">
         
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight mb-8 animate-fade-in-up">
-              <span className="block text-zinc-900">FireGEO Monitor</span>
+              <span className="block text-zinc-900 dark:text-zinc-100">FireGEO Monitor</span>
               <span className="block bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
                 AI Brand Visibility Platform
               </span>
             </h1>
-            <p className="text-xl lg:text-2xl text-zinc-600 max-w-3xl mx-auto mb-6 animate-fade-in-up animation-delay-200">
+            <p className="text-xl lg:text-2xl text-zinc-600 dark:text-zinc-400 max-w-3xl mx-auto mb-6 animate-fade-in-up animation-delay-200">
               Track how AI models rank your brand against competitors
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-400">
@@ -41,7 +41,7 @@ export default function Home() {
                 View Pricing
               </Link>
             </div>
-            <p className="mt-6 text-sm text-zinc-500 animate-fade-in-up animation-delay-600">
+            <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400 animate-fade-in-up animation-delay-600">
               Powered by AI • Real-time Analysis • Competitor Tracking • SEO Insights
             </p>
           </div>

@@ -6,6 +6,7 @@ import { useSession, signOut } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useCustomer } from '@/hooks/useAutumnCustomer';
+import { ThemeToggle } from './theme-toggle';
 
 // Separate component that only renders when Autumn is available
 function UserCredits() {
@@ -14,7 +15,7 @@ function UserCredits() {
   const remainingMessages = messageUsage ? (messageUsage.balance || 0) : 0;
   
   return (
-    <div className="flex items-center text-sm font-medium text-gray-700">
+    <div className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
       <span>{remainingMessages}</span>
       <span className="ml-1">credits</span>
     </div>
@@ -42,7 +43,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -62,13 +63,13 @@ export function Navbar() {
               <>
                 <Link
                   href="/chat"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
                 >
                   Basic Chat
                 </Link>
                 <Link
                   href="/brand-monitor"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
                 >
                   Brand Monitor
                 </Link>
@@ -76,15 +77,16 @@ export function Navbar() {
             )}
             <Link
               href="/plans"
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
             >
               Plans
             </Link>
             {session && (
               <UserCredits />
             )}
+            <ThemeToggle />
             {isPending ? (
-              <div className="text-sm text-gray-400">Loading...</div>
+              <div className="text-sm text-gray-400 dark:text-gray-500">Loading...</div>
             ) : session ? (
               <>
                 <Link
@@ -105,7 +107,7 @@ export function Navbar() {
               <>
                 <Link 
                   href="/login"
-                  className="bg-black text-white hover:bg-gray-800 inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-8 px-3 shadow-sm hover:shadow-md"
+                  className="bg-black text-white hover:bg-gray-800 dark:hover:bg-gray-700 inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-8 px-3 shadow-sm hover:shadow-md"
                 >
                   Login
                 </Link>
