@@ -1,5 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { AIResponse } from './types';
+import { detectBrandMention, stripMarkdown } from './brand-detection-utils';
+import { getBrandDetectionOptions } from './brand-detection-config';
 
 interface WebSearchResult {
   url: string;
@@ -167,16 +169,24 @@ Only respond with valid JSON, no other text.`,
   } catch (error) {
     console.error('Error analyzing response:', error);
     
-    // Fallback to basic text analysis
-    const textLower = responseText.toLowerCase();
-    const brandLower = brandName.toLowerCase();
+    // Fallback to enhanced brand detection
+    const cleanedText = stripMarkdown(responseText);
+    
+    // Use proper brand detection
+    const brandDetectionOptions = getBrandDetectionOptions(brandName);
+    const brandDetectionResult = detectBrandMention(cleanedText, brandName, brandDetectionOptions);
+    
+    // Detect competitors with enhanced detection
+    const competitorsMentioned = competitors.filter(c => {
+      const competitorOptions = getBrandDetectionOptions(c);
+      const result = detectBrandMention(cleanedText, c, competitorOptions);
+      return result.mentioned;
+    });
     
     return {
-      brandMentioned: textLower.includes(brandLower),
+      brandMentioned: brandDetectionResult.mentioned,
       brandPosition: undefined,
-      competitorsMentioned: competitors.filter(c => 
-        textLower.includes(c.toLowerCase())
-      ),
+      competitorsMentioned,
       sentiment: 'neutral',
       confidence: 0.3,
     };
