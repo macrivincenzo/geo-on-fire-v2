@@ -36,6 +36,7 @@ import { AddCompetitorModal } from './modals/add-competitor-modal';
 import { ProviderComparisonMatrix } from './provider-comparison-matrix';
 import { ProviderRankingsTabs } from './provider-rankings-tabs';
 import { ComparisonMatrixExplanation, PromptsResponsesExplanation } from './explanation-card';
+import { StrategicInsightsTab } from './strategic-insights-tab';
 
 // Hooks
 import { useSSEHandler } from './hooks/use-sse-handler';
@@ -531,6 +532,15 @@ export function BrandMonitor({
                     competitors={analysis.competitors}
                     brandData={brandData}
                     identifiedCompetitors={identifiedCompetitors}
+                  />
+                )}
+
+                {activeResultsTab === 'insights' && (
+                  <StrategicInsightsTab
+                    brandData={brandData}
+                    competitors={analysis.competitors}
+                    responses={analysis.responses}
+                    brandName={company?.name || 'Your Brand'}
                   />
                 )}
 

@@ -103,7 +103,7 @@ export interface Analysis {
   errors?: string[];
 }
 
-export type ResultsTab = 'visibility' | 'matrix' | 'rankings' | 'metrics' | 'prompts';
+export type ResultsTab = 'visibility' | 'matrix' | 'rankings' | 'metrics' | 'prompts' | 'insights';
 
 export interface BrandMonitorState {
   // URL and validation
@@ -188,7 +188,7 @@ export const initialBrandMonitorState: BrandMonitorState = {
   promptCompletionStatus: {},
   analysisTiles: [],
   statusUpdateCount: 0,
-  activeResultsTab: 'matrix',
+  activeResultsTab: 'insights',
   expandedPromptIndex: null,
   currentPeriod: true,
   showAddPromptModal: false,
