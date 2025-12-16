@@ -43,6 +43,16 @@ interface StrategicInsightsTabProps {
 // Health Score Indicator
 // ============================================
 function HealthScoreCard({ insights }: { insights: StrategicInsights }) {
+  const getStrokeColor = (health: string): string => {
+    const colorMap: Record<string, string> = {
+      excellent: '#10b981', // green-500
+      good: '#3b82f6',       // blue-500
+      'needs-work': '#f59e0b', // amber-500
+      critical: '#ef4444'    // red-500
+    };
+    return colorMap[health] || '#6b7280';
+  };
+  
   const healthColors = {
     excellent: 'bg-green-500',
     good: 'bg-blue-500',
@@ -97,12 +107,11 @@ function HealthScoreCard({ insights }: { insights: StrategicInsights }) {
                   cx="40"
                   cy="40"
                   r="36"
-                  stroke={healthColors[insights.overallHealth].replace('bg-', '#').replace('-500', '')}
+                  stroke={getStrokeColor(insights.overallHealth)}
                   strokeWidth="8"
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray={`${2 * Math.PI * 36 * (insights.healthScore / 100)} ${2 * Math.PI * 36}`}
-                  className={healthColors[insights.overallHealth].replace('bg-', 'stroke-')}
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
@@ -460,7 +469,12 @@ export function StrategicInsightsTab({
         </Card>
         <Card className="p-4">
           <div className="text-center">
-            <p className="text-2xl font-bold text-blue-600">#{competitors.findIndex(c => c.isOwn) + 1}</p>
+            <p className="text-2xl font-bold text-blue-600">
+              #{(() => {
+                const rankIndex = competitors.findIndex(c => c.isOwn);
+                return rankIndex >= 0 ? rankIndex + 1 : '?';
+              })()}
+            </p>
             <p className="text-xs text-gray-500">Market Rank</p>
           </div>
         </Card>
@@ -513,4 +527,5 @@ export function StrategicInsightsTab({
     </div>
   );
 }
+
 

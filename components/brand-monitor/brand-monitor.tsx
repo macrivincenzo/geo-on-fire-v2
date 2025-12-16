@@ -535,7 +535,7 @@ export function BrandMonitor({
                   />
                 )}
 
-                {activeResultsTab === 'insights' && (
+                {activeResultsTab === 'insights' && brandData && analysis?.competitors && analysis?.responses && (
                   <StrategicInsightsTab
                     brandData={brandData}
                     competitors={analysis.competitors}

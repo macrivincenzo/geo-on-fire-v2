@@ -99,6 +99,10 @@ export function extractBrandQuotes(
   responses: AIResponse[],
   brandName: string
 ): BrandQuote[] {
+  if (!responses || responses.length === 0 || !brandName) {
+    return [];
+  }
+  
   const quotes: BrandQuote[] = [];
   const brandLower = brandName.toLowerCase();
   
@@ -197,6 +201,10 @@ export function analyzeCompetitiveGaps(
   brandData: CompetitorRanking,
   competitors: CompetitorRanking[]
 ): CompetitiveGap[] {
+  if (!competitors || competitors.length === 0 || !brandData) {
+    return [];
+  }
+  
   const gaps: CompetitiveGap[] = [];
   
   competitors.filter(c => !c.isOwn).forEach(competitor => {
@@ -246,6 +254,10 @@ export function generateActionItems(
   responses: AIResponse[],
   brandName: string
 ): ActionItem[] {
+  if (!brandData || !brandName) {
+    return [];
+  }
+  
   const actions: ActionItem[] = [];
   let actionId = 1;
   
@@ -313,7 +325,7 @@ export function generateActionItems(
   }
   
   // Content-based actions
-  const mentionedInResponses = responses.some(r => r.brandMentioned);
+  const mentionedInResponses = responses && responses.length > 0 ? responses.some(r => r.brandMentioned) : false;
   if (!mentionedInResponses) {
     actions.push({
       id: `action-${actionId++}`,
@@ -365,10 +377,14 @@ export function generateContentSuggestions(
   competitors: CompetitorRanking[],
   responses: AIResponse[]
 ): ContentSuggestion[] {
+  if (!brandName) {
+    return [];
+  }
+  
   const suggestions: ContentSuggestion[] = [];
   
   // Extract topics from prompts that didn't mention the brand
-  const missedPrompts = responses.filter(r => !r.brandMentioned);
+  const missedPrompts = responses && responses.length > 0 ? responses.filter(r => !r.brandMentioned) : [];
   const topCompetitors = competitors.filter(c => !c.isOwn).slice(0, 3);
   
   // Comparison articles
@@ -429,6 +445,10 @@ export function analyzeProviderPerformance(
   responses: AIResponse[],
   brandName: string
 ): ProviderInsight[] {
+  if (!responses || responses.length === 0) {
+    return [];
+  }
+  
   const providerMap = new Map<string, AIResponse[]>();
   
   // Group responses by provider
@@ -441,6 +461,19 @@ export function analyzeProviderPerformance(
   const insights: ProviderInsight[] = [];
   
   providerMap.forEach((providerResponses, provider) => {
+    if (providerResponses.length === 0) {
+      insights.push({
+        provider,
+        mentionRate: 0,
+        sentiment: 'neutral',
+        averagePosition: 99,
+        strength: '',
+        weakness: `${provider} has no responses`,
+        opportunity: `Ensure ${provider} is properly configured and responding`
+      });
+      return;
+    }
+    
     const mentioned = providerResponses.filter(r => r.brandMentioned);
     const mentionRate = (mentioned.length / providerResponses.length) * 100;
     
@@ -605,7 +638,12 @@ function generateSummary(
   competitors: CompetitorRanking[],
   brandName: string
 ): string {
-  const rank = competitors.findIndex(c => c.isOwn) + 1;
+  if (!competitors || competitors.length === 0) {
+    return `${brandName} has ${brandData.visibilityScore}% visibility. No competitor data available for comparison.`;
+  }
+  
+  const rankIndex = competitors.findIndex(c => c.isOwn);
+  const rank = rankIndex >= 0 ? rankIndex + 1 : competitors.length;
   const totalCompetitors = competitors.length;
   
   if (healthScore >= 70) {
@@ -623,7 +661,14 @@ function determineCompetitivePosition(
   brandData: CompetitorRanking,
   competitors: CompetitorRanking[]
 ): StrategicInsights['competitivePosition'] {
-  const rank = competitors.findIndex(c => c.isOwn) + 1;
+  if (!competitors || competitors.length === 0) {
+    return 'niche';
+  }
+  
+  const rankIndex = competitors.findIndex(c => c.isOwn);
+  if (rankIndex < 0) return 'niche';
+  
+  const rank = rankIndex + 1;
   const total = competitors.length;
   
   if (rank === 1) return 'leader';
@@ -655,4 +700,5 @@ function extractTopicsFromPrompts(prompts: string[]): string[] {
   // Remove duplicates
   return [...new Set(topics)].slice(0, 5);
 }
+
 
