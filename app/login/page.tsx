@@ -47,7 +47,20 @@ function LoginForm() {
       const returnUrl = searchParams.get('from') || '/dashboard';
       window.location.replace(returnUrl);
     } catch (err: any) {
-      setError(err.message || 'Failed to login');
+      console.error('Login error:', err);
+      
+      // Provide more helpful error messages
+      let errorMessage = 'Failed to login';
+      
+      if (err.message?.includes('fetch')) {
+        errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection and try again.';
+      } else if (err.message?.includes('CORS')) {
+        errorMessage = 'Configuration error: Please contact support. The authentication service may not be properly configured.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
       setLoading(false);
     }
   };
