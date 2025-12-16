@@ -25,6 +25,57 @@ export interface BrandDetectionConfig {
   };
 }
 
+// Common brand aliases for popular companies (backup for smart matching)
+const COMMON_BRAND_ALIASES = new Map<string, string[]>([
+  // Cloud & Hosting
+  ['AWS', ['Amazon Web Services', 'Amazon AWS', 'Amazon Cloud']],
+  ['Amazon Web Services', ['AWS', 'Amazon AWS', 'Amazon Cloud']],
+  ['GCP', ['Google Cloud Platform', 'Google Cloud', 'Google GCP']],
+  ['Google Cloud', ['GCP', 'Google Cloud Platform', 'Google GCP']],
+  ['Google Cloud Platform', ['GCP', 'Google Cloud', 'Google GCP']],
+  ['Azure', ['Microsoft Azure', 'MS Azure', 'Azure Cloud']],
+  ['Microsoft Azure', ['Azure', 'MS Azure', 'Azure Cloud']],
+  
+  // Development Platforms
+  ['Vercel', ['Vercel Inc', 'Vercel Platform']],
+  ['Netlify', ['Netlify Inc', 'Netlify Platform']],
+  ['Heroku', ['Heroku Platform', 'Salesforce Heroku']],
+  ['DigitalOcean', ['Digital Ocean', 'DO']],
+  ['Railway', ['Railway App', 'Railway.app']],
+  ['Render', ['Render.com', 'Render Cloud']],
+  
+  // AI Companies
+  ['OpenAI', ['Open AI', 'ChatGPT', 'GPT']],
+  ['Anthropic', ['Claude AI', 'Claude']],
+  ['Google AI', ['Google Gemini', 'Gemini', 'Bard']],
+  ['Meta AI', ['Facebook AI', 'LLaMA', 'Llama']],
+  
+  // E-commerce
+  ['Shopify', ['Shopify Inc', 'Shopify Platform']],
+  ['WooCommerce', ['Woo Commerce', 'WooCommerce Plugin']],
+  ['BigCommerce', ['Big Commerce']],
+  ['Magento', ['Adobe Commerce', 'Magento Commerce']],
+  
+  // Marketing & CRM
+  ['HubSpot', ['Hub Spot', 'HubSpot CRM']],
+  ['Salesforce', ['SFDC', 'Salesforce CRM', 'Sales Force']],
+  ['Mailchimp', ['Mail Chimp', 'Mailchimp Email']],
+  
+  // Social Media
+  ['Meta', ['Facebook', 'FB', 'Meta Platforms']],
+  ['X', ['Twitter', 'X.com', 'X Platform']],
+  ['Twitter', ['X', 'X.com', 'X Platform']],
+  ['LinkedIn', ['Linked In', 'LinkedIn Platform']],
+  ['TikTok', ['Tik Tok', 'TikTok App']],
+  
+  // Tech Giants
+  ['Microsoft', ['MS', 'MSFT', 'Microsoft Corporation']],
+  ['Google', ['Alphabet', 'Google LLC']],
+  ['Apple', ['Apple Inc', 'AAPL']],
+  ['Amazon', ['AMZN', 'Amazon.com']],
+  ['IBM', ['International Business Machines', 'IBM Corporation']],
+]);
+
 // Default configuration
 export const DEFAULT_BRAND_DETECTION_CONFIG: BrandDetectionConfig = {
   defaultOptions: {
@@ -34,7 +85,7 @@ export const DEFAULT_BRAND_DETECTION_CONFIG: BrandDetectionConfig = {
     excludeNegativeContext: false,
   },
   
-  brandAliases: new Map(),
+  brandAliases: COMMON_BRAND_ALIASES,
   
   ignoredSuffixes: [
     'inc', 'incorporated',

@@ -1,8 +1,222 @@
 /**
  * Enhanced brand detection utilities for accurate brand mention matching
+ * Supports smart matching for ANY brand (small businesses, startups, enterprises)
  */
 
 import { getBrandDetectionConfig } from './brand-detection-config';
+
+/**
+ * SMART BRAND MATCHING SYSTEM
+ * Works for any brand - small bakeries to big enterprises!
+ * 
+ * Features:
+ * 1. Parentheses extraction - "Amazon Web Services (AWS)" matches "AWS"
+ * 2. Auto-abbreviation - "Best Bakery Shop" matches "BBS"
+ * 3. Full name expansion - "AWS" matches "Amazon Web Services"
+ * 4. Fuzzy matching - handles hyphens, spaces, special chars
+ * 5. Suffix handling - ignores Inc, LLC, Ltd, etc.
+ */
+
+/**
+ * Extracts abbreviations and full names from text with parentheses
+ * e.g., "Amazon Web Services (AWS)" → { fullName: "Amazon Web Services", abbreviation: "AWS" }
+ * e.g., "AWS (Amazon Web Services)" → { fullName: "Amazon Web Services", abbreviation: "AWS" }
+ */
+export function extractParenthesesVariations(text: string): { fullName: string; abbreviation: string }[] {
+  const results: { fullName: string; abbreviation: string }[] = [];
+  
+  // Pattern 1: "Full Name (ABBREV)" - e.g., "Amazon Web Services (AWS)"
+  const pattern1 = /([A-Za-z][A-Za-z\s&\-\.]+?)\s*\(([A-Z]{2,10})\)/g;
+  let match;
+  while ((match = pattern1.exec(text)) !== null) {
+    results.push({
+      fullName: match[1].trim(),
+      abbreviation: match[2].trim()
+    });
+  }
+  
+  // Pattern 2: "ABBREV (Full Name)" - e.g., "AWS (Amazon Web Services)"
+  const pattern2 = /\b([A-Z]{2,10})\s*\(([A-Za-z][A-Za-z\s&\-\.]+?)\)/g;
+  while ((match = pattern2.exec(text)) !== null) {
+    results.push({
+      fullName: match[2].trim(),
+      abbreviation: match[1].trim()
+    });
+  }
+  
+  // Pattern 3: "Full Name - ABBREV" or "ABBREV - Full Name"
+  const pattern3 = /([A-Za-z][A-Za-z\s&]+?)\s*[-–—]\s*([A-Z]{2,10})\b/g;
+  while ((match = pattern3.exec(text)) !== null) {
+    results.push({
+      fullName: match[1].trim(),
+      abbreviation: match[2].trim()
+    });
+  }
+  
+  return results;
+}
+
+/**
+ * Generates an abbreviation from a multi-word brand name
+ * e.g., "Best Bakery Shop" → "BBS"
+ * e.g., "Google Cloud Platform" → "GCP"
+ */
+export function generateAbbreviation(brandName: string): string[] {
+  const words = brandName.trim().split(/\s+/).filter(w => w.length > 0);
+  const abbreviations: string[] = [];
+  
+  if (words.length >= 2) {
+    // First letter of each word (uppercase)
+    const firstLetters = words.map(w => w.charAt(0).toUpperCase()).join('');
+    if (firstLetters.length >= 2) {
+      abbreviations.push(firstLetters);
+    }
+    
+    // First letter of significant words (skip common words like "of", "the", "and")
+    const skipWords = ['of', 'the', 'and', 'for', 'to', 'in', 'on', 'at', 'by', 'a', 'an'];
+    const significantWords = words.filter(w => !skipWords.includes(w.toLowerCase()));
+    if (significantWords.length >= 2) {
+      const sigAbbrev = significantWords.map(w => w.charAt(0).toUpperCase()).join('');
+      if (sigAbbrev !== firstLetters && sigAbbrev.length >= 2) {
+        abbreviations.push(sigAbbrev);
+      }
+    }
+  }
+  
+  return abbreviations;
+}
+
+/**
+ * Checks if a short string could be an abbreviation of a longer string
+ * e.g., isAbbreviationOf("AWS", "Amazon Web Services") → true
+ */
+export function isAbbreviationOf(short: string, long: string): boolean {
+  if (short.length >= long.length) return false;
+  
+  const shortUpper = short.toUpperCase();
+  const words = long.split(/\s+/).filter(w => w.length > 0);
+  
+  // Check if first letters match
+  const firstLetters = words.map(w => w.charAt(0).toUpperCase()).join('');
+  if (shortUpper === firstLetters) return true;
+  
+  // Check without common words
+  const skipWords = ['of', 'the', 'and', 'for', 'to', 'in', 'on', 'at', 'by', 'a', 'an'];
+  const significantWords = words.filter(w => !skipWords.includes(w.toLowerCase()));
+  const sigFirstLetters = significantWords.map(w => w.charAt(0).toUpperCase()).join('');
+  if (shortUpper === sigFirstLetters) return true;
+  
+  return false;
+}
+
+/**
+ * Smart brand matcher - finds if brandName is mentioned in text
+ * Works with abbreviations, full names, parentheses variations, etc.
+ */
+export function smartBrandMatch(text: string, brandName: string): {
+  found: boolean;
+  matchedText: string | null;
+  matchType: 'exact' | 'abbreviation' | 'fullname' | 'parentheses' | 'fuzzy' | 'none';
+  confidence: number;
+} {
+  const textLower = text.toLowerCase();
+  const brandLower = brandName.toLowerCase().trim();
+  const brandClean = brandLower.replace(/[^\w\s]/g, '').trim();
+  
+  // 1. EXACT MATCH (highest confidence)
+  const exactPattern = new RegExp(`\\b${escapeRegex(brandLower)}\\b`, 'i');
+  if (exactPattern.test(text)) {
+    const match = text.match(exactPattern);
+    return { found: true, matchedText: match?.[0] || brandName, matchType: 'exact', confidence: 1.0 };
+  }
+  
+  // 2. PARENTHESES EXTRACTION - "Amazon Web Services (AWS)" should match "AWS"
+  const parenthesesVariations = extractParenthesesVariations(text);
+  for (const variation of parenthesesVariations) {
+    // Check if brand matches the abbreviation
+    if (variation.abbreviation.toLowerCase() === brandLower) {
+      return { found: true, matchedText: `${variation.fullName} (${variation.abbreviation})`, matchType: 'parentheses', confidence: 0.95 };
+    }
+    // Check if brand matches the full name
+    if (variation.fullName.toLowerCase() === brandLower || 
+        variation.fullName.toLowerCase().includes(brandLower) ||
+        brandLower.includes(variation.fullName.toLowerCase())) {
+      return { found: true, matchedText: `${variation.fullName} (${variation.abbreviation})`, matchType: 'parentheses', confidence: 0.95 };
+    }
+  }
+  
+  // 3. ABBREVIATION CHECK - "AWS" should match if text contains "Amazon Web Services"
+  // If brand looks like an abbreviation (short, uppercase), look for expanded forms
+  if (brandName.length <= 6 && brandName === brandName.toUpperCase()) {
+    // Brand is likely an abbreviation, search for full names that match
+    const words = text.split(/\s+/);
+    for (let i = 0; i < words.length - brandName.length + 1; i++) {
+      const segment = words.slice(i, i + brandName.length + 3).join(' ');
+      if (isAbbreviationOf(brandName, segment)) {
+        return { found: true, matchedText: segment, matchType: 'abbreviation', confidence: 0.85 };
+      }
+    }
+  }
+  
+  // 4. FULL NAME TO ABBREVIATION - "Amazon Web Services" should match if text contains "AWS"
+  const brandAbbreviations = generateAbbreviation(brandName);
+  for (const abbrev of brandAbbreviations) {
+    const abbrevPattern = new RegExp(`\\b${escapeRegex(abbrev)}\\b`, 'i');
+    if (abbrevPattern.test(text)) {
+      const match = text.match(abbrevPattern);
+      return { found: true, matchedText: match?.[0] || abbrev, matchType: 'fullname', confidence: 0.85 };
+    }
+  }
+  
+  // 5. FUZZY MATCH - Handle variations like hyphens, spaces, dots
+  const fuzzyVariations = [
+    brandClean,
+    brandClean.replace(/\s+/g, ''),      // nospaces
+    brandClean.replace(/\s+/g, '-'),     // with-hyphens
+    brandClean.replace(/\s+/g, '.'),     // with.dots
+    brandLower.replace(/-/g, ' '),       // hyphens to spaces
+    brandLower.replace(/-/g, ''),        // remove hyphens
+  ];
+  
+  for (const variation of fuzzyVariations) {
+    if (variation.length < 2) continue;
+    const fuzzyPattern = new RegExp(`\\b${escapeRegex(variation)}\\b`, 'i');
+    if (fuzzyPattern.test(text)) {
+      const match = text.match(fuzzyPattern);
+      return { found: true, matchedText: match?.[0] || variation, matchType: 'fuzzy', confidence: 0.75 };
+    }
+  }
+  
+  // 6. SUFFIX HANDLING - "TechStartup Inc" should match "TechStartup"
+  const suffixes = ['inc', 'incorporated', 'llc', 'ltd', 'limited', 'corp', 'corporation', 'co', 'company', 'plc', 'gmbh', 'ag', 'sa', 'srl', 'services', 'solutions', 'platform', 'technologies', 'tech'];
+  for (const suffix of suffixes) {
+    // Brand with suffix in text
+    const withSuffixPattern = new RegExp(`\\b${escapeRegex(brandClean)}\\s+${suffix}\\b`, 'i');
+    if (withSuffixPattern.test(text)) {
+      const match = text.match(withSuffixPattern);
+      return { found: true, matchedText: match?.[0] || `${brandName} ${suffix}`, matchType: 'fuzzy', confidence: 0.8 };
+    }
+    
+    // Brand without suffix when searching with suffix
+    if (brandLower.endsWith(` ${suffix}`) || brandLower.endsWith(suffix)) {
+      const withoutSuffix = brandLower.replace(new RegExp(`\\s*${suffix}\\s*$`, 'i'), '').trim();
+      const withoutSuffixPattern = new RegExp(`\\b${escapeRegex(withoutSuffix)}\\b`, 'i');
+      if (withoutSuffixPattern.test(text)) {
+        const match = text.match(withoutSuffixPattern);
+        return { found: true, matchedText: match?.[0] || withoutSuffix, matchType: 'fuzzy', confidence: 0.8 };
+      }
+    }
+  }
+  
+  return { found: false, matchedText: null, matchType: 'none', confidence: 0 };
+}
+
+/**
+ * Helper to escape special regex characters
+ */
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 /**
  * Normalizes a brand name for consistent matching
@@ -132,8 +346,19 @@ export function generateBrandVariations(brandName: string): string[] {
  * @returns Array of regex patterns
  */
 export function createBrandRegexPatterns(brandName: string, variations?: string[]): RegExp[] {
+  const config = getBrandDetectionConfig();
+  
+  // Get aliases from config if available
+  const configAliases = config.brandAliases.get(brandName) || 
+                        config.brandAliases.get(brandName.toLowerCase()) || [];
+  
+  // Generate abbreviations for multi-word names
+  const abbreviations = generateAbbreviation(brandName);
+  
   const allVariations = new Set([
     ...generateBrandVariations(brandName),
+    ...configAliases,
+    ...abbreviations,
     ...(variations || [])
   ]);
   
@@ -204,7 +429,19 @@ export function detectBrandMention(
   const searchText = caseSensitive ? text : text.toLowerCase();
   const matches: BrandDetectionResult['matches'] = [];
   
-  // Generate patterns
+  // FIRST: Try smart brand matching (handles abbreviations, parentheses, etc.)
+  const smartMatch = smartBrandMatch(text, brandName);
+  if (smartMatch.found && smartMatch.matchedText) {
+    const matchIndex = text.toLowerCase().indexOf(smartMatch.matchedText.toLowerCase());
+    matches.push({
+      text: smartMatch.matchedText,
+      index: matchIndex >= 0 ? matchIndex : 0,
+      pattern: `smart:${smartMatch.matchType}`,
+      confidence: smartMatch.confidence
+    });
+  }
+  
+  // THEN: Also try traditional pattern matching for additional matches
   const patterns = wholeWordOnly 
     ? createBrandRegexPatterns(brandName, customVariations)
     : [new RegExp(brandName, caseSensitive ? 'g' : 'gi')];
