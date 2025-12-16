@@ -8,6 +8,7 @@ import { ProviderSpecificRanking } from '@/lib/types';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import Image from 'next/image';
 import { getConfiguredProviders } from '@/lib/provider-config';
+import { ProviderRankingsExplanation } from './explanation-card';
 
 // Provider icon mapping
 const getProviderIcon = (provider: string) => {
@@ -157,21 +158,25 @@ export function ProviderRankingsTabs({
   const brandVisibility = competitors.find(c => c.isOwn)?.visibilityScore || 0;
 
   return (
-    <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
-      <CardHeader className="border-b">
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle className="text-xl font-semibold">Provider Rankings</CardTitle>
-            <CardDescription className="text-sm text-gray-600 mt-1">
-              Your brand performance by AI provider
-            </CardDescription>
+    <div className="flex flex-col h-full">
+      {/* Simple Explanation Card */}
+      <ProviderRankingsExplanation brandName={brandName} />
+      
+      <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
+        <CardHeader className="border-b">
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle className="text-xl font-semibold">Provider Rankings</CardTitle>
+              <CardDescription className="text-sm text-gray-600 mt-1">
+                Your brand performance by AI provider
+              </CardDescription>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-bold text-orange-600">#{brandRank}</p>
+              <p className="text-xs text-gray-500 mt-1">Average Rank</p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-2xl font-bold text-orange-600">#{brandRank}</p>
-            <p className="text-xs text-gray-500 mt-1">Average Rank</p>
-          </div>
-        </div>
-      </CardHeader>
+        </CardHeader>
       <CardContent className="pt-6 pb-2 flex-1 flex flex-col">
         <Tabs value={selectedProvider} onValueChange={setSelectedProvider} className="flex-1 flex flex-col">
           <TabsList className={`grid w-full mb-2 h-14 ${providerRankings.length === 2 ? 'grid-cols-2' : providerRankings.length === 3 ? 'grid-cols-3' : 'grid-cols-4'}`}>
@@ -289,5 +294,6 @@ export function ProviderRankingsTabs({
         </div>
       </CardContent>
     </Card>
+    </div>
   );
 }

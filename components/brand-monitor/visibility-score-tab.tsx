@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { CompetitorRanking } from '@/lib/types';
 import { IdentifiedCompetitor } from '@/lib/brand-monitor-reducer';
+import { VisibilityScoreExplanation } from './explanation-card';
 
 interface VisibilityScoreTabProps {
   competitors: CompetitorRanking[];
@@ -22,6 +23,9 @@ export function VisibilityScoreTab({
   
   return (
     <div className="flex flex-col h-full">
+      {/* Simple Explanation Card */}
+      <VisibilityScoreExplanation score={brandData.visibilityScore} rank={brandRank} />
+      
       {/* Main Content Card */}
       <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
         <CardHeader className="border-b">

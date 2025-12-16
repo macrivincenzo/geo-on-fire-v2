@@ -35,6 +35,7 @@ import { AddPromptModal } from './modals/add-prompt-modal';
 import { AddCompetitorModal } from './modals/add-competitor-modal';
 import { ProviderComparisonMatrix } from './provider-comparison-matrix';
 import { ProviderRankingsTabs } from './provider-rankings-tabs';
+import { ComparisonMatrixExplanation, PromptsResponsesExplanation } from './explanation-card';
 
 // Hooks
 import { useSSEHandler } from './hooks/use-sse-handler';
@@ -534,36 +535,41 @@ export function BrandMonitor({
                 )}
 
                 {activeResultsTab === 'matrix' && (
-                  <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
-                    <CardHeader className="border-b">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <CardTitle className="text-xl font-semibold">Comparison Matrix</CardTitle>
-                          <CardDescription className="text-sm text-gray-600 mt-1">
-                            Compare visibility scores across different AI providers
-                          </CardDescription>
+                  <div className="flex flex-col h-full">
+                    {/* Simple Explanation Card */}
+                    <ComparisonMatrixExplanation />
+                    
+                    <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
+                      <CardHeader className="border-b">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <CardTitle className="text-xl font-semibold">Comparison Matrix</CardTitle>
+                            <CardDescription className="text-sm text-gray-600 mt-1">
+                              Compare visibility scores across different AI providers
+                            </CardDescription>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-2xl font-bold text-orange-600">{brandData.visibilityScore}%</p>
+                            <p className="text-xs text-gray-500 mt-1">Average Score</p>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-orange-600">{brandData.visibilityScore}%</p>
-                          <p className="text-xs text-gray-500 mt-1">Average Score</p>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-6 flex-1 overflow-auto">
-                      {analysis.providerComparison ? (
-                        <ProviderComparisonMatrix 
-                          data={analysis.providerComparison} 
-                          brandName={company?.name || ''} 
-                          competitors={identifiedCompetitors}
-                        />
-                      ) : (
-                        <div className="text-center py-8 text-gray-500">
-                          <p>No comparison data available</p>
-                          <p className="text-sm mt-2">Please ensure AI providers are configured and the analysis has completed.</p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                      </CardHeader>
+                      <CardContent className="pt-6 flex-1 overflow-auto">
+                        {analysis.providerComparison ? (
+                          <ProviderComparisonMatrix 
+                            data={analysis.providerComparison} 
+                            brandName={company?.name || ''} 
+                            competitors={identifiedCompetitors}
+                          />
+                        ) : (
+                          <div className="text-center py-8 text-gray-500">
+                            <p>No comparison data available</p>
+                            <p className="text-sm mt-2">Please ensure AI providers are configured and the analysis has completed.</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
                 )}
 
                 {activeResultsTab === 'rankings' && analysis.providerRankings && (
@@ -580,32 +586,37 @@ export function BrandMonitor({
                 )}
 
                 {activeResultsTab === 'prompts' && analysis.prompts && (
-                  <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
-                    <CardHeader className="border-b">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <CardTitle className="text-xl font-semibold">Prompts & Responses</CardTitle>
-                          <CardDescription className="text-sm text-gray-600 mt-1">
-                            AI responses to your brand queries
-                          </CardDescription>
+                  <div className="flex flex-col h-full">
+                    {/* Simple Explanation Card */}
+                    <PromptsResponsesExplanation />
+                    
+                    <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
+                      <CardHeader className="border-b">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <CardTitle className="text-xl font-semibold">Prompts & Responses</CardTitle>
+                            <CardDescription className="text-sm text-gray-600 mt-1">
+                              AI responses to your brand queries
+                            </CardDescription>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-2xl font-bold text-orange-600">{analysis.prompts.length}</p>
+                            <p className="text-xs text-gray-500 mt-1">Total Prompts</p>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-orange-600">{analysis.prompts.length}</p>
-                          <p className="text-xs text-gray-500 mt-1">Total Prompts</p>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-6 flex-1 overflow-auto">
-                      <PromptsResponsesTab
-                        prompts={analysis.prompts}
-                        responses={analysis.responses}
-                        expandedPromptIndex={expandedPromptIndex}
-                        onToggleExpand={(index) => dispatch({ type: 'SET_EXPANDED_PROMPT_INDEX', payload: index })}
-                        brandName={analysis.company?.name || ''}
-                        competitors={analysis.competitors?.map(c => c.name) || []}
-                      />
-                    </CardContent>
-                  </Card>
+                      </CardHeader>
+                      <CardContent className="pt-6 flex-1 overflow-auto">
+                        <PromptsResponsesTab
+                          prompts={analysis.prompts}
+                          responses={analysis.responses}
+                          expandedPromptIndex={expandedPromptIndex}
+                          onToggleExpand={(index) => dispatch({ type: 'SET_EXPANDED_PROMPT_INDEX', payload: index })}
+                          brandName={analysis.company?.name || ''}
+                          competitors={analysis.competitors?.map(c => c.name) || []}
+                        />
+                      </CardContent>
+                    </Card>
+                  </div>
                 )}
               </div>
             </div>
