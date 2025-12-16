@@ -110,6 +110,33 @@ export function isAbbreviationOf(short: string, long: string): boolean {
 }
 
 /**
+ * Strips markdown formatting from text for cleaner brand matching
+ * Removes: **bold**, *italic*, `code`, [links](url), # headers, etc.
+ */
+function stripMarkdown(text: string): string {
+  return text
+    // Remove bold/italic: **text** or *text* or ***text***
+    .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
+    // Remove code blocks: `code`
+    .replace(/`([^`]+)`/g, '$1')
+    // Remove links: [text](url)
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    // Remove headers: # Header
+    .replace(/^#{1,6}\s+/gm, '')
+    // Remove horizontal rules
+    .replace(/^[-*_]{3,}$/gm, '')
+    // Remove blockquotes: > text
+    .replace(/^>\s+/gm, '')
+    // Remove numbered list markers but keep text: 1. text -> text
+    .replace(/^\d+\.\s+/gm, '')
+    // Remove bullet list markers: - text or * text
+    .replace(/^[-*]\s+/gm, '')
+    // Clean up extra whitespace
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
  * UNIVERSAL SMART BRAND MATCHER
  * Works for ANY brand - small bakeries to big enterprises!
  * 
@@ -129,7 +156,9 @@ export function smartBrandMatch(text: string, brandName: string): {
   matchType: 'exact' | 'abbreviation' | 'fullname' | 'parentheses' | 'contains' | 'prefix' | 'overlap' | 'fuzzy' | 'none';
   confidence: number;
 } {
-  const textLower = text.toLowerCase();
+  // IMPORTANT: Strip markdown formatting first!
+  const cleanText = stripMarkdown(text);
+  const textLower = cleanText.toLowerCase();
   const brandLower = brandName.toLowerCase().trim();
   const brandClean = brandLower.replace(/[^\w\s]/g, '').trim();
   const brandWords = brandClean.split(/\s+/).filter(w => w.length > 0);
@@ -138,8 +167,8 @@ export function smartBrandMatch(text: string, brandName: string): {
   // 1. EXACT MATCH (highest confidence)
   // ============================================================
   const exactPattern = new RegExp(`\\b${escapeRegex(brandLower)}\\b`, 'i');
-  if (exactPattern.test(text)) {
-    const match = text.match(exactPattern);
+  if (exactPattern.test(cleanText)) {
+    const match = cleanText.match(exactPattern);
     return { found: true, matchedText: match?.[0] || brandName, matchType: 'exact', confidence: 1.0 };
   }
   
@@ -148,7 +177,8 @@ export function smartBrandMatch(text: string, brandName: string): {
   // "Amazon Web Services (AWS)" should match "AWS"
   // "Google Cloud Platform (GCP)" should match "Google Cloud"
   // ============================================================
-  const parenthesesVariations = extractParenthesesVariations(text);
+  // Use cleaned text for parentheses extraction
+  const parenthesesVariations = extractParenthesesVariations(cleanText);
   for (const variation of parenthesesVariations) {
     const fullNameLower = variation.fullName.toLowerCase();
     const abbrevLower = variation.abbreviation.toLowerCase();
@@ -180,7 +210,7 @@ export function smartBrandMatch(text: string, brandName: string): {
   if (brandWords.length >= 1 && brandClean.length >= 3) {
     // Look for brand as start of a longer phrase
     const containsPattern = new RegExp(`\\b${escapeRegex(brandClean)}(?:\\s+\\w+)*\\b`, 'gi');
-    const containsMatches = text.match(containsPattern);
+    const containsMatches = cleanText.match(containsPattern);
     if (containsMatches && containsMatches.length > 0) {
       // Find the best (longest) match
       const bestMatch = containsMatches.reduce((a, b) => a.length > b.length ? a : b);
@@ -196,8 +226,8 @@ export function smartBrandMatch(text: string, brandName: string): {
   // "Google Cloud" matches ["Google", "Cloud", "Platform"]
   // ============================================================
   if (brandWords.length >= 2) {
-    // Find all multi-word phrases in text
-    const textPhrases = extractPhrases(text);
+    // Find all multi-word phrases in text (use cleaned text)
+    const textPhrases = extractPhrases(cleanText);
     for (const phrase of textPhrases) {
       const phraseWords = phrase.toLowerCase().split(/\s+/).filter(w => w.length > 0);
       if (phraseWords.length >= brandWords.length) {
@@ -218,7 +248,7 @@ export function smartBrandMatch(text: string, brandName: string): {
   // If >60% of brand words found, it's a match
   // ============================================================
   if (brandWords.length >= 2) {
-    const textPhrases = extractPhrases(text);
+    const textPhrases = extractPhrases(cleanText);
     for (const phrase of textPhrases) {
       const phraseWords = phrase.toLowerCase().split(/\s+/).filter(w => w.length > 0);
       const matchingWords = brandWords.filter(bw => 
@@ -236,7 +266,7 @@ export function smartBrandMatch(text: string, brandName: string): {
   // "AWS" should match if text contains "Amazon Web Services"
   // ============================================================
   if (brandName.length <= 6 && brandName === brandName.toUpperCase()) {
-    const words = text.split(/\s+/);
+    const words = cleanText.split(/\s+/);
     for (let i = 0; i < words.length - brandName.length + 1; i++) {
       const segment = words.slice(i, i + brandName.length + 3).join(' ');
       if (isAbbreviationOf(brandName, segment)) {
@@ -249,8 +279,8 @@ export function smartBrandMatch(text: string, brandName: string): {
   const brandAbbreviations = generateAbbreviation(brandName);
   for (const abbrev of brandAbbreviations) {
     const abbrevPattern = new RegExp(`\\b${escapeRegex(abbrev)}\\b`, 'i');
-    if (abbrevPattern.test(text)) {
-      const match = text.match(abbrevPattern);
+    if (abbrevPattern.test(cleanText)) {
+      const match = cleanText.match(abbrevPattern);
       return { found: true, matchedText: match?.[0] || abbrev, matchType: 'fullname', confidence: 0.85 };
     }
   }
@@ -272,8 +302,8 @@ export function smartBrandMatch(text: string, brandName: string): {
     // Try brand + suffix
     const withSuffix = `${brandClean} ${suffix}`;
     const withSuffixPattern = new RegExp(`\\b${escapeRegex(withSuffix)}\\b`, 'i');
-    if (withSuffixPattern.test(text)) {
-      const match = text.match(withSuffixPattern);
+    if (withSuffixPattern.test(cleanText)) {
+      const match = cleanText.match(withSuffixPattern);
       return { found: true, matchedText: match?.[0] || withSuffix, matchType: 'fuzzy', confidence: 0.82 };
     }
   }
@@ -284,8 +314,8 @@ export function smartBrandMatch(text: string, brandName: string): {
       const withoutSuffix = brandLower.replace(new RegExp(`\\s*${suffix}\\s*$`, 'i'), '').trim();
       if (withoutSuffix.length >= 3) {
         const withoutSuffixPattern = new RegExp(`\\b${escapeRegex(withoutSuffix)}\\b`, 'i');
-        if (withoutSuffixPattern.test(text)) {
-          const match = text.match(withoutSuffixPattern);
+        if (withoutSuffixPattern.test(cleanText)) {
+          const match = cleanText.match(withoutSuffixPattern);
           return { found: true, matchedText: match?.[0] || withoutSuffix, matchType: 'fuzzy', confidence: 0.80 };
         }
       }
@@ -309,9 +339,17 @@ export function smartBrandMatch(text: string, brandName: string): {
   for (const variation of fuzzyVariations) {
     if (variation.length < 2) continue;
     const fuzzyPattern = new RegExp(`\\b${escapeRegex(variation)}\\b`, 'i');
-    if (fuzzyPattern.test(text)) {
-      const match = text.match(fuzzyPattern);
+    if (fuzzyPattern.test(cleanText)) {
+      const match = cleanText.match(fuzzyPattern);
       return { found: true, matchedText: match?.[0] || variation, matchType: 'fuzzy', confidence: 0.70 };
+    }
+  }
+  
+  // FALLBACK: Try original text if cleaned text didn't match (rare edge cases)
+  if (text !== cleanText) {
+    const originalTextLower = text.toLowerCase();
+    if (originalTextLower.includes(brandLower)) {
+      return { found: true, matchedText: brandName, matchType: 'fuzzy', confidence: 0.65 };
     }
   }
   
@@ -570,13 +608,16 @@ export function detectBrandMention(
     excludeNegativeContext = false
   } = options;
   
-  const searchText = caseSensitive ? text : text.toLowerCase();
+  // Strip markdown formatting for cleaner matching
+  const cleanedText = stripMarkdown(text);
+  const searchText = caseSensitive ? cleanedText : cleanedText.toLowerCase();
   const matches: BrandDetectionResult['matches'] = [];
   
   // FIRST: Try smart brand matching (handles abbreviations, parentheses, etc.)
+  // Pass original text - smartBrandMatch handles markdown stripping internally
   const smartMatch = smartBrandMatch(text, brandName);
   if (smartMatch.found && smartMatch.matchedText) {
-    const matchIndex = text.toLowerCase().indexOf(smartMatch.matchedText.toLowerCase());
+    const matchIndex = cleanedText.toLowerCase().indexOf(smartMatch.matchedText.toLowerCase());
     matches.push({
       text: smartMatch.matchedText,
       index: matchIndex >= 0 ? matchIndex : 0,

@@ -2,8 +2,69 @@ import { generateText, generateObject } from 'ai';
 import { z } from 'zod';
 import { Company, BrandPrompt, AIResponse, CompanyRanking, CompetitorRanking, ProviderSpecificRanking, ProviderComparisonData, ProgressCallback, CompetitorFoundData } from './types';
 import { getProviderModel, normalizeProviderName, isProviderConfigured, getConfiguredProviders, PROVIDER_CONFIGS } from './provider-config';
-import { detectBrandMention, detectMultipleBrands, BrandDetectionOptions } from './brand-detection-utils';
+import { detectBrandMention, detectMultipleBrands, BrandDetectionOptions, smartBrandMatch } from './brand-detection-utils';
 import { getBrandDetectionOptions } from './brand-detection-config';
+
+/**
+ * Find the matching tracked company name for a given company string
+ * Uses smart brand matching to handle variations like "Google Cloud Platform" -> "Google Cloud"
+ */
+function findMatchingTrackedCompany(companyName: string, trackedCompanies: Set<string>): string | null {
+  const companyNameLower = companyName.toLowerCase().trim();
+  
+  // First try exact match
+  for (const tracked of trackedCompanies) {
+    if (tracked.toLowerCase() === companyNameLower) {
+      return tracked;
+    }
+  }
+  
+  // Try smart matching - check if tracked company is found in the company name
+  for (const tracked of trackedCompanies) {
+    const match = smartBrandMatch(companyName, tracked);
+    if (match.found && match.confidence >= 0.7) {
+      return tracked;
+    }
+  }
+  
+  // Try reverse: check if company name is found as part of any tracked company
+  for (const tracked of trackedCompanies) {
+    const match = smartBrandMatch(tracked, companyName);
+    if (match.found && match.confidence >= 0.7) {
+      return tracked;
+    }
+  }
+  
+  // Try contains match (either direction)
+  for (const tracked of trackedCompanies) {
+    const trackedLower = tracked.toLowerCase();
+    // "Google Cloud Platform" contains "Google Cloud"
+    if (companyNameLower.includes(trackedLower)) {
+      return tracked;
+    }
+    // "Google Cloud" is contained in "Google Cloud Platform"
+    if (trackedLower.includes(companyNameLower) && companyNameLower.length >= 3) {
+      return tracked;
+    }
+  }
+  
+  // Try word-based matching (all words of one are in the other)
+  const companyWords = companyNameLower.split(/\s+/).filter(w => w.length > 2);
+  for (const tracked of trackedCompanies) {
+    const trackedWords = tracked.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+    
+    // Check if all tracked words are in company name
+    const allTrackedWordsFound = trackedWords.every(tw => 
+      companyWords.some(cw => cw === tw || cw.includes(tw) || tw.includes(cw))
+    );
+    
+    if (allTrackedWordsFound && trackedWords.length > 0) {
+      return tracked;
+    }
+  }
+  
+  return null;
+}
 
 const RankingSchema = z.object({
   rankings: z.array(z.object({
@@ -643,14 +704,16 @@ export async function analyzeCompetitors(
     // Process rankings if available
     if (response.rankings) {
       response.rankings.forEach(ranking => {
-        // Only track companies we care about
-        if (trackedCompanies.has(ranking.company)) {
-          const data = competitorMap.get(ranking.company)!;
+        // Use smart matching to find the tracked company this ranking refers to
+        const matchedCompany = findMatchingTrackedCompany(ranking.company, trackedCompanies);
+        
+        if (matchedCompany) {
+          const data = competitorMap.get(matchedCompany)!;
           
           // Only count one mention per response
-          if (!mentionedInResponse.has(ranking.company)) {
+          if (!mentionedInResponse.has(matchedCompany)) {
             data.mentions++;
-            mentionedInResponse.add(ranking.company);
+            mentionedInResponse.add(matchedCompany);
           }
           
           data.positions.push(ranking.position);
@@ -662,8 +725,9 @@ export async function analyzeCompetitors(
     }
 
     // Count brand mentions (only if not already counted in rankings)
-    if (response.brandMentioned && trackedCompanies.has(company.name) && !mentionedInResponse.has(company.name)) {
-      const brandData = competitorMap.get(company.name)!;
+    const brandMatchedCompany = findMatchingTrackedCompany(company.name, trackedCompanies);
+    if (response.brandMentioned && brandMatchedCompany && !mentionedInResponse.has(brandMatchedCompany)) {
+      const brandData = competitorMap.get(brandMatchedCompany)!;
       brandData.mentions++;
       if (response.brandPosition) {
         brandData.positions.push(response.brandPosition);
@@ -825,12 +889,24 @@ export async function analyzeCompetitorsByProvider(
     const providerMap = providerData.get(response.provider);
     if (!providerMap) return;
 
+    // Track which companies were mentioned in this response for this provider
+    const mentionedInResponse = new Set<string>();
+
     // Process rankings
     if (response.rankings) {
       response.rankings.forEach(ranking => {
-        if (trackedCompanies.has(ranking.company)) {
-          const data = providerMap.get(ranking.company)!;
-          data.mentions++;
+        // Use smart matching to find the tracked company
+        const matchedCompany = findMatchingTrackedCompany(ranking.company, trackedCompanies);
+        
+        if (matchedCompany) {
+          const data = providerMap.get(matchedCompany)!;
+          
+          // Only count one mention per response
+          if (!mentionedInResponse.has(matchedCompany)) {
+            data.mentions++;
+            mentionedInResponse.add(matchedCompany);
+          }
+          
           data.positions.push(ranking.position);
           if (ranking.sentiment) {
             data.sentiments.push(ranking.sentiment);
@@ -839,16 +915,15 @@ export async function analyzeCompetitorsByProvider(
       });
     }
 
-    // Count brand mentions
-    if (response.brandMentioned && trackedCompanies.has(company.name)) {
-      const brandData = providerMap.get(company.name)!;
-      if (!response.rankings?.some(r => r.company === company.name)) {
-        brandData.mentions++;
-        if (response.brandPosition) {
-          brandData.positions.push(response.brandPosition);
-        }
-        brandData.sentiments.push(response.sentiment);
+    // Count brand mentions (only if not already counted in rankings)
+    const brandMatchedCompany = findMatchingTrackedCompany(company.name, trackedCompanies);
+    if (response.brandMentioned && brandMatchedCompany && !mentionedInResponse.has(brandMatchedCompany)) {
+      const brandData = providerMap.get(brandMatchedCompany)!;
+      brandData.mentions++;
+      if (response.brandPosition) {
+        brandData.positions.push(response.brandPosition);
       }
+      brandData.sentiments.push(response.sentiment);
     }
   });
 
