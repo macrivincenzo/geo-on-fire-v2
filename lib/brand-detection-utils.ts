@@ -110,45 +110,132 @@ export function isAbbreviationOf(short: string, long: string): boolean {
 }
 
 /**
- * Smart brand matcher - finds if brandName is mentioned in text
- * Works with abbreviations, full names, parentheses variations, etc.
+ * UNIVERSAL SMART BRAND MATCHER
+ * Works for ANY brand - small bakeries to big enterprises!
+ * 
+ * Matching strategies (in order of confidence):
+ * 1. Exact match
+ * 2. Parentheses extraction
+ * 3. Contains match (bidirectional) - NEW!
+ * 4. Word prefix match - NEW!
+ * 5. Word overlap scoring - NEW!
+ * 6. Abbreviation matching
+ * 7. Suffix expansion - NEW!
+ * 8. Fuzzy variations
  */
 export function smartBrandMatch(text: string, brandName: string): {
   found: boolean;
   matchedText: string | null;
-  matchType: 'exact' | 'abbreviation' | 'fullname' | 'parentheses' | 'fuzzy' | 'none';
+  matchType: 'exact' | 'abbreviation' | 'fullname' | 'parentheses' | 'contains' | 'prefix' | 'overlap' | 'fuzzy' | 'none';
   confidence: number;
 } {
   const textLower = text.toLowerCase();
   const brandLower = brandName.toLowerCase().trim();
   const brandClean = brandLower.replace(/[^\w\s]/g, '').trim();
+  const brandWords = brandClean.split(/\s+/).filter(w => w.length > 0);
   
+  // ============================================================
   // 1. EXACT MATCH (highest confidence)
+  // ============================================================
   const exactPattern = new RegExp(`\\b${escapeRegex(brandLower)}\\b`, 'i');
   if (exactPattern.test(text)) {
     const match = text.match(exactPattern);
     return { found: true, matchedText: match?.[0] || brandName, matchType: 'exact', confidence: 1.0 };
   }
   
-  // 2. PARENTHESES EXTRACTION - "Amazon Web Services (AWS)" should match "AWS"
+  // ============================================================
+  // 2. PARENTHESES EXTRACTION
+  // "Amazon Web Services (AWS)" should match "AWS"
+  // "Google Cloud Platform (GCP)" should match "Google Cloud"
+  // ============================================================
   const parenthesesVariations = extractParenthesesVariations(text);
   for (const variation of parenthesesVariations) {
+    const fullNameLower = variation.fullName.toLowerCase();
+    const abbrevLower = variation.abbreviation.toLowerCase();
+    
     // Check if brand matches the abbreviation
-    if (variation.abbreviation.toLowerCase() === brandLower) {
+    if (abbrevLower === brandLower) {
       return { found: true, matchedText: `${variation.fullName} (${variation.abbreviation})`, matchType: 'parentheses', confidence: 0.95 };
     }
-    // Check if brand matches the full name
-    if (variation.fullName.toLowerCase() === brandLower || 
-        variation.fullName.toLowerCase().includes(brandLower) ||
-        brandLower.includes(variation.fullName.toLowerCase())) {
+    // Check if brand matches the full name exactly
+    if (fullNameLower === brandLower) {
       return { found: true, matchedText: `${variation.fullName} (${variation.abbreviation})`, matchType: 'parentheses', confidence: 0.95 };
+    }
+    // Check if brand is contained in full name (e.g., "Google Cloud" in "Google Cloud Platform")
+    if (fullNameLower.includes(brandLower) && brandLower.length >= 3) {
+      return { found: true, matchedText: `${variation.fullName} (${variation.abbreviation})`, matchType: 'parentheses', confidence: 0.92 };
+    }
+    // Check if full name is contained in brand
+    if (brandLower.includes(fullNameLower) && fullNameLower.length >= 3) {
+      return { found: true, matchedText: `${variation.fullName} (${variation.abbreviation})`, matchType: 'parentheses', confidence: 0.90 };
     }
   }
   
-  // 3. ABBREVIATION CHECK - "AWS" should match if text contains "Amazon Web Services"
-  // If brand looks like an abbreviation (short, uppercase), look for expanded forms
+  // ============================================================
+  // 3. CONTAINS MATCH (BIDIRECTIONAL) - UNIVERSAL!
+  // "Google Cloud" should match "Google Cloud Platform"
+  // "Best Bakery" should match "Best Bakery Shop"
+  // ============================================================
+  // Strategy: Find phrases in text that START with the brand name
+  if (brandWords.length >= 1 && brandClean.length >= 3) {
+    // Look for brand as start of a longer phrase
+    const containsPattern = new RegExp(`\\b${escapeRegex(brandClean)}(?:\\s+\\w+)*\\b`, 'gi');
+    const containsMatches = text.match(containsPattern);
+    if (containsMatches && containsMatches.length > 0) {
+      // Find the best (longest) match
+      const bestMatch = containsMatches.reduce((a, b) => a.length > b.length ? a : b);
+      if (bestMatch.toLowerCase() !== brandLower) {
+        return { found: true, matchedText: bestMatch, matchType: 'contains', confidence: 0.88 };
+      }
+    }
+  }
+  
+  // ============================================================
+  // 4. WORD PREFIX MATCH - UNIVERSAL!
+  // All brand words appear at the start of a text phrase
+  // "Google Cloud" matches ["Google", "Cloud", "Platform"]
+  // ============================================================
+  if (brandWords.length >= 2) {
+    // Find all multi-word phrases in text
+    const textPhrases = extractPhrases(text);
+    for (const phrase of textPhrases) {
+      const phraseWords = phrase.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+      if (phraseWords.length >= brandWords.length) {
+        // Check if brand words are a prefix of phrase words
+        const isPrefix = brandWords.every((word, idx) => 
+          phraseWords[idx] && phraseWords[idx].startsWith(word.substring(0, Math.min(word.length, phraseWords[idx].length)))
+        );
+        if (isPrefix && brandWords.join(' ') !== phraseWords.join(' ')) {
+          return { found: true, matchedText: phrase, matchType: 'prefix', confidence: 0.85 };
+        }
+      }
+    }
+  }
+  
+  // ============================================================
+  // 5. WORD OVERLAP SCORING - UNIVERSAL!
+  // Count matching words between brand and text phrases
+  // If >60% of brand words found, it's a match
+  // ============================================================
+  if (brandWords.length >= 2) {
+    const textPhrases = extractPhrases(text);
+    for (const phrase of textPhrases) {
+      const phraseWords = phrase.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+      const matchingWords = brandWords.filter(bw => 
+        phraseWords.some(pw => pw === bw || pw.startsWith(bw) || bw.startsWith(pw))
+      );
+      const overlapRatio = matchingWords.length / brandWords.length;
+      if (overlapRatio >= 0.6 && matchingWords.length >= 2) {
+        return { found: true, matchedText: phrase, matchType: 'overlap', confidence: 0.75 + (overlapRatio * 0.15) };
+      }
+    }
+  }
+  
+  // ============================================================
+  // 6. ABBREVIATION CHECK
+  // "AWS" should match if text contains "Amazon Web Services"
+  // ============================================================
   if (brandName.length <= 6 && brandName === brandName.toUpperCase()) {
-    // Brand is likely an abbreviation, search for full names that match
     const words = text.split(/\s+/);
     for (let i = 0; i < words.length - brandName.length + 1; i++) {
       const segment = words.slice(i, i + brandName.length + 3).join(' ');
@@ -158,7 +245,7 @@ export function smartBrandMatch(text: string, brandName: string): {
     }
   }
   
-  // 4. FULL NAME TO ABBREVIATION - "Amazon Web Services" should match if text contains "AWS"
+  // Full name to abbreviation
   const brandAbbreviations = generateAbbreviation(brandName);
   for (const abbrev of brandAbbreviations) {
     const abbrevPattern = new RegExp(`\\b${escapeRegex(abbrev)}\\b`, 'i');
@@ -168,14 +255,55 @@ export function smartBrandMatch(text: string, brandName: string): {
     }
   }
   
-  // 5. FUZZY MATCH - Handle variations like hyphens, spaces, dots
+  // ============================================================
+  // 7. SUFFIX EXPANSION - UNIVERSAL!
+  // Try brand + common business suffixes
+  // "Google Cloud" → try "Google Cloud Platform", "Google Cloud Services", etc.
+  // ============================================================
+  const commonSuffixes = [
+    'platform', 'services', 'solutions', 'cloud', 'tech', 'technologies',
+    'software', 'systems', 'app', 'apps', 'inc', 'incorporated', 'llc', 
+    'ltd', 'limited', 'corp', 'corporation', 'co', 'company', 'group',
+    'labs', 'studio', 'studios', 'digital', 'online', 'web', 'net',
+    'shop', 'store', 'market', 'hub', 'center', 'centre', 'pro', 'plus'
+  ];
+  
+  for (const suffix of commonSuffixes) {
+    // Try brand + suffix
+    const withSuffix = `${brandClean} ${suffix}`;
+    const withSuffixPattern = new RegExp(`\\b${escapeRegex(withSuffix)}\\b`, 'i');
+    if (withSuffixPattern.test(text)) {
+      const match = text.match(withSuffixPattern);
+      return { found: true, matchedText: match?.[0] || withSuffix, matchType: 'fuzzy', confidence: 0.82 };
+    }
+  }
+  
+  // Remove suffix from brand and search
+  for (const suffix of commonSuffixes) {
+    if (brandLower.endsWith(` ${suffix}`) || brandLower.endsWith(suffix)) {
+      const withoutSuffix = brandLower.replace(new RegExp(`\\s*${suffix}\\s*$`, 'i'), '').trim();
+      if (withoutSuffix.length >= 3) {
+        const withoutSuffixPattern = new RegExp(`\\b${escapeRegex(withoutSuffix)}\\b`, 'i');
+        if (withoutSuffixPattern.test(text)) {
+          const match = text.match(withoutSuffixPattern);
+          return { found: true, matchedText: match?.[0] || withoutSuffix, matchType: 'fuzzy', confidence: 0.80 };
+        }
+      }
+    }
+  }
+  
+  // ============================================================
+  // 8. FUZZY MATCH - Handle variations
+  // ============================================================
   const fuzzyVariations = [
     brandClean,
-    brandClean.replace(/\s+/g, ''),      // nospaces
-    brandClean.replace(/\s+/g, '-'),     // with-hyphens
-    brandClean.replace(/\s+/g, '.'),     // with.dots
-    brandLower.replace(/-/g, ' '),       // hyphens to spaces
-    brandLower.replace(/-/g, ''),        // remove hyphens
+    brandClean.replace(/\s+/g, ''),
+    brandClean.replace(/\s+/g, '-'),
+    brandClean.replace(/\s+/g, '.'),
+    brandLower.replace(/-/g, ' '),
+    brandLower.replace(/-/g, ''),
+    brandLower.replace(/\./g, ' '),
+    brandLower.replace(/\./g, ''),
   ];
   
   for (const variation of fuzzyVariations) {
@@ -183,32 +311,48 @@ export function smartBrandMatch(text: string, brandName: string): {
     const fuzzyPattern = new RegExp(`\\b${escapeRegex(variation)}\\b`, 'i');
     if (fuzzyPattern.test(text)) {
       const match = text.match(fuzzyPattern);
-      return { found: true, matchedText: match?.[0] || variation, matchType: 'fuzzy', confidence: 0.75 };
-    }
-  }
-  
-  // 6. SUFFIX HANDLING - "TechStartup Inc" should match "TechStartup"
-  const suffixes = ['inc', 'incorporated', 'llc', 'ltd', 'limited', 'corp', 'corporation', 'co', 'company', 'plc', 'gmbh', 'ag', 'sa', 'srl', 'services', 'solutions', 'platform', 'technologies', 'tech'];
-  for (const suffix of suffixes) {
-    // Brand with suffix in text
-    const withSuffixPattern = new RegExp(`\\b${escapeRegex(brandClean)}\\s+${suffix}\\b`, 'i');
-    if (withSuffixPattern.test(text)) {
-      const match = text.match(withSuffixPattern);
-      return { found: true, matchedText: match?.[0] || `${brandName} ${suffix}`, matchType: 'fuzzy', confidence: 0.8 };
-    }
-    
-    // Brand without suffix when searching with suffix
-    if (brandLower.endsWith(` ${suffix}`) || brandLower.endsWith(suffix)) {
-      const withoutSuffix = brandLower.replace(new RegExp(`\\s*${suffix}\\s*$`, 'i'), '').trim();
-      const withoutSuffixPattern = new RegExp(`\\b${escapeRegex(withoutSuffix)}\\b`, 'i');
-      if (withoutSuffixPattern.test(text)) {
-        const match = text.match(withoutSuffixPattern);
-        return { found: true, matchedText: match?.[0] || withoutSuffix, matchType: 'fuzzy', confidence: 0.8 };
-      }
+      return { found: true, matchedText: match?.[0] || variation, matchType: 'fuzzy', confidence: 0.70 };
     }
   }
   
   return { found: false, matchedText: null, matchType: 'none', confidence: 0 };
+}
+
+/**
+ * Extract meaningful phrases from text (for word matching)
+ * Returns phrases that look like company/brand names
+ */
+function extractPhrases(text: string): string[] {
+  const phrases: string[] = [];
+  
+  // Extract capitalized phrases (likely proper nouns/brand names)
+  const capitalizedPattern = /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*(?:\s+(?:Platform|Services|Cloud|Inc|LLC|Ltd|Corp|Co|Solutions|Technologies|Tech|Software|Systems|App|Labs|Studio|Digital|Online|Web|Shop|Store|Pro|Plus))?)\b/g;
+  let match;
+  while ((match = capitalizedPattern.exec(text)) !== null) {
+    if (match[1].length >= 3) {
+      phrases.push(match[1]);
+    }
+  }
+  
+  // Extract phrases from numbered lists (common in AI responses)
+  // e.g., "1. Google Cloud Platform (GCP)"
+  const listPattern = /\d+\.\s*\*?\*?([A-Za-z][A-Za-z\s\-\.]+?)(?:\s*[\(\:\-\*]|$)/gm;
+  while ((match = listPattern.exec(text)) !== null) {
+    const phrase = match[1].trim().replace(/\*+/g, '');
+    if (phrase.length >= 3) {
+      phrases.push(phrase);
+    }
+  }
+  
+  // Extract bold text (often brand names in markdown)
+  const boldPattern = /\*\*([A-Za-z][A-Za-z\s\-\.]+?)\*\*/g;
+  while ((match = boldPattern.exec(text)) !== null) {
+    if (match[1].length >= 3) {
+      phrases.push(match[1]);
+    }
+  }
+  
+  return [...new Set(phrases)]; // Remove duplicates
 }
 
 /**
