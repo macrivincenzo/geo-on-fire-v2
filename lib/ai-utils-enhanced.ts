@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { Company, BrandPrompt, AIResponse, CompanyRanking, CompetitorRanking, ProviderSpecificRanking, ProviderComparisonData, ProgressCallback, CompetitorFoundData } from './types';
 import { getProviderModel, normalizeProviderName, isProviderConfigured, getProviderConfig, PROVIDER_CONFIGS } from './provider-config';
 import { analyzeWithAnthropicWebSearch } from './anthropic-web-search';
+import { detectBrandMention, stripMarkdown } from './brand-detection-utils';
+import { getBrandDetectionOptions } from './brand-detection-config';
 
 const RankingSchema = z.object({
   rankings: z.array(z.object({
@@ -120,21 +122,19 @@ Be very thorough in detecting company names - they might appear in different con
       object = result.object;
     } catch (error) {
       console.error('Structured analysis failed:', error);
-      // Fallback to basic analysis
-      const textLower = text.toLowerCase();
-      const brandNameLower = brandName.toLowerCase();
+      // Fallback to enhanced brand detection
+      const cleanedText = stripMarkdown(text);
       
-      // More robust brand detection
-      const mentioned = textLower.includes(brandNameLower) ||
-        textLower.includes(brandNameLower.replace(/\s+/g, '')) ||
-        textLower.includes(brandNameLower.replace(/[^a-z0-9]/g, ''));
+      // Use proper brand detection
+      const brandDetectionOptions = getBrandDetectionOptions(brandName);
+      const brandDetectionResult = detectBrandMention(cleanedText, brandName, brandDetectionOptions);
+      const mentioned = brandDetectionResult.mentioned;
         
-      // More robust competitor detection
+      // Detect competitors with enhanced detection
       const detectedCompetitors = competitors.filter(c => {
-        const cLower = c.toLowerCase();
-        return textLower.includes(cLower) ||
-          textLower.includes(cLower.replace(/\s+/g, '')) ||
-          textLower.includes(cLower.replace(/[^a-z0-9]/g, ''));
+        const competitorOptions = getBrandDetectionOptions(c);
+        const result = detectBrandMention(cleanedText, c, competitorOptions);
+        return result.mentioned;
       });
       
       object = {
@@ -149,26 +149,38 @@ Be very thorough in detecting company names - they might appear in different con
       };
     }
 
-    // Fallback: simple text-based mention detection 
-    // This complements the AI analysis in case it misses obvious mentions
-    const textLower = text.toLowerCase();
-    const brandNameLower = brandName.toLowerCase();
+    // Enhanced fallback: Use proper brand detection to complement AI analysis
+    // Strip markdown and use smart matching
+    const cleanedText = stripMarkdown(text);
     
-    // Check for brand mention with fallback text search
-    const brandMentioned = object.analysis.brandMentioned || 
-      textLower.includes(brandNameLower) ||
-      textLower.includes(brandNameLower.replace(/\s+/g, '')) || // handle spacing differences
-      textLower.includes(brandNameLower.replace(/[^a-z0-9]/g, '')); // handle punctuation
+    // Use enhanced brand detection
+    const brandDetectionOptions = getBrandDetectionOptions(brandName);
+    const brandDetectionResult = detectBrandMention(cleanedText, brandName, brandDetectionOptions);
+    const brandMentioned = object.analysis.brandMentioned || brandDetectionResult.mentioned;
+    
+    // Log detection details for debugging
+    if (brandDetectionResult.mentioned && !object.analysis.brandMentioned) {
+      console.log(`Enhanced detection found brand "${brandName}" in web search response:`, 
+        brandDetectionResult.matches.map(m => ({
+          text: m.text,
+          confidence: m.confidence,
+          pattern: m.pattern
+        }))
+      );
+    }
       
-    // Add any missed competitors from text search
+    // Add any missed competitors using enhanced detection
     const aiCompetitors = new Set(object.analysis.competitors);
     const allMentionedCompetitors = new Set([...aiCompetitors]);
     
+    // Detect all competitor mentions with their specific options
+    const competitorDetectionResults = new Map<string, any>();
     competitors.forEach(competitor => {
-      const competitorLower = competitor.toLowerCase();
-      if (textLower.includes(competitorLower) || 
-          textLower.includes(competitorLower.replace(/\s+/g, '')) ||
-          textLower.includes(competitorLower.replace(/[^a-z0-9]/g, ''))) {
+      const competitorOptions = getBrandDetectionOptions(competitor);
+      const result = detectBrandMention(cleanedText, competitor, competitorOptions);
+      competitorDetectionResults.set(competitor, result);
+      
+      if (result.mentioned && competitor !== brandName) {
         allMentionedCompetitors.add(competitor);
       }
     });
