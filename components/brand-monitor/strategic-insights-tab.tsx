@@ -449,10 +449,28 @@ export function StrategicInsightsTab({
   responses,
   brandName
 }: StrategicInsightsTabProps) {
-  const insights = useMemo(() => 
-    generateStrategicInsights(brandData, competitors, responses, brandName),
-    [brandData, competitors, responses, brandName]
-  );
+  // #region agent log
+  fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'strategic-insights-tab.tsx:446',message:'StrategicInsightsTab entry',data:{hasBrandData:!!brandData,hasCompetitors:!!competitors,competitorsLength:competitors?.length,hasResponses:!!responses,responsesLength:responses?.length,brandName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+  // #endregion
+  
+  const insights = useMemo(() => {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'strategic-insights-tab.tsx:452',message:'Before generateStrategicInsights',data:{brandDataKeys:brandData?Object.keys(brandData):null,competitorsType:Array.isArray(competitors),responsesType:Array.isArray(responses)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+    
+    try {
+      const result = generateStrategicInsights(brandData, competitors, responses, brandName);
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'strategic-insights-tab.tsx:456',message:'After generateStrategicInsights success',data:{hasResult:!!result,resultKeys:result?Object.keys(result):null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      return result;
+    } catch (error: any) {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'strategic-insights-tab.tsx:461',message:'generateStrategicInsights ERROR',data:{errorMessage:error?.message,errorStack:error?.stack,errorName:error?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      throw error;
+    }
+  }, [brandData, competitors, responses, brandName]);
   
   return (
     <div className="space-y-6">
