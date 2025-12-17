@@ -124,7 +124,9 @@ export function AnalysisProgressSection({
     ];
   };
   
-  const defaultPrompts = generateContextualPrompts(company)
+  // Generate ALL prompts first (before filtering) to get original indices
+  const allGeneratedPrompts = generateContextualPrompts(company);
+  const defaultPrompts = allGeneratedPrompts
     .filter((_, index) => !removedDefaultPrompts.includes(index));
   
   // Use provided prompts or generate from defaults + custom
@@ -213,7 +215,8 @@ export function AnalysisProgressSection({
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                const originalIndex = defaultPrompts.findIndex(p => p === prompt);
+                                // Find the original index in the full generated prompts array
+                                const originalIndex = allGeneratedPrompts.findIndex(p => p === prompt);
                                 if (originalIndex !== -1) {
                                   onRemoveDefaultPrompt(originalIndex);
                                 }
