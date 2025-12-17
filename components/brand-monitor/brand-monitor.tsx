@@ -363,12 +363,33 @@ export function BrandMonitor({
     const generateContextualPrompts = (company: Company): string[] => {
       const keywords = company.scrapedData?.keywords || [];
       const mainProducts = company.scrapedData?.mainProducts || [];
+      const description = (company.scrapedData?.description || company.description || '').toLowerCase();
       const currentYear = new Date().getFullYear();
+      
+      // Detect if this is a marketplace business (where keywords refer to items being sold, not services provided)
+      const isMarketplace = description.includes('marketplace') || 
+                           description.includes('buy and sell') ||
+                           description.includes('buying and selling') ||
+                           (company.industry || '').toLowerCase().includes('marketplace') ||
+                           keywords.some(k => k.toLowerCase() === 'marketplace');
       
       // Filter out generic terms that don't make good prompts
       const genericTerms = ['support', 'service', 'services', 'tool', 'tools', 'solution', 'solutions', 
                             'platform', 'platforms', 'company', 'companies', 'provider', 'providers',
                             'customer', 'customers', 'business', 'businesses'];
+      
+      // For marketplace businesses, generate prompts about the marketplace itself, not the items sold
+      if (isMarketplace) {
+        const marketplacePrompts = [
+          `Best marketplace to buy and sell online businesses in ${currentYear}?`,
+          `Top platforms for buying and selling websites?`,
+          `Most popular marketplaces for online businesses today?`,
+          `Recommended platforms to sell digital assets?`,
+          `Leading marketplaces for buying websites and apps?`,
+          `Best marketplace for buying and selling online businesses?`
+        ];
+        return marketplacePrompts.slice(0, 6);
+      }
       
       // Use keywords if available, otherwise fall back to mainProducts
       let primaryServices: string[] = [];
@@ -378,6 +399,10 @@ export function BrandMonitor({
         primaryServices = keywords
           .filter(k => {
             const kLower = k.toLowerCase();
+            // Also filter out marketplace-related terms that aren't the service itself
+            if (isMarketplace && (kLower === 'websites' || kLower === 'apps' || kLower === 'digital assets')) {
+              return false; // These are items sold, not services provided
+            }
             return !genericTerms.some(term => kLower.includes(term) || term.includes(kLower));
           })
           .slice(0, 6); // Cap at 6 keywords
@@ -412,12 +437,12 @@ export function BrandMonitor({
       }
       
       // Fallback to generic prompts based on industry/service type
-    const serviceType = detectServiceType(company);
+      const serviceType = detectServiceType(company);
       return [
-      `Best ${serviceType}s in ${currentYear}?`,
-      `Top ${serviceType}s for startups?`,
-      `Most popular ${serviceType}s today?`,
-      `Recommended ${serviceType}s for developers?`
+        `Best ${serviceType}s in ${currentYear}?`,
+        `Top ${serviceType}s for startups?`,
+        `Most popular ${serviceType}s today?`,
+        `Recommended ${serviceType}s for developers?`
       ];
     };
     
