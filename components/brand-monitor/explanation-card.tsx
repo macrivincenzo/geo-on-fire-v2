@@ -150,9 +150,9 @@ export function ProviderRankingsExplanation({ brandName }: { brandName: string }
       title="Understanding Provider Rankings"
       icon={<TrendingUp className="w-5 h-5" />}
       variant="info"
-      whatItMeans={`Different AI robots (like ChatGPT, Claude, Google's AI) each have their own "brain" and give different answers. This table shows how each AI robot ranks ${brandName} compared to competitors. Think of it like asking different teachers the same question - each might have a slightly different favorite answer!`}
-      whyItMatters="Knowing which AI mentions you more helps you understand where you're doing well and where you need to improve. If one AI knows about you but another doesn't, you know where to focus your efforts. It's like knowing which friend to ask for a recommendation!"
-      whatToDo="Look for patterns! If you rank low on all providers, focus on general visibility. If you rank high on some but low on others, research what content those specific AI providers trained on and create more of that type of content."
+      whatItMeans={`Different AI robots (like ChatGPT, Claude, Google's AI) each have their own "brain" and give different answers. This table shows how each AI robot ranks ${brandName} compared to competitors. Each provider's visibility score is calculated separately based only on that provider's responses. Think of it like asking different teachers the same question - each might have a slightly different favorite answer!`}
+      whyItMatters="Knowing which AI mentions you more helps you understand where you're doing well and where you need to improve. If one AI knows about you but another doesn't, you know where to focus your efforts. The overall visibility score (shown in other tabs) is an average across all providers. It's like knowing which friend to ask for a recommendation!"
+      whatToDo="Look for patterns! If you rank low on all providers, focus on general visibility. If you rank high on some but low on others, research what content those specific AI providers trained on and create more of that type of content. Compare your per-provider scores to identify opportunities."
     />
   );
 }

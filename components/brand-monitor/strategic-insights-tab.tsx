@@ -486,7 +486,7 @@ export function StrategicInsightsTab({
         </Card>
         <Card className="p-4">
           <div className="text-center">
-            <p className="text-2xl font-bold text-green-600">{insights.brandQuotes.length}</p>
+            <p className="text-2xl font-bold text-green-600">{brandData.mentions}</p>
             <p className="text-xs text-gray-500">Brand Mentions</p>
           </div>
         </Card>

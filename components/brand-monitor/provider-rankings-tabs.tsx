@@ -168,7 +168,7 @@ export function ProviderRankingsTabs({
             <div>
               <CardTitle className="text-xl font-semibold">Provider Rankings</CardTitle>
               <CardDescription className="text-sm text-gray-600 mt-1">
-                Your brand performance by AI provider
+                Your brand performance by AI provider (per-provider visibility scores)
               </CardDescription>
             </div>
             <div className="text-right">
@@ -195,7 +195,16 @@ export function ProviderRankingsTabs({
             })}
           </TabsList>
 
-          {providerRankings.map(({ provider, competitors }) => (
+          {providerRankings.map(({ provider, competitors }) => {
+            // Show all tracked competitors for consistency, but sort by visibility
+            const sortedCompetitors = [...competitors].sort((a, b) => {
+              // Brand always first, then by visibility score
+              if (a.isOwn) return -1;
+              if (b.isOwn) return 1;
+              return b.visibilityScore - a.visibilityScore;
+            });
+            
+            return (
             <TabsContent key={provider} value={provider} className="mt-0">
               <div className="overflow-x-auto rounded-lg border border-gray-200">
                 <table className="w-full border-collapse">
@@ -209,8 +218,9 @@ export function ProviderRankingsTabs({
                     </tr>
                   </thead>
                   <tbody>
-                    {competitors.map((competitor, idx) => {
+                    {sortedCompetitors.map((competitor, idx) => {
                       const competitorUrl = generateFallbackUrl(competitor.name);
+                      const hasVisibility = competitor.visibilityScore > 0;
                       
                       return (
                         <tr 
@@ -219,12 +229,14 @@ export function ProviderRankingsTabs({
                             ${idx > 0 ? 'border-t border-gray-200' : ''}
                             ${competitor.isOwn 
                               ? 'bg-orange-50' 
-                              : 'hover:bg-gray-50 transition-colors'
+                              : hasVisibility 
+                              ? 'hover:bg-gray-50 transition-colors'
+                              : 'opacity-60'
                             }
                           `}
                         >
                           <td className="border-r border-gray-200 p-3 text-xs text-black">
-                            {idx + 1}
+                            {hasVisibility ? idx + 1 : '-'}
                           </td>
                           <td className="border-r border-gray-200 p-3">
                             <CompanyCell 
@@ -258,7 +270,8 @@ export function ProviderRankingsTabs({
                 </table>
               </div>
             </TabsContent>
-          ))}
+            );
+          })}
         </Tabs>
         
         {/* Metrics Row at Bottom */}
