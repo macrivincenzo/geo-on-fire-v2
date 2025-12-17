@@ -58,34 +58,38 @@ export function CompanyCard({
   return (
     <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 overflow-hidden transition-all hover:shadow-lg">
       <div className="flex">
-        {/* Left side - OG Image */}
-        <div className="relative w-80 h-48 ml-4 overflow-hidden">
+        {/* Left side - Logo/Image Display */}
+        <div className="relative w-80 h-48 ml-4 overflow-hidden rounded-lg bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 border border-gray-200">
           {validLogoUrl && !logoError ? (
             <div className="absolute inset-0 pr-4 py-4">
               <Image
                 src={validLogoUrl}
-                alt=""
+                alt={`${company.name} logo`}
                 fill
                 className="object-contain"
                 sizes="320px"
                 onError={() => setLogoError(true)}
               />
             </div>
-          ) : (
+          ) : validFaviconUrl && !faviconError ? (
+            // Show favicon prominently when no logo is available
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative h-16 w-16 rounded-xl bg-white/80 shadow-md border border-gray-200 flex items-center justify-center p-2">
-                {validFaviconUrl && !faviconError ? (
-                  <Image
-                    src={validFaviconUrl}
-                    alt={`${company.name} logo`}
-                    width={32}
-                    height={32}
-                    className="object-contain w-8 h-8"
-                    onError={() => setFaviconError(true)}
-                  />
-                ) : (
-                  <Building2 className="h-8 w-8 text-gray-400" />
-                )}
+              <div className="relative h-36 w-36 rounded-2xl bg-white shadow-xl border-2 border-gray-300 flex items-center justify-center p-6 transition-transform hover:scale-105">
+                <Image
+                  src={validFaviconUrl}
+                  alt={`${company.name} logo`}
+                  width={120}
+                  height={120}
+                  className="object-contain w-30 h-30"
+                  onError={() => setFaviconError(true)}
+                />
+              </div>
+            </div>
+          ) : (
+            // Fallback icon with better styling
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative h-36 w-36 rounded-2xl bg-white/90 shadow-lg border-2 border-gray-300 flex items-center justify-center p-6">
+                <Building2 className="h-20 w-20 text-gray-400" />
               </div>
             </div>
           )}

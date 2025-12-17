@@ -83,9 +83,18 @@ export async function scrapeCompanyInfo(url: string, maxAge?: number): Promise<C
       3. Focus on what the company MAKES/SELLS, not what goes IN their products (e.g., Yeti makes coolers, not beverages)`,
     });
 
-    // Extract favicon URL - try multiple sources
+    // Extract logo/image URL - try multiple sources with comprehensive fallbacks
     const urlObj = new URL(normalizedUrl);
     const domain = urlObj.hostname.replace('www.', '');
+    
+    // Try multiple sources for logo/image in priority order
+    const logoUrl = 
+      metadata?.ogImage ||           // Open Graph image (best quality, most common)
+      metadata?.image ||             // Generic image metadata
+      metadata?.logo ||              // Direct logo field
+      metadata?.twitterImage ||      // Twitter card image
+      metadata?.twitterCard ||       // Twitter card (alternative)
+      undefined;                     // Fall back to favicon if none found
     
     // Try to get a high-quality favicon from various sources
     const faviconUrl = metadata?.favicon || 
@@ -98,7 +107,7 @@ export async function scrapeCompanyInfo(url: string, maxAge?: number): Promise<C
       name: object.name,
       description: object.description,
       industry: object.industry,
-      logo: metadata?.ogImage || undefined,
+      logo: logoUrl,  // Use comprehensive logo extraction
       favicon: faviconUrl,
       scraped: true,
       scrapedData: {
@@ -108,7 +117,7 @@ export async function scrapeCompanyInfo(url: string, maxAge?: number): Promise<C
         mainContent: html || '',
         mainProducts: object.mainProducts,
         competitors: object.competitors,
-        ogImage: metadata?.ogImage || undefined,
+        ogImage: logoUrl,  // Store the best available image
         favicon: faviconUrl,
       },
     };
