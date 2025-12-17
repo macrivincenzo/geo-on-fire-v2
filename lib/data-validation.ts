@@ -134,18 +134,27 @@ export function validateBrandMentions(
   const warnings: string[] = [];
 
   // Count actual responses where brand is mentioned
-  const actualMentions = responses.filter(r => r.brandMentioned).length;
+  // Brand can be mentioned in two ways:
+  // 1. brandMentioned flag is true
+  // 2. Brand appears in rankings (even if brandMentioned is false)
+  const actualMentions = responses.filter(r => {
+    const inRankings = r.rankings?.some(ranking => 
+      ranking.company.toLowerCase().includes(brandName.toLowerCase()) ||
+      brandName.toLowerCase().includes(ranking.company.toLowerCase())
+    ) || false;
+    return r.brandMentioned || inRankings;
+  }).length;
   
   // Compare with brandData.mentions
   // Allow small difference (1) due to edge cases, but log as warning
   const difference = Math.abs(brandData.mentions - actualMentions);
   if (difference > 1) {
     errors.push(
-      `Brand mentions mismatch: Brand data shows ${brandData.mentions} mentions, but ${actualMentions} responses have brandMentioned=true (difference: ${difference})`
+      `Brand mentions mismatch: Brand data shows ${brandData.mentions} mentions, but ${actualMentions} responses have brand mentioned (via flag or rankings) (difference: ${difference})`
     );
   } else if (difference === 1) {
     warnings.push(
-      `Brand mentions slight mismatch: Brand data shows ${brandData.mentions} mentions, but ${actualMentions} responses have brandMentioned=true. This may be due to brand appearing in rankings vs text detection.`
+      `Brand mentions slight mismatch: Brand data shows ${brandData.mentions} mentions, but ${actualMentions} responses have brand mentioned. This may be due to brand matching logic differences.`
     );
   }
 

@@ -488,6 +488,9 @@ export function StrategicInsightsTab({
           <div className="text-center">
             <p className="text-2xl font-bold text-green-600">{brandData.mentions}</p>
             <p className="text-xs text-gray-500">Brand Mentions</p>
+            <p className="text-xs text-gray-400 mt-1" title="Total number of AI responses (across all providers) where your brand was mentioned">
+              {responses.length} total responses
+            </p>
           </div>
         </Card>
       </div>
