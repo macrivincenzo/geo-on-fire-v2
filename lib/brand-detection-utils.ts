@@ -113,7 +113,7 @@ export function isAbbreviationOf(short: string, long: string): boolean {
  * Strips markdown formatting from text for cleaner brand matching
  * Removes: **bold**, *italic*, `code`, [links](url), # headers, etc.
  */
-function stripMarkdown(text: string): string {
+export function stripMarkdown(text: string): string {
   return text
     // Remove bold/italic: **text** or *text* or ***text***
     .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
