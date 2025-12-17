@@ -449,10 +449,6 @@ export function StrategicInsightsTab({
   responses,
   brandName
 }: StrategicInsightsTabProps) {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'strategic-insights-tab.tsx:446',message:'StrategicInsightsTab entry',data:{hasBrandData:!!brandData,hasCompetitors:!!competitors,competitorsLength:competitors?.length,hasResponses:!!responses,responsesLength:responses?.length,brandName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
-  
   const insights = useMemo(() => {
     // #region agent log
     console.error('[DEBUG] Before generateStrategicInsights', {

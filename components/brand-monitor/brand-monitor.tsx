@@ -438,10 +438,6 @@ export function BrandMonitor({
   // Find brand data
   const brandData = analysis?.competitors?.find(c => c.isOwn);
   
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'brand-monitor.tsx:439',message:'brandData check',data:{hasBrandData:!!brandData,brandDataKeys:brandData?Object.keys(brandData):null,analysisExists:!!analysis,competitorsExists:!!analysis?.competitors,activeTab:activeResultsTab},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
-  
   return (
     <div className="flex flex-col">
 

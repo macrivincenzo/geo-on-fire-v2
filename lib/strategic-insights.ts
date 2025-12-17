@@ -541,10 +541,6 @@ export function generateStrategicInsights(
   responses: AIResponse[],
   brandName: string
 ): StrategicInsights {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'strategic-insights.ts:510',message:'generateStrategicInsights entry',data:{hasBrandData:!!brandData,brandDataKeys:brandData?Object.keys(brandData):null,competitorsLength:competitors?.length,responsesLength:responses?.length,brandName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
-  
   // Calculate overall health
   let healthScore = 0;
   
