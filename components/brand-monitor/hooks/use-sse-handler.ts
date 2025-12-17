@@ -245,18 +245,6 @@ export function useSSEHandler({ state, dispatch, onCreditsUpdate, onAnalysisComp
 
       case 'complete':
         const completeData = eventData.data as { analysis: any };
-        // #region agent log
-        console.error('[DEBUG] Analysis complete - data structure', {
-          hasAnalysis: !!completeData.analysis,
-          analysisKeys: completeData.analysis ? Object.keys(completeData.analysis) : null,
-          hasCompetitors: !!completeData.analysis?.competitors,
-          competitorsLength: completeData.analysis?.competitors?.length,
-          hasResponses: !!completeData.analysis?.responses,
-          responsesLength: completeData.analysis?.responses?.length,
-          competitorsType: Array.isArray(completeData.analysis?.competitors),
-          responsesType: Array.isArray(completeData.analysis?.responses)
-        });
-        // #endregion
         dispatch({
           type: 'ANALYSIS_COMPLETE',
           payload: completeData.analysis

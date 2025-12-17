@@ -449,42 +449,10 @@ export function StrategicInsightsTab({
   responses,
   brandName
 }: StrategicInsightsTabProps) {
-  const insights = useMemo(() => {
-    // #region agent log
-    console.error('[DEBUG] Before generateStrategicInsights', {
-      brandDataKeys: brandData ? Object.keys(brandData) : null,
-      brandDataVisibilityScore: brandData?.visibilityScore,
-      competitorsType: Array.isArray(competitors),
-      competitorsLength: competitors?.length,
-      responsesType: Array.isArray(responses),
-      responsesLength: responses?.length,
-      brandName
-    });
-    // #endregion
-    
-    try {
-      const result = generateStrategicInsights(brandData, competitors, responses, brandName);
-      // #region agent log
-      console.error('[DEBUG] After generateStrategicInsights success', {
-        hasResult: !!result,
-        resultKeys: result ? Object.keys(result) : null
-      });
-      // #endregion
-      return result;
-    } catch (error: any) {
-      // #region agent log
-      console.error('[DEBUG] generateStrategicInsights ERROR', {
-        errorMessage: error?.message,
-        errorStack: error?.stack,
-        errorName: error?.name,
-        brandData,
-        competitors,
-        responses
-      });
-      // #endregion
-      throw error;
-    }
-  }, [brandData, competitors, responses, brandName]);
+  const insights = useMemo(() => 
+    generateStrategicInsights(brandData, competitors, responses, brandName),
+    [brandData, competitors, responses, brandName]
+  );
   
   return (
     <div className="space-y-6">
