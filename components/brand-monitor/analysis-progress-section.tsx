@@ -218,7 +218,9 @@ export function AnalysisProgressSection({
                                   onRemoveDefaultPrompt(originalIndex);
                                 }
                               }}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-red-50"
+                              className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1"
+                              title="Delete prompt"
+                              aria-label="Delete prompt"
                             >
                               <Trash2 className="w-4 h-4 text-red-600" />
                             </button>
@@ -229,7 +231,9 @@ export function AnalysisProgressSection({
                                 e.stopPropagation();
                                 onRemoveCustomPrompt(prompt);
                               }}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-red-50"
+                              className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1"
+                              title="Delete prompt"
+                              aria-label="Delete prompt"
                             >
                               <Trash2 className="w-4 h-4 text-red-600" />
                             </button>
