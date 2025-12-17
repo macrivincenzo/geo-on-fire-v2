@@ -53,7 +53,7 @@ export function BrandMonitor({
   onCreditsUpdate,
   selectedAnalysis,
   onSaveAnalysis 
-}: BrandMonitorProps = {}) {
+}: BrandMonitorProps) {
   const [state, dispatch] = useReducer(brandMonitorReducer, initialBrandMonitorState);
   const [demoUrl] = useState('example.com');
   const saveAnalysis = useSaveBrandAnalysis();
@@ -70,12 +70,12 @@ export function BrandMonitor({
         hasSavedRef.current = true;
         
         const analysisData = {
-          url: company?.url || url,
-          companyName: company?.name,
-          industry: company?.industry,
+          url: state.company?.url || state.url,
+          companyName: state.company?.name,
+          industry: state.company?.industry,
           analysisData: completedAnalysis,
-          competitors: identifiedCompetitors,
-          prompts: analyzingPrompts,
+          competitors: state.identifiedCompetitors,
+          prompts: state.analyzingPrompts,
           creditsUsed: CREDITS_PER_BRAND_ANALYSIS
         };
         
