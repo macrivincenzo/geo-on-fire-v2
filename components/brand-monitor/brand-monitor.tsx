@@ -540,12 +540,6 @@ export function BrandMonitor({
                 )}
 
                 {activeResultsTab === 'insights' && brandData && analysis?.competitors && analysis?.responses && (
-                  // #region agent log
-                  (() => {
-                    fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'brand-monitor.tsx:538',message:'Before StrategicInsightsTab render',data:{brandDataType:typeof brandData,competitorsLength:analysis.competitors?.length,responsesLength:analysis.responses?.length,brandName:company?.name || 'Your Brand'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-                    return null;
-                  })(),
-                  // #endregion
                   <StrategicInsightsTab
                     brandData={brandData}
                     competitors={analysis.competitors}
