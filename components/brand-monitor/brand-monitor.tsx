@@ -365,25 +365,50 @@ export function BrandMonitor({
       const mainProducts = company.scrapedData?.mainProducts || [];
       const currentYear = new Date().getFullYear();
       
-      // Use keywords if available, otherwise fall back to mainProducts, then industry
-      const primaryServices = keywords.length > 0 
-        ? keywords.slice(0, 3) 
-        : mainProducts.length > 0 
-          ? mainProducts.slice(0, 3)
-          : [];
+      // Filter out generic terms that don't make good prompts
+      const genericTerms = ['support', 'service', 'services', 'tool', 'tools', 'solution', 'solutions', 
+                            'platform', 'platforms', 'company', 'companies', 'provider', 'providers',
+                            'customer', 'customers', 'business', 'businesses'];
       
-      // If we have specific services/keywords, create prompts around them
+      // Use keywords if available, otherwise fall back to mainProducts
+      let primaryServices: string[] = [];
+      
+      if (keywords.length > 0) {
+        // Filter out generic terms and get all relevant keywords
+        primaryServices = keywords
+          .filter(k => {
+            const kLower = k.toLowerCase();
+            return !genericTerms.some(term => kLower.includes(term) || term.includes(kLower));
+          })
+          .slice(0, 6); // Cap at 6 keywords
+      } else if (mainProducts.length > 0) {
+        primaryServices = mainProducts
+          .filter(p => {
+            const pLower = p.toLowerCase();
+            return !genericTerms.some(term => pLower.includes(term) || term.includes(pLower));
+          })
+          .slice(0, 6);
+      }
+      
+      // If we have specific services/keywords, create prompts for each (up to 6)
       if (primaryServices.length > 0) {
-        const service1 = primaryServices[0];
-        const service2 = primaryServices[1] || service1;
-        const service3 = primaryServices[2] || service1;
-        
-        return [
-          `Best ${service1} providers in ${currentYear}?`,
-          `Top ${service2} services for businesses?`,
-          `Most popular ${service3} platforms today?`,
-          `Recommended ${service1} solutions for developers?`
+        const prompts: string[] = [];
+        const promptTemplates = [
+          (service: string) => `Best ${service} providers in ${currentYear}?`,
+          (service: string) => `Top ${service} services for businesses?`,
+          (service: string) => `Most popular ${service} platforms today?`,
+          (service: string) => `Recommended ${service} solutions?`,
+          (service: string) => `Leading ${service} companies?`,
+          (service: string) => `Best ${service} for startups?`
         ];
+        
+        // Generate one prompt per keyword, rotating through templates
+        primaryServices.forEach((service, index) => {
+          const templateIndex = index % promptTemplates.length;
+          prompts.push(promptTemplates[templateIndex](service));
+        });
+        
+        return prompts.slice(0, 6); // Cap at 6 prompts
       }
       
       // Fallback to generic prompts based on industry/service type
