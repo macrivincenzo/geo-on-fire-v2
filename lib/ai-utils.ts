@@ -697,12 +697,12 @@ export async function analyzeCompetitors(
   });
 
   // Process all responses
-  responses.forEach(response => {
+  responses.forEach((response, responseIndex) => {
     // Track which companies were mentioned in this response
     const mentionedInResponse = new Set<string>();
     
     // Process rankings if available
-    if (response.rankings) {
+    if (response.rankings && response.rankings.length > 0) {
       response.rankings.forEach(ranking => {
         // Use smart matching to find the tracked company this ranking refers to
         const matchedCompany = findMatchingTrackedCompany(ranking.company, trackedCompanies);
@@ -724,15 +724,42 @@ export async function analyzeCompetitors(
       });
     }
 
-    // Count brand mentions (only if not already counted in rankings)
+    // Count brand mentions - CRITICAL: Always count if brandMentioned is true, even if not in rankings
+    // This ensures we capture all mentions, whether they're in structured rankings or just detected in text
     const brandMatchedCompany = findMatchingTrackedCompany(company.name, trackedCompanies);
-    if (response.brandMentioned && brandMatchedCompany && !mentionedInResponse.has(brandMatchedCompany)) {
-      const brandData = competitorMap.get(brandMatchedCompany)!;
-      brandData.mentions++;
-      if (response.brandPosition) {
-        brandData.positions.push(response.brandPosition);
+    if (response.brandMentioned && brandMatchedCompany) {
+      // Only count if not already counted via rankings
+      if (!mentionedInResponse.has(brandMatchedCompany)) {
+        const brandData = competitorMap.get(brandMatchedCompany)!;
+        brandData.mentions++;
+        
+        // Use brandPosition if available, otherwise estimate from response
+        if (response.brandPosition) {
+          brandData.positions.push(response.brandPosition);
+        } else if (response.rankings && response.rankings.length > 0) {
+          // If brand is mentioned but not in rankings, use a high position (not ranked)
+          // This won't affect average position calculation negatively
+        }
+        
+        brandData.sentiments.push(response.sentiment);
       }
-      brandData.sentiments.push(response.sentiment);
+    }
+
+    // Also count competitors that are mentioned in the response.competitors array but not in rankings
+    // This ensures we capture all competitor mentions, not just those in structured rankings
+    if (response.competitors && response.competitors.length > 0) {
+      response.competitors.forEach(competitorName => {
+        const matchedCompetitor = findMatchingTrackedCompany(competitorName, trackedCompanies);
+        
+        if (matchedCompetitor && !mentionedInResponse.has(matchedCompetitor)) {
+          const competitorData = competitorMap.get(matchedCompetitor)!;
+          competitorData.mentions++;
+          // Competitors mentioned but not ranked get position 99 (high number = not ranked)
+          competitorData.positions.push(99);
+          competitorData.sentiments.push('neutral');
+          mentionedInResponse.add(matchedCompetitor);
+        }
+      });
     }
   });
 
@@ -893,7 +920,7 @@ export async function analyzeCompetitorsByProvider(
     const mentionedInResponse = new Set<string>();
 
     // Process rankings
-    if (response.rankings) {
+    if (response.rankings && response.rankings.length > 0) {
       response.rankings.forEach(ranking => {
         // Use smart matching to find the tracked company
         const matchedCompany = findMatchingTrackedCompany(ranking.company, trackedCompanies);
@@ -915,15 +942,34 @@ export async function analyzeCompetitorsByProvider(
       });
     }
 
-    // Count brand mentions (only if not already counted in rankings)
+    // Count brand mentions - CRITICAL: Always count if brandMentioned is true
+    // This ensures we capture all mentions, whether they're in structured rankings or just detected in text
     const brandMatchedCompany = findMatchingTrackedCompany(company.name, trackedCompanies);
-    if (response.brandMentioned && brandMatchedCompany && !mentionedInResponse.has(brandMatchedCompany)) {
-      const brandData = providerMap.get(brandMatchedCompany)!;
-      brandData.mentions++;
-      if (response.brandPosition) {
-        brandData.positions.push(response.brandPosition);
+    if (response.brandMentioned && brandMatchedCompany) {
+      // Only count if not already counted via rankings
+      if (!mentionedInResponse.has(brandMatchedCompany)) {
+        const brandData = providerMap.get(brandMatchedCompany)!;
+        brandData.mentions++;
+        if (response.brandPosition) {
+          brandData.positions.push(response.brandPosition);
+        }
+        brandData.sentiments.push(response.sentiment);
       }
-      brandData.sentiments.push(response.sentiment);
+    }
+
+    // Also count competitors that are mentioned in the response.competitors array but not in rankings
+    if (response.competitors && response.competitors.length > 0) {
+      response.competitors.forEach(competitorName => {
+        const matchedCompetitor = findMatchingTrackedCompany(competitorName, trackedCompanies);
+        
+        if (matchedCompetitor && !mentionedInResponse.has(matchedCompetitor)) {
+          const competitorData = providerMap.get(matchedCompetitor)!;
+          competitorData.mentions++;
+          competitorData.positions.push(99); // Not ranked
+          competitorData.sentiments.push('neutral');
+          mentionedInResponse.add(matchedCompetitor);
+        }
+      });
     }
   });
 

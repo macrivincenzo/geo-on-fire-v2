@@ -329,6 +329,27 @@ export async function performAnalysis({
   // Analyze competitors from all responses
   const competitorRankings = await analyzeCompetitors(company, responses, competitors);
 
+  // Validate data consistency (in development/debug mode)
+  if (process.env.NODE_ENV === 'development') {
+    const { validateAnalysisData } = await import('./data-validation');
+    const brandData = competitorRankings.find(c => c.isOwn);
+    if (brandData) {
+      const validation = validateAnalysisData(
+        competitorRankings,
+        brandData,
+        responses,
+        company.name,
+        undefined // providerRankings not available yet
+      );
+      if (!validation.isValid || validation.warnings.length > 0) {
+        console.warn('Data validation warnings:', {
+          errors: validation.errors,
+          warnings: validation.warnings
+        });
+      }
+    }
+  }
+
   // Send scoring progress for each competitor
   for (let i = 0; i < competitorRankings.length; i++) {
     await sendEvent({
