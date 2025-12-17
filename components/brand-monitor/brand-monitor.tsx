@@ -359,15 +359,45 @@ export function BrandMonitor({
       onCreditsUpdate();
     }
 
-    // Collect all prompts (default + custom)
-    const serviceType = detectServiceType(company);
-    const currentYear = new Date().getFullYear();
-    const defaultPrompts = [
-      `Best ${serviceType}s in ${currentYear}?`,
-      `Top ${serviceType}s for startups?`,
-      `Most popular ${serviceType}s today?`,
-      `Recommended ${serviceType}s for developers?`
-    ].filter((_, index) => !removedDefaultPrompts.includes(index));
+    // Collect all prompts (default + custom) - use company keywords/services
+    const generateContextualPrompts = (company: Company): string[] => {
+      const keywords = company.scrapedData?.keywords || [];
+      const mainProducts = company.scrapedData?.mainProducts || [];
+      const currentYear = new Date().getFullYear();
+      
+      // Use keywords if available, otherwise fall back to mainProducts, then industry
+      const primaryServices = keywords.length > 0 
+        ? keywords.slice(0, 3) 
+        : mainProducts.length > 0 
+          ? mainProducts.slice(0, 3)
+          : [];
+      
+      // If we have specific services/keywords, create prompts around them
+      if (primaryServices.length > 0) {
+        const service1 = primaryServices[0];
+        const service2 = primaryServices[1] || service1;
+        const service3 = primaryServices[2] || service1;
+        
+        return [
+          `Best ${service1} providers in ${currentYear}?`,
+          `Top ${service2} services for businesses?`,
+          `Most popular ${service3} platforms today?`,
+          `Recommended ${service1} solutions for developers?`
+        ];
+      }
+      
+      // Fallback to generic prompts based on industry/service type
+      const serviceType = detectServiceType(company);
+      return [
+        `Best ${serviceType}s in ${currentYear}?`,
+        `Top ${serviceType}s for startups?`,
+        `Most popular ${serviceType}s today?`,
+        `Recommended ${serviceType}s for developers?`
+      ];
+    };
+    
+    const defaultPrompts = generateContextualPrompts(company)
+      .filter((_, index) => !removedDefaultPrompts.includes(index));
     
     const allPrompts = [...defaultPrompts, ...customPrompts];
     
