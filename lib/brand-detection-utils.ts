@@ -166,10 +166,43 @@ export function smartBrandMatch(text: string, brandName: string): {
   // ============================================================
   // 1. EXACT MATCH (highest confidence)
   // ============================================================
+  // First try exact match with word boundaries
   const exactPattern = new RegExp(`\\b${escapeRegex(brandLower)}\\b`, 'i');
   if (exactPattern.test(cleanText)) {
     const match = cleanText.match(exactPattern);
     return { found: true, matchedText: match?.[0] || brandName, matchType: 'exact', confidence: 1.0 };
+  }
+  
+  // Also try exact match when brand is followed by special characters (+, &, etc.)
+  // This handles cases like "Java Burn + Control Coffee" where brand is "Java Burn"
+  // Pattern: brand name followed by optional whitespace and then special char or capital letter
+  const exactWithSpecialChars = new RegExp(`\\b${escapeRegex(brandLower)}(?:\\s*[+&]|\\s+[A-Z]|\\s*[+&]\\s*[A-Z])`, 'i');
+  if (exactWithSpecialChars.test(cleanText)) {
+    // Extract just the brand name part
+    const match = cleanText.match(new RegExp(`\\b${escapeRegex(brandLower)}`, 'i'));
+    if (match) {
+      // #region agent log
+      if (process.env.NODE_ENV === 'development') {
+        fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'brand-detection-utils.ts:183',message:'Brand matched with special chars',data:{brandName,brandLower,matchedText:match[0],textSample:cleanText.substring(0,100)},timestamp:Date.now(),sessionId:'debug-session',runId:'brand-detection-fix',hypothesisId:'A'})}).catch(()=>{});
+      }
+      // #endregion
+      return { found: true, matchedText: match[0], matchType: 'exact', confidence: 1.0 };
+    }
+  }
+  
+  // Additional check: brand name as complete phrase even when followed by special chars
+  // This catches "Java Burn + Control Coffee" by matching "Java Burn" as a complete phrase
+  const brandPhrasePattern = new RegExp(`(?:^|\\s)${escapeRegex(brandLower)}(?:\\s*[+&]|\\s+[^\\s]|$)`, 'i');
+  if (brandPhrasePattern.test(cleanText)) {
+    const match = cleanText.match(new RegExp(`\\b${escapeRegex(brandLower)}`, 'i'));
+    if (match) {
+      // #region agent log
+      if (process.env.NODE_ENV === 'development') {
+        fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'brand-detection-utils.ts:195',message:'Brand matched as phrase with special chars',data:{brandName,brandLower,matchedText:match[0],textSample:cleanText.substring(0,100)},timestamp:Date.now(),sessionId:'debug-session',runId:'brand-detection-fix',hypothesisId:'A'})}).catch(()=>{});
+      }
+      // #endregion
+      return { found: true, matchedText: match[0], matchType: 'exact', confidence: 0.95 };
+    }
   }
   
   // ============================================================
@@ -205,17 +238,31 @@ export function smartBrandMatch(text: string, brandName: string): {
   // 3. CONTAINS MATCH (BIDIRECTIONAL) - UNIVERSAL!
   // "Google Cloud" should match "Google Cloud Platform"
   // "Best Bakery" should match "Best Bakery Shop"
+  // "Java Burn" should match "Java Burn + Control Coffee"
   // ============================================================
   // Strategy: Find phrases in text that START with the brand name
   if (brandWords.length >= 1 && brandClean.length >= 3) {
     // Look for brand as start of a longer phrase
-    const containsPattern = new RegExp(`\\b${escapeRegex(brandClean)}(?:\\s+\\w+)*\\b`, 'gi');
+    // Updated pattern to handle special characters like +, &, etc.
+    const containsPattern = new RegExp(`\\b${escapeRegex(brandClean)}(?:\\s*[+&]\\s*\\w+|\\s+[\\w+&]+)*`, 'gi');
     const containsMatches = cleanText.match(containsPattern);
     if (containsMatches && containsMatches.length > 0) {
       // Find the best (longest) match
       const bestMatch = containsMatches.reduce((a, b) => a.length > b.length ? a : b);
       if (bestMatch.toLowerCase() !== brandLower) {
         return { found: true, matchedText: bestMatch, matchType: 'contains', confidence: 0.88 };
+      }
+    }
+    
+    // Also try a simpler pattern: brand name followed by any characters (including special chars)
+    // This catches cases like "Java Burn + Control Coffee"
+    const simpleContainsPattern = new RegExp(`\\b${escapeRegex(brandClean)}(?:\\s*[+&]|\\s+[^\\s]+)*`, 'gi');
+    const simpleMatches = cleanText.match(simpleContainsPattern);
+    if (simpleMatches && simpleMatches.length > 0) {
+      const bestMatch = simpleMatches.reduce((a, b) => a.length > b.length ? a : b);
+      // Only return if it's actually longer than just the brand name
+      if (bestMatch.toLowerCase() !== brandLower && bestMatch.length > brandLower.length) {
+        return { found: true, matchedText: bestMatch.trim(), matchType: 'contains', confidence: 0.85 };
       }
     }
   }

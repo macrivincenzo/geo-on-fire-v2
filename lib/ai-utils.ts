@@ -572,6 +572,12 @@ Return a simple analysis:
     const brandDetectionResult = detectBrandMention(text, brandName, brandDetectionOptions);
     const brandMentioned = object.analysis.brandMentioned || brandDetectionResult.mentioned;
     
+    // #region agent log
+    if (process.env.NODE_ENV === 'development') {
+      fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ai-utils.ts:576',message:'Brand detection result',data:{brandName,provider,aiSaysMentioned:object.analysis.brandMentioned,detectionSaysMentioned:brandDetectionResult.mentioned,finalBrandMentioned:brandMentioned,confidence:brandDetectionResult.confidence,textSample:text.substring(0,200)},timestamp:Date.now(),sessionId:'debug-session',runId:'brand-detection-fix',hypothesisId:'B'})}).catch(()=>{});
+    }
+    // #endregion
+    
     // Detect all competitor mentions with their specific options
     const competitorDetectionResults = new Map<string, any>();
     competitors.forEach(competitor => {
@@ -771,6 +777,13 @@ export async function analyzeCompetitors(
     const brandMatchedCompany = findMatchingTrackedCompany(company.name, trackedCompanies);
     // Safety check: if matching fails, use company.name directly (it should always be in trackedCompanies)
     const brandToCount = brandMatchedCompany || company.name;
+    
+    // #region agent log
+    if (process.env.NODE_ENV === 'development') {
+      fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ai-utils.ts:780',message:'Checking brand mention for counting',data:{brandName:company.name,brandToCount,brandMentioned:response.brandMentioned,isTracked:trackedCompanies.has(brandToCount),alreadyCounted:mentionedInResponse.has(brandToCount),responseIndex,prompt:response.prompt?.substring(0,50)},timestamp:Date.now(),sessionId:'debug-session',runId:'brand-detection-fix',hypothesisId:'C'})}).catch(()=>{});
+    }
+    // #endregion
+    
     if (response.brandMentioned && trackedCompanies.has(brandToCount)) {
       // Only count if not already counted via rankings
       if (!mentionedInResponse.has(brandToCount)) {
