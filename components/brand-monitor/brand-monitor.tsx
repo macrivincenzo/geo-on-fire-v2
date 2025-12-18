@@ -382,11 +382,11 @@ export function BrandMonitor({
       if (isMarketplace) {
         const marketplacePrompts = [
           `Best marketplace to buy and sell online businesses in ${currentYear}?`,
-          `Top platforms for buying and selling websites?`,
-          `Most popular marketplaces for online businesses today?`,
-          `Recommended platforms to sell digital assets?`,
-          `Leading marketplaces for buying websites and apps?`,
-          `Best marketplace for buying and selling online businesses?`
+          `Top platforms for buying and selling websites and digital assets?`,
+          `Most popular marketplaces for online business transactions today?`,
+          `Recommended platforms to sell websites, apps, and online businesses?`,
+          `Leading marketplaces for entrepreneurs to buy established online businesses?`,
+          `Best platform for buying and selling profitable websites and apps?`
         ];
         return marketplacePrompts.slice(0, 6);
       }

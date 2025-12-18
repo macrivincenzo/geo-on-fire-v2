@@ -90,13 +90,33 @@ export function AnalysisProgressSection({
   const generateContextualPrompts = (company: Company): string[] => {
     const keywords = company.scrapedData?.keywords || [];
     const mainProducts = company.scrapedData?.mainProducts || [];
-    const brandName = company.name;
+    const description = (company.scrapedData?.description || company.description || '').toLowerCase();
     const currentYear = new Date().getFullYear();
+    
+    // Detect if this is a marketplace business (where keywords refer to items being sold, not services provided)
+    const isMarketplace = description.includes('marketplace') || 
+                         description.includes('buy and sell') ||
+                         description.includes('buying and selling') ||
+                         (company.industry || '').toLowerCase().includes('marketplace') ||
+                         keywords.some(k => k.toLowerCase() === 'marketplace');
     
     // Filter out generic terms that don't make good prompts
     const genericTerms = ['support', 'service', 'services', 'tool', 'tools', 'solution', 'solutions', 
                           'platform', 'platforms', 'company', 'companies', 'provider', 'providers',
                           'customer', 'customers', 'business', 'businesses'];
+    
+    // For marketplace businesses, generate prompts about the marketplace itself, not the items sold
+    if (isMarketplace) {
+      const marketplacePrompts = [
+        `Best marketplace to buy and sell online businesses in ${currentYear}?`,
+        `Top platforms for buying and selling websites and digital assets?`,
+        `Most popular marketplaces for online business transactions today?`,
+        `Recommended platforms to sell websites, apps, and online businesses?`,
+        `Leading marketplaces for entrepreneurs to buy established online businesses?`,
+        `Best platform for buying and selling profitable websites and apps?`
+      ];
+      return marketplacePrompts.slice(0, 6);
+    }
     
     // Use keywords if available, otherwise fall back to mainProducts
     let primaryServices: string[] = [];
@@ -106,6 +126,10 @@ export function AnalysisProgressSection({
       primaryServices = keywords
         .filter(k => {
           const kLower = k.toLowerCase();
+          // Also filter out marketplace-related terms that aren't the service itself
+          if (isMarketplace && (kLower === 'websites' || kLower === 'apps' || kLower === 'digital assets')) {
+            return false; // These are items sold, not services provided
+          }
           return !genericTerms.some(term => kLower.includes(term) || term.includes(kLower));
         })
         .slice(0, 6); // Cap at 6 keywords
