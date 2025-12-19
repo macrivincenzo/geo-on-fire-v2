@@ -572,9 +572,37 @@ Return a simple analysis:
     const brandDetectionResult = detectBrandMention(text, brandName, brandDetectionOptions);
     const brandMentioned = object.analysis.brandMentioned || brandDetectionResult.mentioned;
     
-    // #region agent log
+    // #region agent log - Production-safe logging
+    // Always log to console (visible in Vercel logs) + debug endpoint in dev
+    const logData = {
+      location: 'ai-utils.ts:576',
+      message: 'Brand detection result',
+      data: {
+        brandName,
+        provider,
+        aiSaysMentioned: object.analysis.brandMentioned,
+        detectionSaysMentioned: brandDetectionResult.mentioned,
+        finalBrandMentioned: brandMentioned,
+        confidence: brandDetectionResult.confidence,
+        matchesCount: brandDetectionResult.matches?.length || 0,
+        matches: brandDetectionResult.matches?.slice(0, 3).map(m => ({ text: m.text, confidence: m.confidence })) || [],
+        textSample: text.substring(0, 200),
+        textLength: text.length,
+        hasJavaBurn: text.toLowerCase().includes('java burn'),
+        hasJavaBurnPlus: text.toLowerCase().includes('java burn +'),
+      },
+      timestamp: Date.now(),
+      sessionId: 'debug-session',
+      runId: 'brand-detection-fix',
+      hypothesisId: 'B'
+    };
+    
+    // Always log to console (works in production)
+    console.log('[BRAND-DETECTION]', JSON.stringify(logData, null, 2));
+    
+    // Also send to debug endpoint in development
     if (process.env.NODE_ENV === 'development') {
-      fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ai-utils.ts:576',message:'Brand detection result',data:{brandName,provider,aiSaysMentioned:object.analysis.brandMentioned,detectionSaysMentioned:brandDetectionResult.mentioned,finalBrandMentioned:brandMentioned,confidence:brandDetectionResult.confidence,textSample:text.substring(0,200)},timestamp:Date.now(),sessionId:'debug-session',runId:'brand-detection-fix',hypothesisId:'B'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(logData)}).catch(()=>{});
     }
     // #endregion
     
@@ -778,9 +806,59 @@ export async function analyzeCompetitors(
     // Safety check: if matching fails, use company.name directly (it should always be in trackedCompanies)
     const brandToCount = brandMatchedCompany || company.name;
     
-    // #region agent log
+    // #region agent log - Production-safe logging
+    const countingLog = {
+      location: 'ai-utils.ts:780',
+      message: 'Checking brand mention for counting',
+      data: {
+        brandName: company.name,
+        brandToCount,
+        brandMentioned: response.brandMentioned,
+        isTracked: trackedCompanies.has(brandToCount),
+        alreadyCounted: mentionedInResponse.has(brandToCount),
+        responseIndex,
+        provider: response.provider,
+        prompt: response.prompt?.substring(0, 50),
+        hasRankings: !!response.rankings?.length,
+      },
+      timestamp: Date.now(),
+      sessionId: 'debug-session',
+      runId: 'brand-detection-fix',
+      hypothesisId: 'C'
+    };
+    console.log('[BRAND-COUNTING]', JSON.stringify(countingLog, null, 2));
     if (process.env.NODE_ENV === 'development') {
-      fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ai-utils.ts:780',message:'Checking brand mention for counting',data:{brandName:company.name,brandToCount,brandMentioned:response.brandMentioned,isTracked:trackedCompanies.has(brandToCount),alreadyCounted:mentionedInResponse.has(brandToCount),responseIndex,prompt:response.prompt?.substring(0,50)},timestamp:Date.now(),sessionId:'debug-session',runId:'brand-detection-fix',hypothesisId:'C'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(countingLog)}).catch(()=>{});
+    }
+    // #endregion
+    
+    // #region agent log - Check if brand should have been detected
+    if (!response.brandMentioned) {
+      const textLower = response.response?.toLowerCase() || '';
+      const brandLower = company.name.toLowerCase();
+      if (textLower.includes(brandLower) || textLower.includes(brandLower + ' +')) {
+        const missedLog = {
+          location: 'ai-utils.ts:835',
+          message: 'POTENTIAL MISSED DETECTION - Brand in text but brandMentioned=false',
+          data: {
+            responseIndex,
+            provider: response.provider,
+            brandName: company.name,
+            textContainsBrand: textLower.includes(brandLower),
+            textContainsCompound: textLower.includes(brandLower + ' +'),
+            textSample: response.response?.substring(0, 300) || '',
+            prompt: response.prompt?.substring(0, 50),
+          },
+          timestamp: Date.now(),
+          sessionId: 'debug-session',
+          runId: 'brand-detection-fix',
+          hypothesisId: 'A'
+        };
+        console.log('[MISSED-DETECTION]', JSON.stringify(missedLog, null, 2));
+        if (process.env.NODE_ENV === 'development') {
+          fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(missedLog)}).catch(()=>{});
+        }
+      }
     }
     // #endregion
     
@@ -791,16 +869,27 @@ export async function analyzeCompetitors(
         if (brandData) {
           brandData.mentions++;
           
-          // #region agent log
-          if (process.env.NODE_ENV === 'development') {
-            console.log('[DEBUG] Brand counted from brandMentioned flag', {
+          // #region agent log - Production-safe logging
+          const countedLog = {
+            location: 'ai-utils.ts:796',
+            message: 'Brand counted from brandMentioned flag',
+            data: {
               responseIndex,
               provider: response.provider,
               prompt: response.prompt?.substring(0, 50),
               wasInRankings: mentionedInResponse.has(brandToCount),
               totalMentions: brandData.mentions,
-              brandMatched: brandMatchedCompany || 'used company.name directly'
-            });
+              brandMatched: brandMatchedCompany || 'used company.name directly',
+              brandName: company.name,
+            },
+            timestamp: Date.now(),
+            sessionId: 'debug-session',
+            runId: 'brand-detection-fix',
+            hypothesisId: 'C'
+          };
+          console.log('[BRAND-COUNTED]', JSON.stringify(countedLog, null, 2));
+          if (process.env.NODE_ENV === 'development') {
+            fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(countedLog)}).catch(()=>{});
           }
           // #endregion
           
@@ -816,13 +905,26 @@ export async function analyzeCompetitors(
           mentionedInResponse.add(brandToCount);
         }
       } else {
-        // #region agent log
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[DEBUG] Brand NOT counted (already in rankings)', {
+        // #region agent log - Production-safe logging
+        const notCountedLog = {
+          location: 'ai-utils.ts:819',
+          message: 'Brand NOT counted (already in rankings)',
+          data: {
             responseIndex,
             provider: response.provider,
-            prompt: response.prompt?.substring(0, 50)
-          });
+            prompt: response.prompt?.substring(0, 50),
+            brandName: company.name,
+            brandMentioned: response.brandMentioned,
+            alreadyCounted: true,
+          },
+          timestamp: Date.now(),
+          sessionId: 'debug-session',
+          runId: 'brand-detection-fix',
+          hypothesisId: 'C'
+        };
+        console.log('[BRAND-NOT-COUNTED]', JSON.stringify(notCountedLog, null, 2));
+        if (process.env.NODE_ENV === 'development') {
+          fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(notCountedLog)}).catch(()=>{});
         }
         // #endregion
       }
@@ -850,10 +952,12 @@ export async function analyzeCompetitors(
   const totalResponses = responses.length;
   const competitors: CompetitorRanking[] = [];
 
-  // #region agent log
-  if (process.env.NODE_ENV === 'development') {
-    const brandData = competitorMap.get(company.name);
-    console.log('[DEBUG] Final brand mention calculation', {
+  // #region agent log - Production-safe logging
+  const brandData = competitorMap.get(company.name);
+  const finalSummaryLog = {
+    location: 'ai-utils.ts:955',
+    message: 'Final brand mention calculation',
+    data: {
       brandName: company.name,
       totalMentions: brandData?.mentions || 0,
       totalResponses,
@@ -867,8 +971,21 @@ export async function analyzeCompetitors(
           brandMentionedCount: promptResponses.filter(r => r.brandMentioned).length,
           providers: promptResponses.map(r => r.provider)
         };
-      })
-    });
+      }),
+      discrepancy: {
+        mentionsInData: brandData?.mentions || 0,
+        responsesWithBrandFlag: responses.filter(r => r.brandMentioned).length,
+        difference: (brandData?.mentions || 0) - responses.filter(r => r.brandMentioned).length,
+      }
+    },
+    timestamp: Date.now(),
+    sessionId: 'debug-session',
+    runId: 'brand-detection-fix',
+    hypothesisId: 'D'
+  };
+  console.log('[FINAL-SUMMARY]', JSON.stringify(finalSummaryLog, null, 2));
+  if (process.env.NODE_ENV === 'development') {
+    fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(finalSummaryLog)}).catch(()=>{});
   }
   // #endregion
 

@@ -663,6 +663,32 @@ export function detectBrandMention(
   // FIRST: Try smart brand matching (handles abbreviations, parentheses, etc.)
   // Pass original text - smartBrandMatch handles markdown stripping internally
   const smartMatch = smartBrandMatch(text, brandName);
+  
+  // #region agent log - Production-safe logging
+  const smartMatchLog = {
+    location: 'brand-detection-utils.ts:665',
+    message: 'Smart brand match result',
+    data: {
+      brandName,
+      found: smartMatch.found,
+      matchType: smartMatch.matchType,
+      confidence: smartMatch.confidence,
+      matchedText: smartMatch.matchedText,
+      textSample: text.substring(0, 150),
+      hasBrandInText: text.toLowerCase().includes(brandName.toLowerCase()),
+      hasCompoundPattern: text.toLowerCase().includes(brandName.toLowerCase() + ' +'),
+    },
+    timestamp: Date.now(),
+    sessionId: 'debug-session',
+    runId: 'brand-detection-fix',
+    hypothesisId: 'A'
+  };
+  console.log('[SMART-MATCH]', JSON.stringify(smartMatchLog, null, 2));
+  if (process.env.NODE_ENV === 'development') {
+    fetch('http://127.0.0.1:7242/ingest/46fc0ebb-94f8-45d0-854e-584419eef9c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(smartMatchLog)}).catch(()=>{});
+  }
+  // #endregion
+  
   if (smartMatch.found && smartMatch.matchedText) {
     const matchIndex = cleanedText.toLowerCase().indexOf(smartMatch.matchedText.toLowerCase());
     matches.push({
