@@ -57,28 +57,6 @@ export async function POST(request: NextRequest) {
       throw new ExternalServiceError('Unable to verify credits. Please try again', 'autumn');
     }
 
-    // Track usage (10 credits)
-    try {
-      console.log('[Brand Monitor] Tracking usage - Customer ID:', sessionResponse.user.id, 'Count:', CREDITS_PER_BRAND_ANALYSIS);
-      const trackResult = await autumn.track({
-        customer_id: sessionResponse.user.id,
-        feature_id: FEATURE_ID_MESSAGES,
-        count: CREDITS_PER_BRAND_ANALYSIS,
-      });
-      console.log('[Brand Monitor] Track result:', JSON.stringify(trackResult, null, 2));
-    } catch (err) {
-      console.error('[Brand Monitor] Failed to track usage:', err);
-      // Log more details about the error
-      if (err instanceof Error) {
-        console.error('[Brand Monitor] Error details:', {
-          message: err.message,
-          stack: err.stack,
-          response: (err as any).response?.data
-        });
-      }
-      throw new ExternalServiceError('Unable to process credit deduction. Please try again', 'autumn');
-    }
-
     const { company, prompts: customPrompts, competitors: userSelectedCompetitors, useWebSearch = false } = await request.json();
 
     if (!company || !company.name) {
@@ -87,17 +65,24 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Track usage with Autumn (deduct credits)
+    // Track usage with Autumn (deduct credits) - ONLY ONCE
     try {
-      console.log('[Brand Monitor] Recording usage - Customer ID:', sessionResponse.user.id);
-      await autumn.track({
+      console.log('[Brand Monitor] Tracking usage - Customer ID:', sessionResponse.user.id, 'Count:', CREDITS_PER_BRAND_ANALYSIS);
+      const trackResult = await autumn.track({
         customer_id: sessionResponse.user.id,
         feature_id: FEATURE_ID_MESSAGES,
         count: CREDITS_PER_BRAND_ANALYSIS,
       });
-      console.log('[Brand Monitor] Usage recorded successfully');
+      console.log('[Brand Monitor] Usage tracked successfully:', JSON.stringify(trackResult, null, 2));
     } catch (err) {
-      console.error('Failed to track usage:', err);
+      console.error('[Brand Monitor] Failed to track usage:', err);
+      if (err instanceof Error) {
+        console.error('[Brand Monitor] Error details:', {
+          message: err.message,
+          stack: err.stack,
+          response: (err as any).response?.data
+        });
+      }
       throw new ExternalServiceError('Unable to process credit deduction. Please try again', 'autumn');
     }
 
