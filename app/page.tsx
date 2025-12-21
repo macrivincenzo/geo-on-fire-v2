@@ -75,68 +75,36 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gray-50 rounded-[30px] p-16">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-zinc-900 mb-4">
-                Monitor Your Brand Visibility
+              <h2 className="text-4xl font-bold mb-4">
+                <span className="bg-gradient-to-tr from-orange-600 to-orange-400 bg-clip-text text-transparent">
+                  Simple Pay-As-You-Go Pricing
+                </span>
               </h2>
               <p className="text-xl text-zinc-600">
-                Choose the plan that fits your monitoring needs
+                No subscriptions. No complicated plans. Just simple credits for brand analysis.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Starter */}
+            {/* Free Trial */}
             <div className="bg-white p-8 rounded-[20px] border border-zinc-200 animate-fade-in-up animation-delay-400 hover:scale-105 transition-all duration-200">
-              <h3 className="text-2xl font-bold mb-2">Starter</h3>
-              <p className="text-zinc-600 mb-6">Perfect for personal brands</p>
+              <h3 className="text-2xl font-bold mb-2">Free Trial</h3>
+              <p className="text-zinc-600 mb-6">Try it out</p>
               <div className="mb-6">
                 <span className="text-4xl font-bold">$0</span>
-                <span className="text-zinc-600">/month</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  10 brand analyses/month
+                  1 free brand analysis
                 </li>
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Basic AI providers
-                </li>
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Email reports
-                </li>
-              </ul>
-              <Link
-                href="/register"
-                className="btn-firecrawl-outline w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
-              >
-                Start free
-              </Link>
-            </div>
-
-            {/* Pro - Featured */}
-            <div className="bg-white p-8 rounded-[20px] border-2 border-orange-500 relative animate-fade-in-up animation-delay-600 hover:scale-105 transition-all duration-200">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                Most Popular
-              </div>
-              <h3 className="text-2xl font-bold mb-2">Pro</h3>
-              <p className="text-zinc-600 mb-6">For growing businesses</p>
-              <div className="mb-6">
-                <span className="text-4xl font-bold">$49</span>
-                <span className="text-zinc-600">/month</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Unlimited brand analyses
+                  10 credits on signup
                 </li>
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,53 +112,85 @@ export default function Home() {
                   </svg>
                   All AI providers
                 </li>
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Real-time alerts
-                </li>
               </ul>
               <Link
                 href="/register"
-                className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
+                className="btn-firecrawl-outline w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
               >
-                Start free trial
+                Start Free
               </Link>
             </div>
 
-            {/* Enterprise */}
-            <div className="bg-white p-8 rounded-[20px] border border-zinc-200 animate-fade-in-up animation-delay-800 hover:scale-105 transition-all duration-200">
-              <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
-              <p className="text-zinc-600 mb-6">For agencies & large brands</p>
+            {/* Single Analysis - Featured */}
+            <div className="bg-white p-8 rounded-[20px] border-2 border-orange-500 relative animate-fade-in-up animation-delay-600 hover:scale-105 transition-all duration-200">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                Most Popular
+              </div>
+              <h3 className="text-2xl font-bold mb-2">Single Analysis</h3>
+              <p className="text-zinc-600 mb-6">One-time purchase</p>
               <div className="mb-6">
-                <span className="text-4xl font-bold">Custom</span>
+                <span className="text-4xl font-bold">$49</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Multiple brands
+                  50 credits (5 analyses)
                 </li>
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  API access
+                  No expiration
                 </li>
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  White-label options
+                  Full AI coverage
                 </li>
               </ul>
               <Link
-                href="/contact"
+                href="/register"
+                className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
+              >
+                Buy Now
+              </Link>
+            </div>
+
+            {/* Credit Pack */}
+            <div className="bg-white p-8 rounded-[20px] border border-zinc-200 animate-fade-in-up animation-delay-800 hover:scale-105 transition-all duration-200">
+              <h3 className="text-2xl font-bold mb-2">Credit Pack</h3>
+              <p className="text-zinc-600 mb-6">Best value</p>
+              <div className="mb-6">
+                <span className="text-4xl font-bold">$149</span>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  200 credits (20 analyses)
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Save 25%
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Priority support
+                </li>
+              </ul>
+              <Link
+                href="/register"
                 className="btn-firecrawl-outline w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
               >
-                Contact sales
+                Buy Now
               </Link>
             </div>
             </div>
