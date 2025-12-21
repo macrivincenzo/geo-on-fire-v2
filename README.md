@@ -29,6 +29,12 @@ cp .env.example .env.local
 **Required API Keys** (add to `.env.local`):
 - `DATABASE_URL` - PostgreSQL connection string (required)
 - `BETTER_AUTH_SECRET` - Generate with `openssl rand -base64 32` (required)
+- **At least ONE AI Provider API Key** (required for brand monitoring):
+  - `OPENAI_API_KEY` - Get from https://platform.openai.com/api-keys
+  - `ANTHROPIC_API_KEY` - Get from https://console.anthropic.com/
+  - `PERPLEXITY_API_KEY` - Get from https://www.perplexity.ai/settings/api
+
+> ⚠️ **Important:** Without AI provider API keys, the brand monitoring feature will show 0% visibility. See [SETUP.md](SETUP.md) for detailed setup instructions.
 
 
 ```bash

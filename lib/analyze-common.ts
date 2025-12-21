@@ -140,7 +140,7 @@ export async function performAnalysis({
   
   // Filter providers based on available API keys
   const availableProviders = getAvailableProviders();
-  
+
   console.log('Available providers for analysis:', availableProviders.map(p => p.name));
   console.log('Available provider details:', availableProviders.map(p => ({ name: p.name, model: p.model })));
   console.log('Environment variables:', {
@@ -152,7 +152,34 @@ export async function performAnalysis({
   console.log('Web search enabled:', useWebSearch);
   console.log('Number of prompts:', analysisPrompts.length);
   console.log('Number of available providers:', availableProviders.length);
-  
+
+  // CRITICAL CHECK: If no providers are configured, throw a descriptive error
+  if (availableProviders.length === 0) {
+    const errorMessage = 'No AI providers configured. Please set at least one API key in your environment variables (.env file):\n' +
+      '- OPENAI_API_KEY for OpenAI\n' +
+      '- ANTHROPIC_API_KEY for Anthropic\n' +
+      '- PERPLEXITY_API_KEY for Perplexity';
+
+    console.error('[CRITICAL ERROR]', errorMessage);
+
+    // Send error event to UI
+    await sendEvent({
+      type: 'error',
+      stage: 'analyzing-prompts',
+      data: {
+        message: errorMessage,
+        details: {
+          openaiConfigured: !!process.env.OPENAI_API_KEY,
+          anthropicConfigured: !!process.env.ANTHROPIC_API_KEY,
+          perplexityConfigured: !!process.env.PERPLEXITY_API_KEY,
+        }
+      },
+      timestamp: new Date()
+    });
+
+    throw new Error(errorMessage);
+  }
+
   const totalAnalyses = analysisPrompts.length * availableProviders.length;
   let completedAnalyses = 0;
   console.log('Total analyses to perform:', totalAnalyses);

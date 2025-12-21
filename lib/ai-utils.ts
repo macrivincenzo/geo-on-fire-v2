@@ -995,7 +995,16 @@ export async function analyzeCompetitors(
       : 99; // High number for companies not ranked
 
     const sentimentScore = calculateSentimentScore(data.sentiments);
-    const visibilityScore = (data.mentions / totalResponses) * 100;
+
+    // SAFETY: Prevent division by zero - if no responses, visibility is 0%
+    const visibilityScore = totalResponses > 0
+      ? (data.mentions / totalResponses) * 100
+      : 0;
+
+    // SAFETY: Ensure visibilityScore is a valid number (not NaN or Infinity)
+    const safeVisibilityScore = isNaN(visibilityScore) || !isFinite(visibilityScore)
+      ? 0
+      : Math.round(visibilityScore * 10) / 10;
 
     competitors.push({
       name,
@@ -1004,7 +1013,7 @@ export async function analyzeCompetitors(
       sentiment: determineSentiment(data.sentiments),
       sentimentScore,
       shareOfVoice: 0, // Will calculate after all competitors are processed
-      visibilityScore: Math.round(visibilityScore * 10) / 10,
+      visibilityScore: safeVisibilityScore,
       weeklyChange: undefined, // No historical data available yet
       isOwn: name === company.name,
     });

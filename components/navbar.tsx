@@ -60,26 +60,18 @@ export function Navbar() {
 
           <div className="flex items-center space-x-4">
             {session && (
-              <>
-                <Link
-                  href="/chat"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
-                >
-                  Basic Chat
-                </Link>
-                <Link
-                  href="/brand-monitor"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
-                >
-                  Brand Monitor
-                </Link>
-              </>
+              <Link
+                href="/brand-monitor"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+              >
+                Brand Monitor
+              </Link>
             )}
             <Link
               href="/plans"
               className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
             >
-              Plans
+              Pricing
             </Link>
             {session && (
               <UserCredits />
