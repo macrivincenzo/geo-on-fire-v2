@@ -56,9 +56,9 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Blue gradient */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 p-12 items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/90 via-blue-600/90 to-cyan-500/90" />
+      {/* Left side - Blue solid */}
+      <div className="hidden lg:flex lg:w-1/2 bg-blue-600 p-12 items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-blue-600" />
         <div className="relative z-10 max-w-md text-white">
           <h1 className="text-4xl font-bold mb-4">Start tracking your brand</h1>
           <p className="text-lg opacity-90">

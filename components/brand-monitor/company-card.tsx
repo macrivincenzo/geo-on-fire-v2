@@ -60,7 +60,7 @@ export function CompanyCard({
     <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 overflow-hidden transition-all hover:shadow-lg">
       <div className="flex">
         {/* Left side - Logo/Image Display */}
-        <div className="relative w-80 h-48 ml-4 overflow-hidden rounded-lg bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 border border-gray-200">
+        <div className="relative w-80 h-48 ml-4 overflow-hidden rounded-lg bg-gray-100 border border-gray-200">
           {validLogoUrl && !logoError ? (
             <div className="absolute inset-0 pr-4 py-4">
               <Image

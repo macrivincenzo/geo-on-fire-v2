@@ -20,7 +20,7 @@ export default function Home() {
           <div className="text-center">
             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight mb-8 animate-fade-in-up">
               <span className="block text-zinc-900 dark:text-zinc-100">AI Brand Track</span>
-              <span className="block bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              <span className="block text-blue-600 dark:text-blue-400">
                 Monitor Your AI Brand Visibility
               </span>
             </h1>
@@ -76,7 +76,7 @@ export default function Home() {
           <div className="bg-gray-50 rounded-[30px] p-16">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold mb-4">
-                <span className="bg-gradient-to-tr from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                <span className="text-blue-600 dark:text-blue-400">
                   Simple Pay-As-You-Go Pricing
                 </span>
               </h2>
@@ -208,7 +208,7 @@ export default function Home() {
       {/* CTA Section 1 */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-[30px] p-16 text-center">
+          <div className="bg-blue-600 rounded-[30px] p-16 text-center">
             <h2 className="text-4xl font-bold text-white mb-6">
               See How AI Models Rank Your Brand
             </h2>

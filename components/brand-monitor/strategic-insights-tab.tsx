@@ -75,7 +75,7 @@ function HealthScoreCard({ insights }: { insights: StrategicInsights }) {
   };
   
   return (
-    <Card className="bg-gradient-to-br from-slate-50 to-white border-slate-200">
+    <Card className="bg-white border-slate-200">
       <CardContent className="pt-6">
         <div className="flex items-start justify-between">
           <div className="flex-1">
