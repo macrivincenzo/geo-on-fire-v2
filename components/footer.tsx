@@ -41,54 +41,29 @@ export function Footer() {
 
           {/* Product */}
           <div>
-            <h3 className="text-zinc-900 font-semibold mb-4">Product</h3>
+            <h3 className="text-zinc-900 dark:text-zinc-100 font-semibold mb-4">Product</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/plans" className="hover:text-zinc-900 transition-colors">
+                <Link href="/plans" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
                   Plans
                 </Link>
-              </li>
-              <li>
-                <a href="#" className="hover:text-zinc-900 transition-colors">
-                  Documentation
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-zinc-900 transition-colors">
-                  API Reference
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-zinc-900 transition-colors">
-                  Demo
-                </a>
               </li>
             </ul>
           </div>
 
           {/* Company */}
           <div>
-            <h3 className="text-zinc-900 font-semibold mb-4">Company</h3>
+            <h3 className="text-zinc-900 dark:text-zinc-100 font-semibold mb-4">Company</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="hover:text-zinc-900 transition-colors">
+                <Link href="/about" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
                   About
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-zinc-900 transition-colors">
+                <Link href="/blog" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
                   Blog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-zinc-900 transition-colors">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-zinc-900 transition-colors">
-                  Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -100,12 +75,12 @@ export function Footer() {
               © {new Date().getFullYear()} AI Brand Track. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-sm hover:text-zinc-900 transition-colors">
+              <Link href="/privacy-policy" className="text-sm hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
                 Privacy Policy
-              </a>
-              <a href="#" className="text-sm hover:text-zinc-900 transition-colors">
+              </Link>
+              <Link href="/terms-of-service" className="text-sm hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
                 Terms of Service
-              </a>
+              </Link>
             </div>
           </div>
         </div>
