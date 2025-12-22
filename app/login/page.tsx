@@ -86,7 +86,7 @@ function LoginForm() {
         <div className="max-w-md w-full space-y-8">
           <div>
             <div className="lg:hidden mb-8 flex justify-center">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              <h2 className="text-2xl font-bold text-zinc-900">
                 AI Brand Track
               </h2>
             </div>

@@ -8,7 +8,7 @@ export function Footer() {
           {/* Logo and description */}
           <div className="col-span-1 md:col-span-2">
             <div className="mb-4">
-              <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
                 AI Brand Track
               </h3>
             </div>

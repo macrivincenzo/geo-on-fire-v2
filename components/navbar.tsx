@@ -47,7 +47,7 @@ export function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              <span className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
                 AI Brand Track
               </span>
             </Link>
