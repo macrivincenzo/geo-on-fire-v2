@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export function Footer() {
   return (
@@ -9,12 +8,9 @@ export function Footer() {
           {/* Logo and description */}
           <div className="col-span-1 md:col-span-2">
             <div className="mb-4">
-              <Image
-                src="/ai-brand-track-logo.jpeg"
-                alt="AI Brand Track"
-                width={150}
-                height={40}
-              />
+              <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                AI Brand Track
+              </h3>
             </div>
             <p className="text-sm mb-4">
               Track how AI models like ChatGPT, Claude, and Perplexity rank your brand. Monitor your AI brand visibility and get actionable insights.

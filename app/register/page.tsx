@@ -56,13 +56,13 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Orange gradient */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 p-12 items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-400/90 via-orange-500/90 to-orange-600/90" />
+      {/* Left side - Blue gradient */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 p-12 items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/90 via-blue-600/90 to-cyan-500/90" />
         <div className="relative z-10 max-w-md text-white">
-          <h1 className="text-4xl font-bold mb-4">Join thousands of developers</h1>
+          <h1 className="text-4xl font-bold mb-4">Start tracking your brand</h1>
           <p className="text-lg opacity-90">
-            Start building with our powerful API and unlock new possibilities for your applications.
+            Monitor how AI models rank your brand and get actionable insights to improve your visibility.
           </p>
           <div className="mt-8 space-y-4">
             <div className="flex items-center space-x-3">
@@ -86,8 +86,8 @@ export default function RegisterPage() {
           </div>
         </div>
         {/* Decorative elements */}
-        <div className="absolute top-20 right-20 w-64 h-64 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
-        <div className="absolute bottom-20 left-20 w-64 h-64 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
+        <div className="absolute top-20 right-20 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
+        <div className="absolute bottom-20 left-20 w-64 h-64 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
       </div>
 
       {/* Right side - Form */}
@@ -95,20 +95,16 @@ export default function RegisterPage() {
         <div className="max-w-md w-full space-y-8">
           <div>
             <div className="lg:hidden mb-8 flex justify-center">
-              <Image
-                src="/ai-brand-track-logo.jpeg"
-                alt="AI Brand Track"
-                width={200}
-                height={50}
-                priority
-              />
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                AI Brand Track
+              </h2>
             </div>
             <h2 className="text-center text-3xl font-extrabold text-gray-900">
               Create your account
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               Or{' '}
-              <Link href="/login" className="font-medium text-orange-600 hover:text-orange-500">
+              <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
                 sign in to existing account
               </Link>
             </p>
@@ -127,7 +123,7 @@ export default function RegisterPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -143,7 +139,7 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Enter your email"
                 />
               </div>
@@ -159,7 +155,7 @@ export default function RegisterPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Choose a strong password"
                 />
                 <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
@@ -179,13 +175,13 @@ export default function RegisterPage() {
                     <div className="flex flex-col sm:flex-row gap-2">
                       <Link 
                         href={`/login?email=${encodeURIComponent(email)}`}
-                        className="inline-flex items-center justify-center px-4 py-2 border border-orange-500 text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:ring-offset-gray-900 transition-colors"
+                        className="inline-flex items-center justify-center px-4 py-2 border border-blue-500 text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-900 transition-colors"
                       >
                         Sign in instead
                       </Link>
                       <Link 
                         href="/forgot-password"
-                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-orange-400 hover:text-orange-300 focus:outline-none focus:underline transition-colors"
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-blue-400 hover:text-blue-300 focus:outline-none focus:underline transition-colors"
                       >
                         Forgot password?
                       </Link>
@@ -202,15 +198,15 @@ export default function RegisterPage() {
                   name="terms"
                   type="checkbox"
                   required
-                  className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
                   I agree to the{' '}
-                  <Link href="#" className="text-orange-600 hover:text-orange-500">
+                  <Link href="#" className="text-blue-600 hover:text-blue-500">
                     Terms of Service
                   </Link>{' '}
                   and{' '}
-                  <Link href="#" className="text-orange-600 hover:text-orange-500">
+                  <Link href="#" className="text-blue-600 hover:text-blue-500">
                     Privacy Policy
                   </Link>
                 </label>

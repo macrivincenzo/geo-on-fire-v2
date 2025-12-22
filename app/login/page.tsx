@@ -67,18 +67,18 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Orange gradient */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 p-12 items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-400/90 via-orange-500/90 to-orange-600/90" />
+      {/* Left side - Blue gradient */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 p-12 items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/90 via-blue-600/90 to-cyan-500/90" />
         <div className="relative z-10 max-w-md text-white">
           <h1 className="text-4xl font-bold mb-4">Welcome back!</h1>
           <p className="text-lg opacity-90">
-            Sign in to continue building amazing things with our powerful API.
+            Sign in to continue tracking your AI brand visibility.
           </p>
         </div>
         {/* Decorative elements */}
-        <div className="absolute top-20 right-20 w-64 h-64 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
-        <div className="absolute bottom-20 left-20 w-64 h-64 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
+        <div className="absolute top-20 right-20 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
+        <div className="absolute bottom-20 left-20 w-64 h-64 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
       </div>
 
       {/* Right side - Form */}
@@ -86,20 +86,16 @@ function LoginForm() {
         <div className="max-w-md w-full space-y-8">
           <div>
             <div className="lg:hidden mb-8 flex justify-center">
-              <Image
-                src="/ai-brand-track-logo.jpeg"
-                alt="AI Brand Track"
-                width={200}
-                height={50}
-                priority
-              />
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                AI Brand Track
+              </h2>
             </div>
             <h2 className="text-center text-3xl font-extrabold text-gray-900">
               Sign in to your account
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               Or{' '}
-              <Link href="/register" className="font-medium text-orange-600 hover:text-orange-500">
+              <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
                 create a new account
               </Link>
             </p>
@@ -118,7 +114,7 @@ function LoginForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Enter your email"
                 />
               </div>
@@ -134,7 +130,7 @@ function LoginForm() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Enter your password"
                 />
               </div>
@@ -146,13 +142,13 @@ function LoginForm() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                   Remember me
                 </label>
               </div>
-              <Link href="/forgot-password" className="text-sm text-orange-600 hover:text-orange-500">
+              <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-500">
                 Forgot your password?
               </Link>
             </div>

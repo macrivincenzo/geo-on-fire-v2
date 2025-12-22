@@ -62,11 +62,11 @@ function DynamicPricingContent({ session }: { session: any }) {
               <div 
                 key={product.id} 
                 className={`bg-white rounded-lg shadow-lg p-8 ${
-                  product.display?.recommend_text ? 'ring-2 ring-orange-500 transform scale-105' : ''
+                  product.display?.recommend_text ? 'ring-2 ring-blue-500 transform scale-105' : ''
                 }`}
               >
                 {product.display?.recommend_text && (
-                  <div className="bg-orange-500 text-white text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">
+                  <div className="bg-blue-500 text-white text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">
                     {product.display.recommend_text}
                   </div>
                 )}

@@ -11,7 +11,7 @@ export default function PricingPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-            <span className="bg-gradient-to-tr from-orange-600 to-orange-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-tr from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               Simple Pay-As-You-Go Pricing
             </span>
           </h1>
@@ -57,8 +57,8 @@ export default function PricingPage() {
           </div>
 
           {/* Single Analysis */}
-          <div className="bg-white dark:bg-gray-800 rounded-[20px] shadow-lg p-8 border-2 border-orange-500 relative">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+          <div className="bg-white dark:bg-gray-800 rounded-[20px] shadow-lg p-8 border-2 border-blue-500 relative">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
               Most Popular
             </div>
             <h3 className="text-2xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">Single Analysis</h3>
