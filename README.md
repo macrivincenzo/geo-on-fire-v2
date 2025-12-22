@@ -1,6 +1,6 @@
-# FireGEO Open-Source SaaS Starter
+# AI Brand Track
 
-<img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjh4N3VwdGw2YXg2ZXpvMHBlNDFlejd1MjBpZXBxNHZ5YXJxOGk5OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/x2sTqbCW5m7z0qaNJM/giphy.gif" alt="FireGEO Demo" width="100%" />
+Monitor how AI models like ChatGPT, Claude, and Perplexity rank your brand. Track your AI brand visibility, analyze competitor rankings, and get actionable insights to improve your presence across AI platforms.
 
 Get your SaaS running in minutes with authentication, billing, AI chat, and brand monitoring. Zero-config setup with Next.js 15, TypeScript, and PostgreSQL.
 
@@ -19,8 +19,8 @@ Get your SaaS running in minutes with authentication, billing, AI chat, and bran
 
 ```bash
 # Clone the repository
-git clone https://github.com/mendableai/firegeo
-cd firegeo
+git clone https://github.com/yourusername/ai-brand-track
+cd ai-brand-track
 
 # Copy environment variables
 cp .env.example .env.local

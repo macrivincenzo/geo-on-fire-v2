@@ -121,7 +121,54 @@
   }
 }
 
-/* Firecrawl button styles */
+/* Button styles - Simple and clean */
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  box-shadow: inset 0px -2px 0px 0px #1e40af, 0px 1px 6px 0px rgba(37, 99, 235, 58%);
+}
+.btn-primary:hover {
+  background-color: #1d4ed8;
+  transform: translateY(1px) scale(0.98);
+  box-shadow: inset 0px -1px 0px 0px #1e40af, 0px 1px 3px 0px rgba(37, 99, 235, 40%);
+}
+.btn-primary:active {
+  transform: translateY(2px) scale(0.97);
+  box-shadow: inset 0px 1px 1px 0px #1e40af, 0px 1px 2px 0px rgba(37, 99, 235, 30%);
+}
+
+.btn-secondary {
+  background-color: #18181b;
+  color: white;
+  box-shadow: inset 0px -2px 0px 0px #18181b, 0px 1px 6px 0px rgba(24, 24, 27, 58%);
+}
+.btn-secondary:hover {
+  background-color: #27272a;
+  transform: translateY(1px) scale(0.98);
+  box-shadow: inset 0px -1px 0px 0px #18181b, 0px 1px 3px 0px rgba(24, 24, 27, 40%);
+}
+.btn-secondary:active {
+  transform: translateY(2px) scale(0.97);
+  box-shadow: inset 0px 1px 1px 0px #18181b, 0px 1px 2px 0px rgba(24, 24, 27, 30%);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #18181b;
+  border: 1px solid #d4d4d8;
+  box-shadow: inset 0px -2px 0px 0px #e4e4e7, 0px 1px 6px 0px rgba(228, 228, 231, 58%);
+}
+.btn-outline:hover {
+  background-color: #fafafa;
+  transform: translateY(1px) scale(0.98);
+  box-shadow: inset 0px -1px 0px 0px #e4e4e7, 0px 1px 3px 0px rgba(228, 228, 231, 40%);
+}
+.btn-outline:active {
+  transform: translateY(2px) scale(0.97);
+  box-shadow: inset 0px 1px 1px 0px #e4e4e7, 0px 1px 2px 0px rgba(228, 228, 231, 30%);
+}
+
+/* Legacy aliases - keeping for backward compatibility */
 .btn-firecrawl-default {
   background-color: #18181b;
   color: white;
@@ -138,18 +185,18 @@
 }
 
 .btn-firecrawl-orange {
-  background-color: #f97316;
+  background-color: #2563eb;
   color: white;
-  box-shadow: inset 0px -2px 0px 0px #c2410c, 0px 1px 6px 0px rgba(234, 88, 12, 58%);
+  box-shadow: inset 0px -2px 0px 0px #1e40af, 0px 1px 6px 0px rgba(37, 99, 235, 58%);
 }
 .btn-firecrawl-orange:hover {
-  background-color: #ea580c;
+  background-color: #1d4ed8;
   transform: translateY(1px) scale(0.98);
-  box-shadow: inset 0px -1px 0px 0px #c2410c, 0px 1px 3px 0px rgba(234, 88, 12, 40%);
+  box-shadow: inset 0px -1px 0px 0px #1e40af, 0px 1px 3px 0px rgba(37, 99, 235, 40%);
 }
 .btn-firecrawl-orange:active {
   transform: translateY(2px) scale(0.97);
-  box-shadow: inset 0px 1px 1px 0px #c2410c, 0px 1px 2px 0px rgba(234, 88, 12, 30%);
+  box-shadow: inset 0px 1px 1px 0px #1e40af, 0px 1px 2px 0px rgba(37, 99, 235, 30%);
 }
 
 .btn-firecrawl-outline {

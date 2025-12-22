@@ -87,10 +87,10 @@ function LoginForm() {
           <div>
             <div className="lg:hidden mb-8 flex justify-center">
               <Image
-                src="/firecrawl-logo-with-fire.webp"
-                alt="Firecrawl"
-                width={180}
-                height={37}
+                src="/ai-brand-track-logo.jpeg"
+                alt="AI Brand Track"
+                width={200}
+                height={50}
                 priority
               />
             </div>

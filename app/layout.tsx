@@ -16,8 +16,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SaaS Starter",
-  description: "Next.js SaaS Starter with Better Auth",
+  title: {
+    default: "AI Brand Track - Monitor Your Brand Visibility Across AI Platforms",
+    template: "%s | AI Brand Track"
+  },
+  description: "Track how AI models like ChatGPT, Claude, and Perplexity rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence.",
+  keywords: [
+    "AI brand visibility",
+    "AI brand monitoring",
+    "brand tracking AI",
+    "AI brand analysis",
+    "ChatGPT brand tracking",
+    "Claude brand monitoring",
+    "AI competitor analysis",
+    "brand SEO AI",
+    "AI search visibility",
+    "brand mention tracker"
+  ],
 };
 
 export default function RootLayout({

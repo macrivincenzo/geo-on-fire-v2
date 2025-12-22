@@ -49,10 +49,10 @@ export function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <Image
-                src="/firecrawl-logo-with-fire.webp"
-                alt="Firecrawl"
-                width={120}
-                height={25}
+                src="/ai-brand-track-logo.jpeg"
+                alt="AI Brand Track"
+                width={150}
+                height={40}
                 priority
               />
             </Link>
