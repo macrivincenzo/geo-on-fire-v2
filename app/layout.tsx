@@ -16,11 +16,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://aibrandtrack.com'),
   title: {
-    default: "AI Brand Track - Monitor Your Brand Visibility Across AI Platforms",
+    default: "AI Brand Track - Monitor Your Brand Visibility Across AI Platforms | ChatGPT, Claude & Perplexity Tracking",
     template: "%s | AI Brand Track"
   },
-  description: "Track how AI models like ChatGPT, Claude, and Perplexity rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence.",
+  description: "Track how AI models like ChatGPT, Claude, and Perplexity rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence. Real-time AI search optimization and GEO tracking.",
   keywords: [
     "AI brand visibility",
     "AI brand monitoring",
@@ -31,8 +32,62 @@ export const metadata: Metadata = {
     "AI competitor analysis",
     "brand SEO AI",
     "AI search visibility",
-    "brand mention tracker"
+    "brand mention tracker",
+    "AI search optimization",
+    "GEO optimization",
+    "AI ranking tracker",
+    "brand visibility score",
+    "AI platform monitoring",
+    "Perplexity brand tracking",
+    "Gemini brand monitoring",
+    "AI search engine optimization",
+    "brand presence AI",
+    "AI brand reputation",
+    "ChatGPT SEO",
+    "Claude SEO",
+    "AI model ranking",
+    "brand visibility analytics",
+    "AI search analytics"
   ],
+  authors: [{ name: "AI Brand Track" }],
+  creator: "AI Brand Track",
+  publisher: "AI Brand Track",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://aibrandtrack.com',
+    siteName: 'AI Brand Track',
+    title: 'AI Brand Track - Monitor Your Brand Visibility Across AI Platforms',
+    description: 'Track how AI models like ChatGPT, Claude, and Perplexity rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'AI Brand Track - Brand Visibility Monitoring Platform',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI Brand Track - Monitor Your Brand Visibility Across AI Platforms',
+    description: 'Track how AI models rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights.',
+    images: ['/og-image.png'],
+  },
+  alternates: {
+    canonical: 'https://aibrandtrack.com',
+  },
 };
 
 export default function RootLayout({

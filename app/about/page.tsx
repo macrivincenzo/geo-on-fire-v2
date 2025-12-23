@@ -1,3 +1,25 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'About Us - AI Brand Track',
+  description: 'Learn about AI Brand Track and our mission to help businesses understand and improve their presence in AI-powered search. Empowering brands with AI visibility insights.',
+  keywords: [
+    'about AI brand tracking',
+    'AI brand monitoring company',
+    'AI search optimization',
+    'brand visibility tools',
+    'AI platform monitoring'
+  ],
+  openGraph: {
+    title: 'About Us - AI Brand Track',
+    description: 'Learn about AI Brand Track and our mission to help businesses understand and improve their presence in AI-powered search.',
+    url: 'https://aibrandtrack.com/about',
+  },
+  alternates: {
+    canonical: 'https://aibrandtrack.com/about',
+  },
+};
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">

@@ -1,3 +1,26 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Blog - AI Brand Track',
+  description: 'Insights, tips, and updates about AI brand visibility, ChatGPT SEO, Claude optimization, Perplexity tracking, and AI search engine optimization strategies.',
+  keywords: [
+    'AI brand tracking blog',
+    'AI SEO tips',
+    'ChatGPT optimization',
+    'AI search visibility',
+    'brand monitoring insights',
+    'GEO optimization strategies'
+  ],
+  openGraph: {
+    title: 'Blog - AI Brand Track',
+    description: 'Insights, tips, and updates about AI brand visibility, ChatGPT SEO, Claude optimization, and AI search engine optimization.',
+    url: 'https://aibrandtrack.com/blog',
+  },
+  alternates: {
+    canonical: 'https://aibrandtrack.com/blog',
+  },
+};
+
 export default function BlogPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
