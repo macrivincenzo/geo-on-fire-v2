@@ -32,12 +32,13 @@ export default function Home() {
               "ratingValue": "4.8",
               "ratingCount": "150"
             },
-            "description": "Track how AI models like ChatGPT, Claude, and Perplexity rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence.",
+            "description": "Track how AI models like ChatGPT, Claude, Perplexity, and Google Gemini rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence.",
             "featureList": [
               "AI Brand Visibility Monitoring",
               "ChatGPT Brand Tracking",
               "Claude Brand Monitoring",
               "Perplexity Brand Analysis",
+              "Google Gemini Brand Monitoring",
               "Competitor Tracking",
               "Real-time Analysis",
               "Actionable Insights",
@@ -57,7 +58,7 @@ export default function Home() {
             "name": "AI Brand Track",
             "url": "https://aibrandtrack.com",
             "logo": "https://aibrandtrack.com/logo.png",
-            "description": "AI Brand Track helps businesses monitor their brand visibility across AI platforms like ChatGPT, Claude, and Perplexity.",
+            "description": "AI Brand Track helps businesses monitor their brand visibility across AI platforms like ChatGPT, Claude, Perplexity, and Google Gemini.",
             "contactPoint": {
               "@type": "ContactPoint",
               "contactType": "Customer Support",
@@ -79,7 +80,7 @@ export default function Home() {
                 "name": "How does AI Brand Track work?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "AI Brand Track analyzes your brand's visibility across major AI platforms like ChatGPT, Claude, and Perplexity. Simply enter your website URL, and we'll show you how AI models rank your brand against competitors, what prompts trigger your appearance, and provide actionable insights to improve your AI visibility."
+                  "text": "AI Brand Track analyzes your brand's visibility across major AI platforms like ChatGPT, Claude, Perplexity, and Google Gemini. Simply enter your website URL, and we'll show you how AI models rank your brand against competitors, what prompts trigger your appearance, and provide actionable insights to improve your AI visibility."
                 }
               },
               {
@@ -128,7 +129,7 @@ export default function Home() {
             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight mb-8 animate-fade-in-up">
               <span className="block text-zinc-900 dark:text-zinc-100">AI Brand Track</span>
               <span className="block text-blue-600 dark:text-blue-400">
-                Monitor Your AI Brand Visibility Across ChatGPT, Claude & Perplexity
+                Monitor Your AI Brand Visibility Across ChatGPT, Claude, Perplexity & Gemini
               </span>
             </h1>
             <p className="text-xl lg:text-2xl text-zinc-600 dark:text-zinc-400 max-w-3xl mx-auto mb-6 animate-fade-in-up animation-delay-200">
@@ -158,7 +159,7 @@ export default function Home() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center animate-fade-in-up animation-delay-1000">
                 <div className="text-4xl font-bold text-white">ChatGPT</div>
-                <div className="text-sm text-zinc-400 mt-1">Claude, Perplexity & More</div>
+                <div className="text-sm text-zinc-400 mt-1">Claude, Perplexity, Gemini & More</div>
               </div>
               <div className="text-center animate-fade-in-up animation-delay-1000" style={{animationDelay: '1100ms'}}>
                 <div className="text-4xl font-bold text-white">Real-time</div>
@@ -358,7 +359,7 @@ export default function Home() {
                 Why AI Brand Visibility Monitoring Matters
               </h2>
               <p className="text-lg text-zinc-600 mb-6">
-                As AI search platforms like ChatGPT, Claude, and Perplexity become primary sources of information for millions of users, your brand's visibility in AI responses directly impacts your business growth. Traditional SEO is no longer enough—you need AI search optimization.
+                As AI search platforms like ChatGPT, Claude, Perplexity, and Google Gemini become primary sources of information for millions of users, your brand's visibility in AI responses directly impacts your business growth. Traditional SEO is no longer enough—you need AI search optimization.
               </p>
               <p className="text-lg text-zinc-600 mb-6">
                 AI Brand Track helps you understand how AI models perceive and rank your brand. With comprehensive AI brand monitoring, you can identify opportunities to improve your AI presence, track competitor performance, and optimize your content for better AI search visibility.
@@ -368,7 +369,7 @@ export default function Home() {
                   <svg className="w-6 h-6 text-green-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-zinc-600"><strong>Track AI Brand Rankings:</strong> See where your brand appears in AI responses across ChatGPT, Claude, Perplexity, and more.</span>
+                  <span className="text-zinc-600"><strong>Track AI Brand Rankings:</strong> See where your brand appears in AI responses across ChatGPT, Claude, Perplexity, Google Gemini, and more.</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="w-6 h-6 text-green-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -435,7 +436,7 @@ export default function Home() {
               See How AI Models Rank Your Brand
             </h2>
             <p className="text-xl text-blue-100 mb-8">
-              Monitor your brand visibility across ChatGPT, Claude, Perplexity and more. Start your free AI brand analysis today.
+              Monitor your brand visibility across ChatGPT, Claude, Perplexity, Google Gemini, and more. Start your free AI brand analysis today.
             </p>
             <Link
               href="/brand-monitor"
@@ -482,7 +483,7 @@ export default function Home() {
               {openFaq === 0 && (
                 <div className="px-6 py-6">
                   <p className="text-zinc-600 leading-relaxed">
-                    AI Brand Track analyzes your brand's visibility across major AI platforms like ChatGPT, Claude, and Perplexity. Simply enter your website URL, and we'll show you how AI models rank your brand against competitors, what prompts trigger your appearance, and provide actionable insights to improve your AI visibility.
+                    AI Brand Track analyzes your brand's visibility across major AI platforms like ChatGPT, Claude, Perplexity, and Google Gemini. Simply enter your website URL, and we'll show you how AI models rank your brand against competitors, what prompts trigger your appearance, and provide actionable insights to improve your AI visibility.
                   </p>
                 </div>
               )}

@@ -18,10 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://aibrandtrack.com'),
   title: {
-    default: "AI Brand Track - Monitor Your Brand Visibility Across AI Platforms | ChatGPT, Claude & Perplexity Tracking",
+    default: "AI Brand Track - Monitor Your Brand Visibility Across AI Platforms | ChatGPT, Claude, Perplexity & Gemini Tracking",
     template: "%s | AI Brand Track"
   },
-  description: "Track how AI models like ChatGPT, Claude, and Perplexity rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence. Real-time AI search optimization and GEO tracking.",
+  description: "Track how AI models like ChatGPT, Claude, Perplexity, and Google Gemini rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence. Real-time AI search optimization and GEO tracking.",
   keywords: [
     "AI brand visibility",
     "AI brand monitoring",
@@ -40,6 +40,9 @@ export const metadata: Metadata = {
     "AI platform monitoring",
     "Perplexity brand tracking",
     "Gemini brand monitoring",
+    "Google Gemini brand tracking",
+    "Gemini brand analysis",
+    "Google AI brand monitoring",
     "AI search engine optimization",
     "brand presence AI",
     "AI brand reputation",
@@ -69,7 +72,7 @@ export const metadata: Metadata = {
     url: 'https://aibrandtrack.com',
     siteName: 'AI Brand Track',
     title: 'AI Brand Track - Monitor Your Brand Visibility Across AI Platforms',
-    description: 'Track how AI models like ChatGPT, Claude, and Perplexity rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence.',
+    description: 'Track how AI models like ChatGPT, Claude, Perplexity, and Google Gemini rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence.',
     images: [
       {
         url: '/og-image.png',

@@ -44,7 +44,7 @@ export function Footer() {
                 </h2>
               </div>
               <p className="text-sm mb-6 leading-relaxed">
-                Track how AI models like <strong>ChatGPT, Claude, and Perplexity</strong> rank your brand. Monitor your <strong>AI brand visibility</strong> across all major AI platforms. Get real-time <strong>AI brand monitoring</strong>, competitor analysis, and actionable insights for <strong>AI search optimization</strong> and <strong>GEO optimization</strong>.
+                Track how AI models like <strong>ChatGPT, Claude, Perplexity, and Google Gemini</strong> rank your brand. Monitor your <strong>AI brand visibility</strong> across all major AI platforms. Get real-time <strong>AI brand monitoring</strong>, competitor analysis, and actionable insights for <strong>AI search optimization</strong> and <strong>GEO optimization</strong>.
               </p>
               <div className="flex space-x-4">
                 <a
@@ -113,6 +113,9 @@ export function Footer() {
                   <span className="text-sm">Perplexity Brand Analysis</span>
                 </li>
                 <li>
+                  <span className="text-sm">Google Gemini Brand Monitoring</span>
+                </li>
+                <li>
                   <span className="text-sm">AI Competitor Tracking</span>
                 </li>
                 <li>
@@ -157,7 +160,7 @@ export function Footer() {
                   © {currentYear} AI Brand Track. All rights reserved.
                 </p>
                 <p className="text-xs text-zinc-500">
-                  AI Brand Visibility Monitoring • ChatGPT Tracking • Claude Monitoring • Perplexity Analysis • AI Search Optimization
+                  AI Brand Visibility Monitoring • ChatGPT Tracking • Claude Monitoring • Perplexity Analysis • Google Gemini Monitoring • AI Search Optimization
                 </p>
               </div>
               <div className="flex flex-wrap justify-center md:justify-end gap-4 text-sm">
