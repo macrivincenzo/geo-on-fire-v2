@@ -24,6 +24,22 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Ensure proper domain handling
+  async redirects() {
+    return [
+      {
+        source: '/',
+        has: [
+          {
+            type: 'host',
+            value: 'aibrandtrack.com',
+          },
+        ],
+        destination: 'https://www.aibrandtrack.com',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

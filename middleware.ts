@@ -6,6 +6,14 @@ const protectedRoutes = ['/dashboard', '/brand-monitor'];
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const hostname = request.headers.get('host') || '';
+  
+  // Redirect root domain to www (for SEO and consistency)
+  if (hostname === 'aibrandtrack.com') {
+    const url = new URL(request.url);
+    url.hostname = 'www.aibrandtrack.com';
+    return NextResponse.redirect(url, 301); // Permanent redirect for SEO
+  }
   
   // Check if the route is protected
   const isProtectedRoute = protectedRoutes.some(route => 
