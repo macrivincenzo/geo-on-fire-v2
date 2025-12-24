@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import React from 'react';
 
 export default function TermsOfServicePage() {
   return (
-    <>
+    <React.Fragment>
       {/* Breadcrumb Structured Data */}
       <script
         type="application/ld+json"
@@ -184,7 +185,7 @@ export default function TermsOfServicePage() {
           </div>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 }
 

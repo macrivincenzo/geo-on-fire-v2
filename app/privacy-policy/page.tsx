@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import React from 'react';
 
 export default function PrivacyPolicyPage() {
   return (
-    <>
+    <React.Fragment>
       {/* Breadcrumb Structured Data */}
       <script
         type="application/ld+json"
@@ -163,7 +164,7 @@ export default function PrivacyPolicyPage() {
           </div>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 }
 
