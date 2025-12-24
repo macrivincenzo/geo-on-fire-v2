@@ -13,8 +13,8 @@ export function Footer() {
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": "AI Brand Track",
-            "url": "https://aibrandtrack.com",
-            "logo": "https://aibrandtrack.com/logo.png",
+            "url": "https://www.aibrandtrack.com",
+            "logo": "https://www.aibrandtrack.com/logo.png",
             "description": "AI Brand Track helps businesses monitor their brand visibility across AI platforms like ChatGPT, Claude, Perplexity, and Gemini. Track AI brand rankings, competitor analysis, and get actionable insights for AI search optimization.",
             "address": {
               "@type": "PostalAddress",

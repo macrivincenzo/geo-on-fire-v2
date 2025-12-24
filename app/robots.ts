@@ -37,7 +37,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       },
     ],
-    sitemap: 'https://aibrandtrack.com/sitemap.xml',
+    sitemap: 'https://www.aibrandtrack.com/sitemap.xml',
   }
 }
 

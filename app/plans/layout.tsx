@@ -13,10 +13,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Pricing Plans - AI Brand Track',
     description: 'Simple pay-as-you-go pricing for AI brand visibility monitoring. Track your brand across ChatGPT, Claude, Perplexity, and more.',
-    url: 'https://aibrandtrack.com/plans',
+    url: 'https://www.aibrandtrack.com/plans',
   },
   alternates: {
-    canonical: 'https://aibrandtrack.com/plans',
+    canonical: 'https://www.aibrandtrack.com/plans',
   },
 };
 

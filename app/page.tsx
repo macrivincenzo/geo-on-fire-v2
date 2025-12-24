@@ -44,7 +44,10 @@ export default function Home() {
               "Actionable Insights",
               "AI Search Optimization",
               "GEO Optimization"
-            ]
+            ],
+            "screenshot": "https://www.aibrandtrack.com/og-image.png",
+            "softwareVersion": "2.0",
+            "releaseNotes": "Comprehensive AI brand monitoring across ChatGPT, Claude, Perplexity, and Google Gemini"
           })
         }}
       />
@@ -56,13 +59,23 @@ export default function Home() {
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": "AI Brand Track",
-            "url": "https://aibrandtrack.com",
-            "logo": "https://aibrandtrack.com/logo.png",
+            "url": "https://www.aibrandtrack.com",
+            "logo": "https://www.aibrandtrack.com/logo.png",
             "description": "AI Brand Track helps businesses monitor their brand visibility across AI platforms like ChatGPT, Claude, Perplexity, and Google Gemini.",
+            "sameAs": [
+              "https://twitter.com/aibrandtrack",
+              "https://github.com/aibrandtrack"
+            ],
             "contactPoint": {
               "@type": "ContactPoint",
               "contactType": "Customer Support",
-              "email": "support@aibrandtrack.com"
+              "email": "support@aibrandtrack.com",
+              "availableLanguage": "English"
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://www.aibrandtrack.com/brand-monitor",
+              "query-input": "required name=search_term_string"
             }
           })
         }}
@@ -321,7 +334,7 @@ export default function Home() {
               How AI Brand Visibility Tracking Works
             </h2>
             <p className="text-xl text-zinc-600 max-w-3xl mx-auto">
-              Monitor your brand's presence across AI search platforms with comprehensive AI brand monitoring and GEO optimization tools.
+              Monitor your brand's presence across AI search platforms with comprehensive <Link href="/brand-monitor" className="text-blue-600 dark:text-blue-400 hover:underline">AI brand monitoring</Link> and <Link href="/about" className="text-blue-600 dark:text-blue-400 hover:underline">GEO optimization tools</Link>.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -329,7 +342,7 @@ export default function Home() {
               <div className="text-4xl font-bold text-blue-600 mb-4">1</div>
               <h3 className="text-2xl font-bold mb-4">Enter Your Website URL</h3>
               <p className="text-zinc-600">
-                Start your AI brand visibility analysis by entering your website URL. Our system automatically extracts your brand information, keywords, and industry data to create comprehensive AI brand tracking reports.
+                Start your AI brand visibility analysis by entering your website URL. Our system automatically extracts your brand information, keywords, and industry data to create comprehensive <Link href="/brand-monitor" className="text-blue-600 dark:text-blue-400 hover:underline">AI brand tracking reports</Link>.
               </p>
             </div>
             <div className="bg-white p-8 rounded-[20px] shadow-sm">
@@ -343,7 +356,7 @@ export default function Home() {
               <div className="text-4xl font-bold text-blue-600 mb-4">3</div>
               <h3 className="text-2xl font-bold mb-4">Get Actionable Insights</h3>
               <p className="text-zinc-600">
-                Receive detailed reports showing your AI brand visibility score, which prompts trigger your appearance, competitor analysis, and specific recommendations for AI search optimization and GEO improvement.
+                Receive detailed reports showing your AI brand visibility score, which prompts trigger your appearance, competitor analysis, and specific recommendations for <Link href="/blog" className="text-blue-600 dark:text-blue-400 hover:underline">AI search optimization</Link> and <Link href="/about" className="text-blue-600 dark:text-blue-400 hover:underline">GEO improvement</Link>.
               </p>
             </div>
           </div>
@@ -359,10 +372,10 @@ export default function Home() {
                 Why AI Brand Visibility Monitoring Matters
               </h2>
               <p className="text-lg text-zinc-600 mb-6">
-                As AI search platforms like ChatGPT, Claude, Perplexity, and Google Gemini become primary sources of information for millions of users, your brand's visibility in AI responses directly impacts your business growth. Traditional SEO is no longer enough—you need AI search optimization.
+                As AI search platforms like ChatGPT, Claude, Perplexity, and Google Gemini become primary sources of information for millions of users, your brand's visibility in AI responses directly impacts your business growth. Traditional SEO is no longer enough—you need <Link href="/blog" className="text-blue-600 dark:text-blue-400 hover:underline">AI search optimization</Link>.
               </p>
               <p className="text-lg text-zinc-600 mb-6">
-                AI Brand Track helps you understand how AI models perceive and rank your brand. With comprehensive AI brand monitoring, you can identify opportunities to improve your AI presence, track competitor performance, and optimize your content for better AI search visibility.
+                AI Brand Track helps you understand how AI models perceive and rank your brand. With comprehensive <Link href="/brand-monitor" className="text-blue-600 dark:text-blue-400 hover:underline">AI brand monitoring</Link>, you can identify opportunities to improve your AI presence, track competitor performance, and optimize your content for better AI search visibility. <Link href="/plans" className="text-blue-600 dark:text-blue-400 hover:underline">View our pricing plans</Link> to get started.
               </p>
               <ul className="space-y-4">
                 <li className="flex items-start">

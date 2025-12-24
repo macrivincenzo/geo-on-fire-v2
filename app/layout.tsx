@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://aibrandtrack.com'),
+  metadataBase: new URL('https://www.aibrandtrack.com'),
   title: {
     default: "AI Brand Track - Monitor Your Brand Visibility Across AI Platforms | ChatGPT, Claude, Perplexity & Gemini Tracking",
     template: "%s | AI Brand Track"
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://aibrandtrack.com',
+    url: 'https://www.aibrandtrack.com',
     siteName: 'AI Brand Track',
     title: 'AI Brand Track - Monitor Your Brand Visibility Across AI Platforms',
     description: 'Track how AI models like ChatGPT, Claude, Perplexity, and Google Gemini rank your brand. Monitor AI brand visibility, competitor analysis, and get actionable insights to improve your AI presence.',
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   alternates: {
-    canonical: 'https://aibrandtrack.com',
+    canonical: 'https://www.aibrandtrack.com',
   },
 };
 
