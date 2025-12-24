@@ -22,10 +22,12 @@ export default function Home() {
             "name": "AI Brand Track",
             "applicationCategory": "BusinessApplication",
             "operatingSystem": "Web",
+            "url": "https://www.aibrandtrack.com",
             "offers": {
               "@type": "Offer",
               "price": "0",
-              "priceCurrency": "USD"
+              "priceCurrency": "USD",
+              "url": "https://www.aibrandtrack.com/plans"
             },
             "aggregateRating": {
               "@type": "AggregateRating",
