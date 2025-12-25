@@ -3,63 +3,16 @@
 import Link from 'next/link';
 import { useSession } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 
-// Separate component for purchase buttons
-// Uses fetch API instead of useCustomer hook to avoid SSR/prerendering issues
-function PurchaseButton({ productId, disabled, className, children }: { 
-  productId: string; 
-  disabled: boolean; 
-  className: string; 
-  children: React.ReactNode;
-}) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handlePurchase = async () => {
-    if (!mounted) return;
-    
-    try {
-      // Call the Autumn API directly via our backend
-      const response = await fetch('/api/autumn/attach', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ productId }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to initiate checkout');
-      }
-
-      const result = await response.json();
-      
-      // Handle the result - if there's a checkout_url, redirect to it
-      if (result.checkout_url) {
-        window.location.href = result.checkout_url;
-      }
-    } catch (error) {
-      console.error('Error purchasing:', error);
-      if (error instanceof Error && (error.message.includes('auth') || error.message.includes('unauthorized'))) {
-        window.location.href = '/login?redirect=/plans';
-      }
-    }
-  };
-
-  return (
-    <Button
-      onClick={handlePurchase}
-      disabled={disabled || !mounted}
-      className={className}
-    >
-      {children}
-    </Button>
-  );
-}
+// Dynamically import PurchaseButton to avoid SSR issues with useCustomer hook
+const PurchaseButton = dynamic(
+  () => import('@/components/plans/purchase-button'),
+  { 
+    ssr: false,
+    loading: () => <Button disabled className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4">Loading...</Button>
+  }
+);
 
 export default function PricingPage() {
   const { data: session, isPending } = useSession();
