@@ -2,45 +2,68 @@
 
 import Link from 'next/link';
 import { useSession } from '@/lib/auth-client';
-import { useCustomer } from '@/hooks/useAutumnCustomer';
 import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
 
-export default function PricingPage() {
-  const { data: session, isPending } = useSession();
-  const { attach } = useCustomer();
+// Separate component for purchase buttons
+// Uses fetch API instead of useCustomer hook to avoid SSR/prerendering issues
+function PurchaseButton({ productId, disabled, className, children }: { 
+  productId: string; 
+  disabled: boolean; 
+  className: string; 
+  children: React.ReactNode;
+}) {
+  const [mounted, setMounted] = useState(false);
 
-  const handlePurchase = async (productId: string) => {
-    // Wait for session to load
-    if (isPending) {
-      console.log('Session loading, please wait...');
-      return; // Don't do anything while loading
-    }
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-    // Check if user is authenticated
-    if (!session?.user) {
-      console.log('No session, redirecting to login');
-      // Redirect to login if not authenticated
-      window.location.href = '/login?redirect=/plans';
-      return;
-    }
-
+  const handlePurchase = async () => {
+    if (!mounted) return;
+    
     try {
-      const result = await attach({
-        productId,
+      // Call the Autumn API directly via our backend
+      const response = await fetch('/api/autumn/attach', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to initiate checkout');
+      }
+
+      const result = await response.json();
       
       // Handle the result - if there's a checkout_url, redirect to it
-      if (result.data?.checkout_url) {
-        window.location.href = result.data.checkout_url;
+      if (result.checkout_url) {
+        window.location.href = result.checkout_url;
       }
     } catch (error) {
       console.error('Error purchasing:', error);
-      // If error is due to authentication, redirect to login
       if (error instanceof Error && (error.message.includes('auth') || error.message.includes('unauthorized'))) {
         window.location.href = '/login?redirect=/plans';
       }
     }
   };
+
+  return (
+    <Button
+      onClick={handlePurchase}
+      disabled={disabled || !mounted}
+      className={className}
+    >
+      {children}
+    </Button>
+  );
+}
+
+export default function PricingPage() {
+  const { data: session, isPending } = useSession();
+
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
@@ -122,13 +145,22 @@ export default function PricingPage() {
                 Full AI coverage
               </li>
             </ul>
-            <Button
-              onClick={() => handlePurchase('single-analysis')}
-              disabled={isPending || !session?.user}
-              className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
-            >
-              {isPending ? 'Loading...' : 'Buy Now'}
-            </Button>
+            {session?.user ? (
+              <PurchaseButton
+                productId="single-analysis"
+                disabled={isPending}
+                className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
+              >
+                {isPending ? 'Loading...' : 'Buy Now'}
+              </PurchaseButton>
+            ) : (
+              <Link
+                href="/login?redirect=/plans"
+                className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
+              >
+                Buy Now
+              </Link>
+            )}
           </div>
 
           {/* Credit Pack */}
@@ -158,13 +190,22 @@ export default function PricingPage() {
                 Priority support
               </li>
             </ul>
-            <Button
-              onClick={() => handlePurchase('credit-pack')}
-              disabled={isPending || !session?.user}
-              className="btn-firecrawl-outline w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
-            >
-              {isPending ? 'Loading...' : 'Buy Now'}
-            </Button>
+            {session?.user ? (
+              <PurchaseButton
+                productId="credit-pack"
+                disabled={isPending}
+                className="btn-firecrawl-outline w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
+              >
+                {isPending ? 'Loading...' : 'Buy Now'}
+              </PurchaseButton>
+            ) : (
+              <Link
+                href="/login?redirect=/plans"
+                className="btn-firecrawl-outline w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
+              >
+                Buy Now
+              </Link>
+            )}
           </div>
         </div>
 
