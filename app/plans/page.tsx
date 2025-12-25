@@ -2,9 +2,45 @@
 
 import Link from 'next/link';
 import { useSession } from '@/lib/auth-client';
+import { useCustomer } from '@/hooks/useAutumnCustomer';
+import { Button } from '@/components/ui/button';
 
 export default function PricingPage() {
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
+  const { attach } = useCustomer();
+
+  const handlePurchase = async (productId: string) => {
+    // Wait for session to load
+    if (isPending) {
+      console.log('Session loading, please wait...');
+      return; // Don't do anything while loading
+    }
+
+    // Check if user is authenticated
+    if (!session?.user) {
+      console.log('No session, redirecting to login');
+      // Redirect to login if not authenticated
+      window.location.href = '/login?redirect=/plans';
+      return;
+    }
+
+    try {
+      const result = await attach({
+        productId,
+      });
+      
+      // Handle the result - if there's a checkout_url, redirect to it
+      if (result.data?.checkout_url) {
+        window.location.href = result.data.checkout_url;
+      }
+    } catch (error) {
+      console.error('Error purchasing:', error);
+      // If error is due to authentication, redirect to login
+      if (error instanceof Error && (error.message.includes('auth') || error.message.includes('unauthorized'))) {
+        window.location.href = '/login?redirect=/plans';
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
@@ -49,10 +85,10 @@ export default function PricingPage() {
               </li>
             </ul>
             <Link
-              href="/register"
+              href={session?.user ? "/dashboard" : "/register"}
               className="btn-firecrawl-outline w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
             >
-              Start Free
+              {session?.user ? 'Go to Dashboard' : 'Start Free'}
             </Link>
           </div>
 
@@ -86,12 +122,13 @@ export default function PricingPage() {
                 Full AI coverage
               </li>
             </ul>
-            <Link
-              href="/register"
+            <Button
+              onClick={() => handlePurchase('single-analysis')}
+              disabled={isPending || !session?.user}
               className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
             >
-              Buy Now
-            </Link>
+              {isPending ? 'Loading...' : 'Buy Now'}
+            </Button>
           </div>
 
           {/* Credit Pack */}
@@ -121,12 +158,13 @@ export default function PricingPage() {
                 Priority support
               </li>
             </ul>
-            <Link
-              href="/register"
+            <Button
+              onClick={() => handlePurchase('credit-pack')}
+              disabled={isPending || !session?.user}
               className="btn-firecrawl-outline w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-10 px-4"
             >
-              Buy Now
-            </Link>
+              {isPending ? 'Loading...' : 'Buy Now'}
+            </Button>
           </div>
         </div>
 

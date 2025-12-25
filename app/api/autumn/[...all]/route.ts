@@ -28,7 +28,7 @@ export const { GET, POST } = autumnHandler({
     }
   },
   billingPortalConfig: {
-    business_name: "Fire SaaS",
+    business_name: "AI Brand Track",
     privacy_policy_url: `${process.env.NEXT_PUBLIC_APP_URL}/privacy`,
     terms_of_service_url: `${process.env.NEXT_PUBLIC_APP_URL}/terms`,
   },

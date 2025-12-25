@@ -25,7 +25,7 @@ async function setupBillingPortal() {
   try {
     const configuration = await stripe.billingPortal.configurations.create({
       business_profile: {
-        headline: 'Fire SaaS - Manage your subscription',
+        headline: 'AI Brand Track - Manage your subscription',
         privacy_policy_url: `${process.env.NEXT_PUBLIC_APP_URL}/privacy`,
         terms_of_service_url: `${process.env.NEXT_PUBLIC_APP_URL}/terms`,
       },
