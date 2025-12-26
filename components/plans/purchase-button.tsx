@@ -42,9 +42,56 @@ export default function PurchaseButton({ productId, disabled, className, childre
       
       if (checkoutUrl) {
         console.log('Opening checkout in new tab:', checkoutUrl);
-        // Open immediately in new tab - this should happen before any redirect
-        window.open(checkoutUrl, '_blank');
+        
+        // Open in new tab immediately
+        const newWindow = window.open(checkoutUrl, '_blank');
+        
+        // Prevent any automatic redirect by intercepting location changes
+        // Use setTimeout to ensure window.open executes first
+        setTimeout(() => {
+          // Try to prevent redirect by overriding location.replace
+          const originalReplace = window.location.replace;
+          window.location.replace = function(url: string) {
+            if (url.includes('checkout.stripe.com')) {
+              console.log('Prevented redirect to:', url);
+              return; // Prevent redirect
+            }
+            return originalReplace.call(window.location, url);
+          };
+          
+          // Also prevent href assignment
+          const originalHref = Object.getOwnPropertyDescriptor(window.location, 'href');
+          if (originalHref) {
+            Object.defineProperty(window.location, 'href', {
+              get: originalHref.get,
+              set: function(value: string) {
+                if (value.includes('checkout.stripe.com')) {
+                  console.log('Prevented href redirect to:', value);
+                  return; // Prevent redirect
+                }
+                if (originalHref.set) {
+                  originalHref.set.call(window.location, value);
+                }
+              },
+              configurable: true,
+            });
+          }
+          
+          // Restore after a short delay
+          setTimeout(() => {
+            if (originalHref) {
+              Object.defineProperty(window.location, 'href', originalHref);
+            }
+            window.location.replace = originalReplace;
+          }, 500);
+        }, 0);
+        
         setLoading(false);
+        
+        // If newWindow was blocked, show a message
+        if (!newWindow || newWindow.closed) {
+          console.warn('Popup blocked or window closed');
+        }
       } else {
         console.warn('No checkout URL found in result:', result);
         setLoading(false);
