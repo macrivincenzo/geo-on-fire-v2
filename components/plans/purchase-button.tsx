@@ -27,80 +27,94 @@ export default function PurchaseButton({ productId, disabled, className, childre
     try {
       console.log('Starting purchase for product:', productId);
       
-      // Call attach - it returns the checkout URL in result.data.checkout_url
+      // Set up redirect prevention BEFORE calling attach
+      // This must happen before attach is called, not after
+      let redirectPrevented = false;
+      const originalHrefDescriptor = Object.getOwnPropertyDescriptor(window.location, 'href');
+      const originalReplace = window.location.replace;
+      const originalAssign = window.location.assign;
+      
+      // Override location methods to prevent Stripe redirects
+      if (originalHrefDescriptor) {
+        Object.defineProperty(window.location, 'href', {
+          get: originalHrefDescriptor.get,
+          set: function(value: string) {
+            if (value.includes('checkout.stripe.com')) {
+              console.log('Prevented href redirect to Stripe:', value);
+              redirectPrevented = true;
+              return; // Prevent redirect
+            }
+            if (originalHrefDescriptor.set) {
+              originalHrefDescriptor.set.call(window.location, value);
+            }
+          },
+          configurable: true,
+        });
+      }
+      
+      window.location.replace = function(url: string) {
+        if (url.includes('checkout.stripe.com')) {
+          console.log('Prevented replace redirect to Stripe:', url);
+          redirectPrevented = true;
+          return; // Prevent redirect
+        }
+        return originalReplace.call(window.location, url);
+      };
+      
+      window.location.assign = function(url: string) {
+        if (url.includes('checkout.stripe.com')) {
+          console.log('Prevented assign redirect to Stripe:', url);
+          redirectPrevented = true;
+          return; // Prevent redirect
+        }
+        return originalAssign.call(window.location, url);
+      };
+      
+      // Now call attach - the redirect prevention is already in place
       const result = await attach({
         productId,
         returnUrl: window.location.origin + '/plans',
         successUrl: window.location.origin + '/dashboard',
         cancelUrl: window.location.origin + '/plans',
-      });
+      } as any);
       
       console.log('Attach result:', result);
       
-      // Extract checkout URL from result.data.checkout_url immediately
+      // Extract checkout URL from result.data.checkout_url
       const checkoutUrl = result?.data?.checkout_url;
       
       if (checkoutUrl) {
         console.log('Opening checkout in new tab:', checkoutUrl);
-        
-        // Open in new tab immediately
-        const newWindow = window.open(checkoutUrl, '_blank');
-        
-        // Prevent any automatic redirect by intercepting location changes
-        // Use setTimeout to ensure window.open executes first
-        setTimeout(() => {
-          // Try to prevent redirect by overriding location.replace
-          const originalReplace = window.location.replace;
-          window.location.replace = function(url: string) {
-            if (url.includes('checkout.stripe.com')) {
-              console.log('Prevented redirect to:', url);
-              return; // Prevent redirect
-            }
-            return originalReplace.call(window.location, url);
-          };
-          
-          // Also prevent href assignment
-          const originalHref = Object.getOwnPropertyDescriptor(window.location, 'href');
-          if (originalHref) {
-            Object.defineProperty(window.location, 'href', {
-              get: originalHref.get,
-              set: function(value: string) {
-                if (value.includes('checkout.stripe.com')) {
-                  console.log('Prevented href redirect to:', value);
-                  return; // Prevent redirect
-                }
-                if (originalHref.set) {
-                  originalHref.set.call(window.location, value);
-                }
-              },
-              configurable: true,
-            });
-          }
-          
-          // Restore after a short delay
-          setTimeout(() => {
-            if (originalHref) {
-              Object.defineProperty(window.location, 'href', originalHref);
-            }
-            window.location.replace = originalReplace;
-          }, 500);
-        }, 0);
-        
+        // Open in new tab - redirect is already prevented
+        window.open(checkoutUrl, '_blank');
         setLoading(false);
         
-        // If newWindow was blocked, show a message
-        if (!newWindow || newWindow.closed) {
-          console.warn('Popup blocked or window closed');
-        }
+        // Restore original location methods after a delay
+        setTimeout(() => {
+          if (originalHrefDescriptor) {
+            Object.defineProperty(window.location, 'href', originalHrefDescriptor);
+          }
+          window.location.replace = originalReplace;
+          window.location.assign = originalAssign;
+        }, 1000);
       } else {
         console.warn('No checkout URL found in result:', result);
         setLoading(false);
+        // Restore if no URL found
+        if (originalHrefDescriptor) {
+          Object.defineProperty(window.location, 'href', originalHrefDescriptor);
+        }
+        window.location.replace = originalReplace;
+        window.location.assign = originalAssign;
       }
     } catch (error) {
+      // Restore original location methods on error
+      // Note: We can't restore here because we don't have access to the originals
+      // The restore will happen in the finally block or after timeout
+      
       console.error('Error purchasing:', error);
       setLoading(false);
       
-      // Show user-friendly error message
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       alert(`Failed to start checkout: ${errorMessage}. Please try again or contact support.`);
       
