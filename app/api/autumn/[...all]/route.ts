@@ -1,7 +1,13 @@
 import { autumnHandler } from "autumn-js/next";
 import { auth } from "@/lib/auth";
 
+// Validate AUTUMN_SECRET_KEY is set
+if (!process.env.AUTUMN_SECRET_KEY) {
+  console.error('[Autumn] AUTUMN_SECRET_KEY is not set in environment variables');
+}
+
 export const { GET, POST } = autumnHandler({
+  apiKey: process.env.AUTUMN_SECRET_KEY,
   identify: async (request) => {
     try {
       const session = await auth.api.getSession({
