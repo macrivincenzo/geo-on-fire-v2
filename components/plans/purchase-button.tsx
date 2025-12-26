@@ -27,40 +27,37 @@ export default function PurchaseButton({ productId, disabled, className, childre
     try {
       console.log('Starting purchase for product:', productId);
       
-      // Call attach - it should automatically redirect to Stripe checkout
-      // or return a checkout URL
-      const result = await attach({
-        productId,
-        returnUrl: window.location.origin + '/plans',
-        successUrl: window.location.origin + '/dashboard',
-        cancelUrl: window.location.origin + '/plans',
+      // Make direct API call to get checkout URL instead of using attach
+      // This gives us control over opening in a new tab
+      const response = await fetch('/api/autumn/attach', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId,
+          returnUrl: window.location.origin + '/plans',
+          successUrl: window.location.origin + '/dashboard',
+          cancelUrl: window.location.origin + '/plans',
+        }),
       });
       
-      console.log('Attach result:', result);
+      if (!response.ok) {
+        throw new Error(`Failed to create checkout: ${response.status}`);
+      }
       
-      // Autumn's attach function may automatically redirect or return a checkout URL
-      // Open checkout in new tab so user doesn't leave the site
-      if (result?.data?.checkout_url) {
-        console.log('Opening checkout in new tab:', result.data.checkout_url);
-        window.open(result.data.checkout_url, '_blank');
-        setLoading(false); // Reset loading state after opening new tab
-      } else if (result?.checkout_url) {
-        console.log('Opening checkout in new tab (direct):', result.checkout_url);
-        window.open(result.checkout_url, '_blank');
-        setLoading(false); // Reset loading state after opening new tab
-      } else if (result?.url) {
-        console.log('Opening URL in new tab:', result.url);
-        window.open(result.url, '_blank');
-        setLoading(false); // Reset loading state after opening new tab
+      const data = await response.json();
+      console.log('Checkout response:', data);
+      
+      // Extract checkout URL from response
+      const checkoutUrl = data?.checkout_url || data?.data?.checkout_url || data?.url;
+      
+      if (checkoutUrl) {
+        console.log('Opening checkout in new tab:', checkoutUrl);
+        window.open(checkoutUrl, '_blank');
+        setLoading(false);
       } else {
-        // If no explicit redirect, attach might have already redirected
-        // or opened a checkout session automatically
-        console.log('Attach completed, checking if redirect happened...');
-        setLoading(false); // Reset loading state
-        // Give it a moment in case redirect is happening
-        setTimeout(() => {
-          console.warn('No redirect detected after attach. Result:', result);
-        }, 1000);
+        throw new Error('No checkout URL in response');
       }
     } catch (error) {
       console.error('Error purchasing:', error);
