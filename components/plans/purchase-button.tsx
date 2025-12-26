@@ -39,20 +39,24 @@ export default function PurchaseButton({ productId, disabled, className, childre
       console.log('Attach result:', result);
       
       // Autumn's attach function may automatically redirect or return a checkout URL
-      // Check various possible response structures
+      // Open checkout in new tab so user doesn't leave the site
       if (result?.data?.checkout_url) {
-        console.log('Redirecting to checkout:', result.data.checkout_url);
-        window.location.href = result.data.checkout_url;
+        console.log('Opening checkout in new tab:', result.data.checkout_url);
+        window.open(result.data.checkout_url, '_blank');
+        setLoading(false); // Reset loading state after opening new tab
       } else if (result?.checkout_url) {
-        console.log('Redirecting to checkout (direct):', result.checkout_url);
-        window.location.href = result.checkout_url;
+        console.log('Opening checkout in new tab (direct):', result.checkout_url);
+        window.open(result.checkout_url, '_blank');
+        setLoading(false); // Reset loading state after opening new tab
       } else if (result?.url) {
-        console.log('Redirecting to URL:', result.url);
-        window.location.href = result.url;
+        console.log('Opening URL in new tab:', result.url);
+        window.open(result.url, '_blank');
+        setLoading(false); // Reset loading state after opening new tab
       } else {
         // If no explicit redirect, attach might have already redirected
         // or opened a checkout session automatically
         console.log('Attach completed, checking if redirect happened...');
+        setLoading(false); // Reset loading state
         // Give it a moment in case redirect is happening
         setTimeout(() => {
           console.warn('No redirect detected after attach. Result:', result);
