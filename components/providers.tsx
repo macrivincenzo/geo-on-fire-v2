@@ -16,7 +16,7 @@ function AuthAwareAutumnProvider({ children }: { children: React.ReactNode }) {
   
   return (
     <AutumnProvider
-      backendUrl="/api/auth/autumn"
+      backendUrl="/api/autumn"
       betterAuthUrl={process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}
       allowAnonymous={false}
       skipInitialFetch={false}
