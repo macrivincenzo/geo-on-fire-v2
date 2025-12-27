@@ -91,6 +91,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://www.aibrandtrack.com',
   },
+  icons: {
+    icon: '/ai-brand-track-logo.jpeg',
+    apple: '/ai-brand-track-logo.jpeg',
+    shortcut: '/ai-brand-track-logo.jpeg',
+  },
 };
 
 export default function RootLayout({
