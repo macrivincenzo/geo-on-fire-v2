@@ -437,12 +437,12 @@ export function BrandMonitor({
       }
       
       // Fallback to generic prompts based on industry/service type
-      const serviceType = detectServiceType(company);
+    const serviceType = detectServiceType(company);
       return [
-        `Best ${serviceType}s in ${currentYear}?`,
-        `Top ${serviceType}s for startups?`,
-        `Most popular ${serviceType}s today?`,
-        `Recommended ${serviceType}s for developers?`
+      `Best ${serviceType}s in ${currentYear}?`,
+      `Top ${serviceType}s for startups?`,
+      `Most popular ${serviceType}s today?`,
+      `Recommended ${serviceType}s for developers?`
       ];
     };
     
@@ -644,11 +644,11 @@ export function BrandMonitor({
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-6 flex-1 overflow-auto">
+                    <CardContent className="pt-6 flex-1">
                       {analysis.providerComparison ? (
-                        <ProviderComparisonMatrix 
-                          data={analysis.providerComparison} 
-                          brandName={company?.name || ''} 
+                        <ProviderComparisonMatrix
+                          data={analysis.providerComparison}
+                          brandName={company?.name || ''}
                           competitors={identifiedCompetitors}
                         />
                       ) : (
@@ -695,7 +695,7 @@ export function BrandMonitor({
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-6 flex-1 overflow-auto">
+                    <CardContent className="pt-6 flex-1">
                       <PromptsResponsesTab
                         prompts={analysis.prompts}
                         responses={analysis.responses}
