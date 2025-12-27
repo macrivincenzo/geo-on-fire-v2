@@ -49,7 +49,7 @@ export const AUTUMN_PRODUCTS: AutumnProduct[] = [
     },
     items: [
       {
-        id: 'free-credits',
+        id: 'messages', // Use 'messages' as feature_id for credits
         type: 'unit',
         display: {
           primary_text: '10 credits',
@@ -89,7 +89,7 @@ export const AUTUMN_PRODUCTS: AutumnProduct[] = [
         },
       },
       {
-        id: 'single-analysis-credits',
+        id: 'messages', // Use 'messages' as feature_id for credits
         type: 'unit',
         display: {
           primary_text: '50 credits',
@@ -128,7 +128,7 @@ export const AUTUMN_PRODUCTS: AutumnProduct[] = [
         },
       },
       {
-        id: 'credit-pack-credits',
+        id: 'messages', // Use 'messages' as feature_id for credits
         type: 'unit',
         display: {
           primary_text: '200 credits',
