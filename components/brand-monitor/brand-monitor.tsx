@@ -629,8 +629,8 @@ export function BrandMonitor({
                     {/* Simple Explanation Card */}
                     <ComparisonMatrixExplanation />
                     
-                  <Card className="p-2 bg-white dark:bg-gray-800 gap-6 border border-gray-200 dark:border-gray-700 py-6 h-full flex flex-col">
-                    <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+                  <Card className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
+                    <CardHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
                       <div className="flex justify-between items-center">
                         <div>
                           <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">Comparison Matrix</CardTitle>
@@ -680,8 +680,8 @@ export function BrandMonitor({
                     {/* Simple Explanation Card */}
                     <PromptsResponsesExplanation />
                     
-                  <Card className="p-2 bg-white dark:bg-gray-800 gap-6 border border-gray-200 dark:border-gray-700 py-6 h-full flex flex-col">
-                    <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+                  <Card className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
+                    <CardHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
                       <div className="flex justify-between items-center">
                         <div>
                           <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">Prompts & Responses</CardTitle>

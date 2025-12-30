@@ -57,10 +57,10 @@ export function CompanyCard({
   const validFaviconUrl = isValidUrl(company.favicon) ? company.favicon : null;
 
   return (
-    <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 overflow-hidden transition-all hover:shadow-lg">
+    <Card className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors hover:border-gray-300 dark:hover:border-gray-600">
       <div className="flex">
         {/* Left side - Logo/Image Display */}
-        <div className="relative w-80 h-48 ml-4 overflow-hidden rounded-lg bg-gray-100 border border-gray-200">
+        <div className="relative w-80 h-48 overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
           {validLogoUrl && !logoError ? (
             <div className="absolute inset-0 pr-4 py-4">
               <Image
@@ -110,7 +110,7 @@ export function CompanyCard({
         <div className="flex-1 p-8">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900">{company.name}</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{company.name}</h3>
               <div className="flex items-center gap-2 mt-1">
                 {company.industry && (
                   <Badge variant="secondary">
@@ -123,10 +123,10 @@ export function CompanyCard({
                 </span>
               </div>
             </div>
-            <button 
-              onClick={onAnalyze} 
+            <button
+              onClick={onAnalyze}
               disabled={analyzing}
-              className="h-9 rounded-[10px] text-sm font-medium flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-[#36322F] text-[#fff] hover:bg-[#4a4542] disabled:bg-[#8c8885] disabled:hover:bg-[#8c8885] [box-shadow:inset_0px_-2.108433723449707px_0px_0px_#171310,_0px_1.2048193216323853px_6.325301647186279px_0px_rgba(58,_33,_8,_58%)] hover:translate-y-[1px] hover:scale-[0.98] hover:[box-shadow:inset_0px_-1px_0px_0px_#171310,_0px_1px_3px_0px_rgba(58,_33,_8,_40%)] active:translate-y-[2px] active:scale-[0.97] active:[box-shadow:inset_0px_1px_1px_0px_#171310,_0px_1px_2px_0px_rgba(58,_33,_8,_30%)] disabled:shadow-none disabled:hover:translate-y-0 disabled:hover:scale-100 px-4 py-1"
+              className="h-9 px-4 py-1 text-sm font-medium flex items-center transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:hover:bg-gray-400"
             >
               {analyzing ? (
                 <>
@@ -139,7 +139,7 @@ export function CompanyCard({
             </button>
           </div>
 
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
             {company.description}
           </p>
 
@@ -177,20 +177,20 @@ export function CompanyCard({
       
       {/* Competitors Section */}
       {showCompetitors && identifiedCompetitors.length > 0 && (
-        <div className="border-t border-gray-200">
+        <div className="border-t border-gray-200 dark:border-gray-700">
           <div className="px-8 py-6">
             <div className="mb-4">
               <div>
-                <h3 className="text-sm font-medium text-gray-900">Competitors</h3>
-                <p className="text-sm text-gray-500">We'll compare {company.name} against these {identifiedCompetitors.length} competitors</p>
+                <h3 className="text-sm font-medium text-gray-900 dark:text-white">Competitors</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">We'll compare {company.name} against these {identifiedCompetitors.length} competitors</p>
               </div>
             </div>
               
               <div className="grid grid-cols-3 gap-4">
                 {identifiedCompetitors.map((competitor, idx) => (
-                  <div 
-                    key={idx} 
-                    className="group relative bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all opacity-0 animate-fade-up"
+                  <div
+                    key={idx}
+                    className="group relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 hover:border-gray-300 dark:hover:border-gray-600 transition-colors opacity-0 animate-fade-up"
                     style={{ 
                       animationDelay: `${idx * 50}ms`,
                       animationFillMode: 'forwards',
@@ -255,23 +255,23 @@ export function CompanyCard({
               </div>
               
               {/* Actions */}
-              <div className="flex items-center gap-4 mt-6 pt-6 border-t">
+              <div className="flex items-center gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                 {onAddCompetitor && (
                   <button
                     onClick={onAddCompetitor}
-                    className="h-10 px-4 rounded-[10px] text-sm font-medium flex items-center gap-1 transition-all duration-200 bg-orange-500 text-white hover:bg-orange-600 [box-shadow:inset_0px_-2.108433723449707px_0px_0px_#c2410c,_0px_1.2048193216323853px_6.325301647186279px_0px_rgba(234,_88,_12,_58%)] hover:translate-y-[1px] hover:scale-[0.98] hover:[box-shadow:inset_0px_-1px_0px_0px_#c2410c,_0px_1px_3px_0px_rgba(234,_88,_12,_40%)] active:translate-y-[2px] active:scale-[0.97] active:[box-shadow:inset_0px_1px_1px_0px_#c2410c,_0px_1px_2px_0px_rgba(234,_88,_12,_30%)]"
+                    className="h-10 px-4 text-sm font-medium flex items-center gap-1 transition-colors bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
                   >
                     <Plus className="w-4 h-4" />
                     Add Competitor
                   </button>
                 )}
-                
+
                 <div className="flex-1" />
-                
+
                 {onContinueToAnalysis && (
                   <button
                     onClick={onContinueToAnalysis}
-                    className="h-10 px-6 rounded-[10px] text-sm font-medium flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-[#36322F] text-[#fff] hover:bg-[#4a4542] disabled:bg-[#8c8885] disabled:hover:bg-[#8c8885] [box-shadow:inset_0px_-2.108433723449707px_0px_0px_#171310,_0px_1.2048193216323853px_6.325301647186279px_0px_rgba(58,_33,_8,_58%)] hover:translate-y-[1px] hover:scale-[0.98] hover:[box-shadow:inset_0px_-1px_0px_0px_#171310,_0px_1px_3px_0px_rgba(58,_33,_8,_40%)] active:translate-y-[2px] active:scale-[0.97] active:[box-shadow:inset_0px_1px_1px_0px_#171310,_0px_1px_2px_0px_rgba(58,_33,_8,_30%)] disabled:shadow-none disabled:hover:translate-y-0 disabled:hover:scale-100"
+                    className="h-10 px-6 text-sm font-medium flex items-center transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:hover:bg-gray-400"
                   >
                     Continue to Analysis
                   </button>
