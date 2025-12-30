@@ -57,9 +57,8 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left side - Blue solid */}
-      <div className="hidden lg:flex lg:w-1/2 bg-blue-600 p-12 items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-blue-600" />
-        <div className="relative z-10 max-w-md text-white">
+      <div className="hidden lg:flex lg:w-1/2 bg-blue-600 p-12 items-center justify-center">
+        <div className="max-w-md text-white">
           <h1 className="text-4xl font-bold mb-4">Start tracking your brand</h1>
           <p className="text-lg opacity-90">
             Monitor how AI models rank your brand and get actionable insights to improve your visibility.
@@ -69,25 +68,22 @@ export default function RegisterPage() {
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span>Unlimited API access</span>
+              <span>10 free credits on signup</span>
             </div>
             <div className="flex items-center space-x-3">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span>Real-time collaboration</span>
+              <span>Track 4+ AI platforms</span>
             </div>
             <div className="flex items-center space-x-3">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span>24/7 support</span>
+              <span>Real-time analysis</span>
             </div>
           </div>
         </div>
-        {/* Decorative elements */}
-        <div className="absolute top-20 right-20 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
-        <div className="absolute bottom-20 left-20 w-64 h-64 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
       </div>
 
       {/* Right side - Form */}
@@ -123,7 +119,7 @@ export default function RegisterPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -139,7 +135,7 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Enter your email"
                 />
               </div>
@@ -155,7 +151,7 @@ export default function RegisterPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Choose a strong password"
                 />
                 <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
@@ -163,7 +159,7 @@ export default function RegisterPage() {
             </div>
 
             {error && (
-              <div className={`border px-4 py-3 rounded-lg ${showExistingAccountOptions ? 'bg-gray-900 border-gray-800' : 'bg-red-50 border-red-200'}`}>
+              <div className={`border px-4 py-3 ${showExistingAccountOptions ? 'bg-gray-900 border-gray-800' : 'bg-red-50 border-red-200'}`}>
                 <p className={showExistingAccountOptions ? 'text-white font-medium' : 'text-red-600'}>
                   {error}
                 </p>
@@ -173,15 +169,15 @@ export default function RegisterPage() {
                       It looks like you already have an account with this email address.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <Link 
+                      <Link
                         href={`/login?email=${encodeURIComponent(email)}`}
-                        className="inline-flex items-center justify-center px-4 py-2 border border-blue-500 text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-900 transition-colors"
+                        className="inline-flex items-center justify-center px-4 py-2 border border-blue-500 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors"
                       >
                         Sign in instead
                       </Link>
-                      <Link 
+                      <Link
                         href="/forgot-password"
-                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-blue-400 hover:text-blue-300 focus:outline-none focus:underline transition-colors"
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 focus:underline transition-colors"
                       >
                         Forgot password?
                       </Link>
@@ -214,7 +210,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 h-10 px-4"
+                className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Creating account...' : 'Create account'}
               </button>
