@@ -148,14 +148,14 @@ export default function Home() {
             </div>
 
             {/* Clean headline */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight leading-tight">
               Monitor Your AI Brand
               <br />
               <span className="text-blue-600">Visibility</span>
             </h1>
 
             {/* Simple description */}
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed px-4">
               See how ChatGPT, Claude, Perplexity & Gemini rank your brand against competitors. Get actionable insights to improve your AI presence.
             </p>
 
@@ -176,7 +176,7 @@ export default function Home() {
             </div>
 
             {/* Trust indicators */}
-            <div className="flex items-center justify-center gap-6 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-gray-500 dark:text-gray-400">
               <span>✓ No credit card required</span>
               <span>✓ 10 free credits</span>
               <span>✓ 30 second setup</span>
@@ -213,10 +213,10 @@ export default function Home() {
       <section className="py-24 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Simple Pay-As-You-Go Pricing
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 px-4">
               No subscriptions. No complicated plans. Just simple credits for brand analysis.
             </p>
           </div>
@@ -344,10 +344,10 @@ export default function Home() {
       <section className="py-24 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               How AI Brand Visibility Tracking Works
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
               Monitor your brand's presence across AI search platforms with comprehensive <Link href="/brand-monitor" className="text-blue-600 hover:text-blue-700 transition-colors">AI brand monitoring</Link> and <Link href="/about" className="text-blue-600 hover:text-blue-700 transition-colors">GEO optimization tools</Link>.
             </p>
           </div>
@@ -382,7 +382,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
                 Why AI Brand Visibility Monitoring Matters
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
@@ -458,11 +458,11 @@ export default function Home() {
       {/* CTA Section - Clean Minimal */}
       <section className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-blue-600 dark:bg-blue-700 p-16 text-center border-2 border-blue-700 dark:border-blue-600">
-            <h2 className="text-4xl font-bold text-white mb-6">
+          <div className="bg-blue-600 dark:bg-blue-700 p-8 sm:p-12 md:p-16 text-center border-2 border-blue-700 dark:border-blue-600">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
               See How AI Models Rank Your Brand
             </h2>
-            <p className="text-xl text-blue-50 mb-8">
+            <p className="text-lg sm:text-xl text-blue-50 mb-8 px-4">
               Monitor your brand visibility across ChatGPT, Claude, Perplexity, Google Gemini, and more. Start your free AI brand analysis today.
             </p>
             <Link
@@ -480,10 +480,10 @@ export default function Home() {
       <section className="py-24 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Frequently asked questions
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 px-4">
               Everything you need to know about AI Brand Track
             </p>
           </div>
