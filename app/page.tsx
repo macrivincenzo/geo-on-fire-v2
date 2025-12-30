@@ -134,110 +134,76 @@ export default function Home() {
           })
         }}
       />
-    <div className="min-h-screen">
-      {/* Hero Section - Premium Design */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 pt-24 pb-32">
-        {/* Animated background gradient */}
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25" />
-
-        {/* Floating orbs */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/20 rounded-full filter blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-400/20 rounded-full filter blur-3xl animate-pulse delay-700" />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Hero Section - Clean & Minimal */}
+      <section className="relative pt-20 pb-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Clean centered content */}
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm font-medium mb-8 animate-fade-in-up">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            {/* Simple badge */}
+            <div className="inline-block mb-8">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-full">
+                Track Your Brand Across 4+ AI Platforms
               </span>
-              Track Your Brand Across 4+ AI Platforms
             </div>
 
-            <h1 className="text-6xl lg:text-8xl font-black tracking-tight mb-8 animate-fade-in-up animation-delay-100">
-              <span className="block bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent">
-                AI Brand Track
-              </span>
-              <span className="block mt-4 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent text-5xl lg:text-7xl">
-                See How AI Ranks Your Brand
-              </span>
+            {/* Clean headline */}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
+              Monitor Your AI Brand
+              <br />
+              <span className="text-blue-600">Visibility</span>
             </h1>
 
-            <p className="text-xl lg:text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto mb-10 leading-relaxed animate-fade-in-up animation-delay-200">
-              Monitor your brand visibility across <span className="font-semibold text-gray-900 dark:text-white">ChatGPT, Claude, Perplexity & Gemini</span>. Get real-time rankings, competitor analysis, and AI search optimization insights.
+            {/* Simple description */}
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+              See how ChatGPT, Claude, Perplexity & Gemini rank your brand against competitors. Get actionable insights to improve your AI presence.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up animation-delay-400">
+            {/* Clean CTA buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Link
                 href="/brand-monitor"
-                className="group relative inline-flex items-center justify-center gap-2 px-10 py-5 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl shadow-blue-500/50 hover:shadow-blue-600/60 hover:scale-105 transition-all duration-300 overflow-hidden"
+                className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative flex items-center gap-2">
-                  Start Free Analysis
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </span>
+                Start Free Analysis
               </Link>
               <Link
                 href="/plans"
-                className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-gray-900 dark:text-white bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg transition-colors"
               >
                 View Pricing
               </Link>
             </div>
 
-            <p className="mt-8 text-sm text-gray-600 dark:text-gray-400 animate-fade-in-up animation-delay-600 flex items-center justify-center gap-4 flex-wrap">
-              <span className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                No credit card required
-              </span>
-              <span className="text-gray-400">•</span>
-              <span className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                10 free credits on signup
-              </span>
-              <span className="text-gray-400">•</span>
-              <span className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                Setup in 30 seconds
-              </span>
-            </p>
+            {/* Trust indicators */}
+            <div className="flex items-center justify-center gap-6 text-sm text-gray-500 dark:text-gray-400">
+              <span>✓ No credit card required</span>
+              <span>✓ 10 free credits</span>
+              <span>✓ 30 second setup</span>
+            </div>
           </div>
 
-          {/* Premium Stats Card */}
-          <div className="mt-24 relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-[30px] blur-2xl opacity-20" />
-            <div className="relative backdrop-blur-xl bg-white/40 dark:bg-gray-900/40 border border-white/20 dark:border-gray-700/20 rounded-[30px] p-12 shadow-2xl animate-fade-in-scale animation-delay-800">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                <div className="text-center group cursor-default animate-fade-in-up animation-delay-1000">
-                  <div className="text-5xl font-black bg-gradient-to-br from-blue-600 to-purple-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform">4+</div>
-                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-3">AI Platforms</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">ChatGPT, Claude, Gemini, Perplexity</div>
-                </div>
-                <div className="text-center group cursor-default animate-fade-in-up animation-delay-1000" style={{animationDelay: '1100ms'}}>
-                  <div className="text-5xl font-black bg-gradient-to-br from-purple-600 to-pink-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform">Real-time</div>
-                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-3">Live Analysis</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Instant brand visibility tracking</div>
-                </div>
-                <div className="text-center group cursor-default animate-fade-in-up animation-delay-1000" style={{animationDelay: '1200ms'}}>
-                  <div className="text-5xl font-black bg-gradient-to-br from-pink-600 to-orange-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform">100%</div>
-                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-3">Accurate</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Competitor benchmarking</div>
-                </div>
-                <div className="text-center group cursor-default animate-fade-in-up animation-delay-1000" style={{animationDelay: '1300ms'}}>
-                  <div className="text-5xl font-black bg-gradient-to-br from-orange-600 to-blue-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform">24/7</div>
-                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-3">Monitoring</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">SEO & GEO optimization</div>
-                </div>
-              </div>
+          {/* Clean Stats Grid */}
+          <div className="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8 py-12 border-t border-b border-gray-200 dark:border-gray-700">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">4+</div>
+              <div className="text-sm font-medium text-gray-600 dark:text-gray-400">AI Platforms</div>
+              <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">ChatGPT, Claude, Gemini, Perplexity</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Real-time</div>
+              <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Live Analysis</div>
+              <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">Instant visibility tracking</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">100%</div>
+              <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Accurate</div>
+              <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">Competitor benchmarking</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">24/7</div>
+              <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Monitoring</div>
+              <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">SEO & GEO optimization</div>
             </div>
           </div>
         </div>
