@@ -629,18 +629,18 @@ export function BrandMonitor({
                     {/* Simple Explanation Card */}
                     <ComparisonMatrixExplanation />
                     
-                  <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
-                    <CardHeader className="border-b">
+                  <Card className="p-2 bg-white dark:bg-gray-800 gap-6 border border-gray-200 dark:border-gray-700 py-6 h-full flex flex-col">
+                    <CardHeader className="border-b border-gray-200 dark:border-gray-700">
                       <div className="flex justify-between items-center">
                         <div>
-                          <CardTitle className="text-xl font-semibold">Comparison Matrix</CardTitle>
-                          <CardDescription className="text-sm text-gray-600 mt-1">
+                          <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">Comparison Matrix</CardTitle>
+                          <CardDescription className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                             Compare visibility scores across different AI providers
                           </CardDescription>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-orange-600">{brandData.visibilityScore}%</p>
-                          <p className="text-xs text-gray-500 mt-1">Average Score</p>
+                          <p className="text-2xl font-bold text-blue-600">{brandData.visibilityScore}%</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Average Score</p>
                         </div>
                       </div>
                     </CardHeader>
@@ -680,18 +680,18 @@ export function BrandMonitor({
                     {/* Simple Explanation Card */}
                     <PromptsResponsesExplanation />
                     
-                  <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
-                    <CardHeader className="border-b">
+                  <Card className="p-2 bg-white dark:bg-gray-800 gap-6 border border-gray-200 dark:border-gray-700 py-6 h-full flex flex-col">
+                    <CardHeader className="border-b border-gray-200 dark:border-gray-700">
                       <div className="flex justify-between items-center">
                         <div>
-                          <CardTitle className="text-xl font-semibold">Prompts & Responses</CardTitle>
-                          <CardDescription className="text-sm text-gray-600 mt-1">
+                          <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">Prompts & Responses</CardTitle>
+                          <CardDescription className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                             AI responses to your brand queries
                           </CardDescription>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-orange-600">{analysis.prompts.length}</p>
-                          <p className="text-xs text-gray-500 mt-1">Total Prompts</p>
+                          <p className="text-2xl font-bold text-blue-600">{analysis.prompts.length}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Total Prompts</p>
                         </div>
                       </div>
                     </CardHeader>

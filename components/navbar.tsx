@@ -42,12 +42,12 @@ export function Navbar() {
   };
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
+    <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
                 AI Brand Track
               </span>
             </Link>
@@ -57,14 +57,14 @@ export function Navbar() {
             {session && (
               <Link
                 href="/brand-monitor"
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 Brand Monitor
               </Link>
             )}
             <Link
               href="/plans"
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               Pricing
             </Link>
@@ -78,29 +78,29 @@ export function Navbar() {
               <>
                 <Link
                   href="/dashboard"
-                  className="btn-firecrawl-orange inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-8 px-3"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors"
                 >
                   Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
                   disabled={isLoggingOut}
-                  className="btn-firecrawl-default inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 h-8 px-3"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
                 >
                   {isLoggingOut ? 'Logging out...' : 'Logout'}
                 </button>
               </>
             ) : (
               <>
-                <Link 
+                <Link
                   href="/login"
-                  className="bg-black text-white hover:bg-gray-800 dark:hover:bg-gray-700 inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-8 px-3 shadow-sm hover:shadow-md"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   Login
                 </Link>
-                <Link 
+                <Link
                   href="/register"
-                  className="btn-firecrawl-orange inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 h-8 px-3"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors"
                 >
                   Register
                 </Link>

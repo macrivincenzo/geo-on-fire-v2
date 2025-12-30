@@ -62,50 +62,48 @@ function BrandMonitorContent({ session }: { session: any }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Header */}
-      <div className="relative overflow-hidden bg-white border-b">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Hero Header - Clean Minimal */}
+      <div className="relative bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="px-4 sm:px-6 lg:px-8 py-12">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between">
-              <div className="text-center flex-1">
-                <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-2 animate-fade-in-up">
-                  <span className="block text-zinc-900">AI Brand Track</span>
-                  <span className="block text-blue-600 dark:text-blue-400">
-                    Monitor Your AI Brand Visibility
-                  </span>
-                </h1>
-                <p className="text-lg text-zinc-600 animate-fade-in-up animation-delay-200">
-                  Track how AI models rank your brand against competitors
-                </p>
-              </div>
+            <div className="text-center">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-2">
+                <span className="block text-gray-900 dark:text-white">AI Brand Track</span>
+                <span className="block text-blue-600">
+                  Monitor Your AI Brand Visibility
+                </span>
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
+                Track how AI models rank your brand against competitors
+              </p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="flex h-[calc(100vh-12rem)] relative">
-        {/* Sidebar Toggle Button - Always visible */}
+        {/* Sidebar Toggle Button - Clean Minimal */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className={`absolute top-2 z-10 p-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200 ${
+          className={`absolute top-2 z-10 p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
             sidebarOpen ? 'left-[324px]' : 'left-4'
           }`}
           aria-label="Toggle sidebar"
         >
           {sidebarOpen ? (
-            <X className="h-5 w-5 text-gray-600" />
+            <X className="h-5 w-5 text-gray-600 dark:text-gray-300" />
           ) : (
-            <Menu className="h-5 w-5 text-gray-600" />
+            <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
           )}
         </button>
 
-        {/* Sidebar */}
-        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-white border-r overflow-hidden flex flex-col transition-all duration-200`}>
-          <div className="p-4 border-b">
+        {/* Sidebar - Clean Minimal */}
+        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col transition-all duration-200`}>
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <Button
               onClick={handleNewAnalysis}
-              className="w-full btn-firecrawl-orange"
+              className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-4 h-4 mr-2" />
               New Analysis
@@ -122,8 +120,8 @@ function BrandMonitorContent({ session }: { session: any }) {
                 {analyses?.map((analysis) => (
                   <div
                     key={analysis.id}
-                    className={`p-3 rounded-lg cursor-pointer hover:bg-gray-100 ${
-                      selectedAnalysisId === analysis.id ? 'bg-gray-100' : ''
+                    className={`p-3 cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                      selectedAnalysisId === analysis.id ? 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600' : ''
                     }`}
                     onClick={() => setSelectedAnalysisId(analysis.id)}
                   >
@@ -192,17 +190,17 @@ export default function BrandMonitorPage() {
 
   if (isPending) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Please log in to access the brand monitor</p>
+          <p className="text-gray-600 dark:text-gray-300">Please log in to access the brand monitor</p>
         </div>
       </div>
     );
