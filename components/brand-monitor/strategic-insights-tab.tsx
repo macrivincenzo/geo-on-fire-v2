@@ -53,13 +53,6 @@ function HealthScoreCard({ insights }: { insights: StrategicInsights }) {
     return colorMap[health] || '#6b7280';
   };
   
-  const healthColors = {
-    excellent: 'bg-green-500',
-    good: 'bg-blue-500',
-    'needs-work': 'bg-amber-500',
-    critical: 'bg-red-500'
-  };
-  
   const healthIcons = {
     excellent: <Trophy className="w-6 h-6 text-green-600" />,
     good: <CheckCircle className="w-6 h-6 text-blue-600" />,
@@ -75,20 +68,20 @@ function HealthScoreCard({ insights }: { insights: StrategicInsights }) {
   };
   
   return (
-    <Card className="bg-white border-slate-200">
+    <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
       <CardContent className="pt-6">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-3">
               {healthIcons[insights.overallHealth]}
               <div>
-                <p className="text-sm text-gray-500 font-medium">AI Visibility Health</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-1">AI Visibility Health</p>
+                <p className="text-3xl font-bold text-gray-900">
                   {healthLabels[insights.overallHealth]}
                 </p>
               </div>
             </div>
-            <p className="text-sm text-gray-600 leading-relaxed">
+            <p className="text-base text-gray-700 leading-relaxed">
               {insights.summary}
             </p>
           </div>
@@ -149,11 +142,11 @@ function ActionItemsCard({ actions, title, icon }: {
   if (actions.length === 0) return null;
   
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <CardHeader className="pb-4 bg-gradient-to-r from-gray-50 to-white">
         <div className="flex items-center gap-2">
           {icon}
-          <CardTitle className="text-lg">{title}</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-900">{title}</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -190,13 +183,13 @@ function CompetitiveGapsCard({ gaps }: { gaps: CompetitiveGap[] }) {
   if (gaps.length === 0) return null;
   
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-white border-b">
         <div className="flex items-center gap-2">
           <BarChart3 className="w-5 h-5 text-purple-600" />
-          <CardTitle className="text-lg">Competitive Gap Analysis</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-900">Competitive Gap Analysis</CardTitle>
         </div>
-        <CardDescription>How you compare to each competitor</CardDescription>
+        <CardDescription className="text-sm text-gray-600 mt-1.5">How you compare to each competitor</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {gaps.slice(0, 5).map((gap, idx) => (
@@ -259,17 +252,17 @@ function BrandQuotesCard({ quotes, brandName }: { quotes: BrandQuote[]; brandNam
   if (quotes.length === 0) {
     return (
       <Card>
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-4">
           <div className="flex items-center gap-2">
             <MessageSquareQuote className="w-5 h-5 text-teal-600" />
-            <CardTitle className="text-lg">What AI Says About You</CardTitle>
+            <CardTitle className="text-xl font-bold text-gray-900">What AI Says About You</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-6 text-gray-500">
-            <Quote className="w-10 h-10 mx-auto mb-3 opacity-30" />
-            <p className="text-sm">No direct quotes found mentioning {brandName}.</p>
-            <p className="text-xs mt-1">This is an opportunity to create more content!</p>
+          <div className="text-center py-10 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-dashed border-gray-300">
+            <Quote className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+            <p className="text-base font-semibold text-gray-700 mb-1">No direct quotes found mentioning {brandName}</p>
+            <p className="text-sm text-gray-600">This is an opportunity to create more content!</p>
           </div>
         </CardContent>
       </Card>
@@ -289,13 +282,13 @@ function BrandQuotesCard({ quotes, brandName }: { quotes: BrandQuote[]; brandNam
   };
   
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <CardHeader className="pb-4 bg-gradient-to-r from-teal-50 to-white border-b">
         <div className="flex items-center gap-2">
           <MessageSquareQuote className="w-5 h-5 text-teal-600" />
-          <CardTitle className="text-lg">What AI Says About You</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-900">What AI Says About You</CardTitle>
         </div>
-        <CardDescription>Direct quotes from AI responses mentioning your brand</CardDescription>
+        <CardDescription className="text-sm text-gray-600 mt-1.5">Direct quotes from AI responses mentioning your brand</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {quotes.slice(0, 5).map((quote, idx) => (
@@ -343,13 +336,13 @@ function ContentSuggestionsCard({ suggestions }: { suggestions: ContentSuggestio
   };
   
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <CardHeader className="pb-4 bg-gradient-to-r from-yellow-50 to-white border-b">
         <div className="flex items-center gap-2">
           <Lightbulb className="w-5 h-5 text-yellow-600" />
-          <CardTitle className="text-lg">Content Strategy</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-900">Content Strategy</CardTitle>
         </div>
-        <CardDescription>Recommended content to boost AI visibility</CardDescription>
+        <CardDescription className="text-sm text-gray-600 mt-1.5">Recommended content to boost AI visibility</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {suggestions.slice(0, 5).map((suggestion, idx) => (
@@ -387,13 +380,13 @@ function ContentSuggestionsCard({ suggestions }: { suggestions: ContentSuggestio
 // ============================================
 function ProviderInsightsCard({ insights, brandName }: { insights: ProviderInsight[]; brandName: string }) {
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <CardHeader className="pb-4 bg-gradient-to-r from-indigo-50 to-white border-b">
         <div className="flex items-center gap-2">
           <Shield className="w-5 h-5 text-indigo-600" />
-          <CardTitle className="text-lg">AI Provider Analysis</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-900">AI Provider Analysis</CardTitle>
         </div>
-        <CardDescription>How each AI provider sees {brandName}</CardDescription>
+        <CardDescription className="text-sm text-gray-600 mt-1.5">How each AI provider sees {brandName}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {insights.map((insight, idx) => (
@@ -461,33 +454,33 @@ export function StrategicInsightsTab({
       
       {/* Quick Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-4">
+        <Card className="p-5 shadow-sm hover:shadow-md transition-all hover:scale-105 border-l-4 border-l-orange-500">
           <div className="text-center">
-            <p className="text-2xl font-bold text-orange-600">{brandData.visibilityScore}%</p>
-            <p className="text-xs text-gray-500">Visibility Score</p>
+            <p className="text-3xl font-bold text-orange-600">{brandData.visibilityScore}%</p>
+            <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Visibility Score</p>
           </div>
         </Card>
-        <Card className="p-4">
+        <Card className="p-5 shadow-sm hover:shadow-md transition-all hover:scale-105 border-l-4 border-l-blue-500">
           <div className="text-center">
-            <p className="text-2xl font-bold text-blue-600">
+            <p className="text-3xl font-bold text-blue-600">
               #{(() => {
                 const rankIndex = competitors.findIndex(c => c.isOwn);
                 return rankIndex >= 0 ? rankIndex + 1 : '?';
               })()}
             </p>
-            <p className="text-xs text-gray-500">Market Rank</p>
+            <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Market Rank</p>
           </div>
         </Card>
-        <Card className="p-4">
+        <Card className="p-5 shadow-sm hover:shadow-md transition-all hover:scale-105 border-l-4 border-l-purple-500">
           <div className="text-center">
-            <p className="text-2xl font-bold text-purple-600">{insights.actionItems.length}</p>
-            <p className="text-xs text-gray-500">Action Items</p>
+            <p className="text-3xl font-bold text-purple-600">{insights.actionItems.length}</p>
+            <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Action Items</p>
           </div>
         </Card>
-        <Card className="p-4">
+        <Card className="p-5 shadow-sm hover:shadow-md transition-all hover:scale-105 border-l-4 border-l-green-500">
           <div className="text-center">
-            <p className="text-2xl font-bold text-green-600">{brandData.mentions}</p>
-            <p className="text-xs text-gray-500">Brand Mentions</p>
+            <p className="text-3xl font-bold text-green-600">{brandData.mentions}</p>
+            <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Brand Mentions</p>
             <p className="text-xs text-gray-400 mt-1" title="Total number of AI responses (across all providers) where your brand was mentioned">
               {responses.length} total responses
             </p>

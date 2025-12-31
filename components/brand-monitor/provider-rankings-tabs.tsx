@@ -209,12 +209,12 @@ export function ProviderRankingsTabs({
               <div className="overflow-x-auto rounded-lg border border-gray-200">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr>
-                      <th className="bg-gray-50 border-b border-r border-gray-200 text-left p-3 text-xs font-medium text-gray-900 w-8">#</th>
-                      <th className="bg-gray-50 border-b border-r border-gray-200 text-left p-3 text-xs font-medium text-gray-900 w-[200px]">Company</th>
-                      <th className="bg-gray-50 border-b border-r border-gray-200 text-right p-3 text-xs font-medium text-gray-900">Visibility</th>
-                      <th className="bg-gray-50 border-b border-r border-gray-200 text-right p-3 text-xs font-medium text-gray-900">Share of Voice</th>
-                      <th className="bg-gray-50 border-b border-gray-200 text-right p-3 text-xs font-medium text-gray-900">Sentiment</th>
+                    <tr className="bg-gradient-to-r from-gray-50 to-gray-100">
+                      <th className="border-b-2 border-r border-gray-300 text-left p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider w-12">#</th>
+                      <th className="border-b-2 border-r border-gray-300 text-left p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider w-[200px]">Company</th>
+                      <th className="border-b-2 border-r border-gray-300 text-right p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider">Visibility</th>
+                      <th className="border-b-2 border-r border-gray-300 text-right p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider">Share of Voice</th>
+                      <th className="border-b-2 border-gray-300 text-right p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider">Sentiment</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -223,44 +223,82 @@ export function ProviderRankingsTabs({
                       const hasVisibility = competitor.visibilityScore > 0;
                       
                       return (
-                        <tr 
-                          key={idx} 
+                        <tr
+                          key={idx}
                           className={`
                             ${idx > 0 ? 'border-t border-gray-200' : ''}
-                            ${competitor.isOwn 
-                              ? 'bg-orange-50' 
-                              : hasVisibility 
+                            ${competitor.isOwn
+                              ? 'bg-gradient-to-r from-orange-50 to-orange-100 border-l-4 border-l-orange-500'
+                              : hasVisibility
                               ? 'hover:bg-gray-50 transition-colors'
-                              : 'opacity-60'
+                              : 'opacity-60 bg-gray-50'
                             }
                           `}
                         >
-                          <td className="border-r border-gray-200 p-3 text-xs text-black">
-                            {hasVisibility ? idx + 1 : '-'}
+                          <td className="border-r border-gray-200 p-4">
+                            <div className="flex items-center justify-center">
+                              {hasVisibility ? (
+                                <span className={`text-sm font-bold ${
+                                  competitor.isOwn ? 'text-orange-700' : idx === 0 ? 'text-blue-600' : 'text-gray-700'
+                                }`}>
+                                  #{idx + 1}
+                                </span>
+                              ) : (
+                                <span className="text-xs text-gray-400">N/A</span>
+                              )}
+                            </div>
                           </td>
-                          <td className="border-r border-gray-200 p-3">
-                            <CompanyCell 
+                          <td className="border-r border-gray-200 p-4">
+                            <CompanyCell
                               name={competitor.name}
                               isOwn={competitor.isOwn}
                               url={competitorUrl}
                             />
                           </td>
-                          <td className="border-r border-gray-200 p-3 text-right">
-                            <div className="flex items-center justify-end gap-1">
-                              <span className="text-sm font-medium text-black">
-                                {competitor.visibilityScore}%
-                              </span>
-                              {competitor.weeklyChange !== undefined && competitor.weeklyChange !== 0 && (
-                                getChangeIcon(competitor.weeklyChange)
+                          <td className="border-r border-gray-200 p-4 text-right">
+                            <div className="flex flex-col items-end gap-1">
+                              <div className="flex items-center gap-2">
+                                <span className={`text-base font-semibold ${
+                                  competitor.isOwn ? 'text-orange-700' : 'text-gray-900'
+                                }`}>
+                                  {competitor.visibilityScore}%
+                                </span>
+                                {competitor.weeklyChange !== undefined && competitor.weeklyChange !== 0 && (
+                                  <span className={`text-xs ${
+                                    competitor.weeklyChange > 0 ? 'text-green-600' : 'text-red-600'
+                                  }`}>
+                                    {getChangeIcon(competitor.weeklyChange)}
+                                  </span>
+                                )}
+                              </div>
+                              {hasVisibility && (
+                                <div className="w-20 bg-gray-200 h-1.5 overflow-hidden">
+                                  <div
+                                    className={`h-full transition-all duration-300 ${
+                                      competitor.isOwn ? 'bg-orange-500' : 'bg-blue-500'
+                                    }`}
+                                    style={{ width: `${competitor.visibilityScore}%` }}
+                                  />
+                                </div>
                               )}
                             </div>
                           </td>
-                          <td className="border-r border-gray-200 p-3 text-right">
-                            <span className="text-sm text-black">
-                              {competitor.shareOfVoice}%
-                            </span>
+                          <td className="border-r border-gray-200 p-4 text-right">
+                            <div className="flex flex-col items-end gap-1">
+                              <span className="text-sm font-medium text-gray-900">
+                                {competitor.shareOfVoice}%
+                              </span>
+                              {hasVisibility && (
+                                <div className="w-16 bg-gray-200 h-1 overflow-hidden">
+                                  <div
+                                    className="h-full bg-purple-500 transition-all duration-300"
+                                    style={{ width: `${competitor.shareOfVoice}%` }}
+                                  />
+                                </div>
+                              )}
+                            </div>
                           </td>
-                          <td className="p-3 text-right">
+                          <td className="p-4 text-right">
                             {getSentimentBadge(competitor.sentiment)}
                           </td>
                         </tr>
@@ -274,35 +312,35 @@ export function ProviderRankingsTabs({
           })}
         </Tabs>
         
-        {/* Metrics Row at Bottom */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 pt-6 border-t">
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <p className="text-xs text-gray-500 mb-1">Competitors</p>
-            <p className="text-lg font-semibold text-black">{competitors.length}</p>
+        {/* Metrics Row at Bottom - Enhanced Design */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-6 pt-6 border-t-2 border-gray-200">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 p-4 text-center transition-transform hover:scale-105">
+            <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-2">Competitors</p>
+            <p className="text-2xl font-bold text-blue-900">{competitors.length}</p>
           </div>
-          <div className="bg-orange-50 rounded-lg p-4 text-center">
-            <p className="text-xs text-gray-500 mb-1">{brandName} Rank</p>
-            <p className="text-lg font-semibold text-black">
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-300 p-4 text-center transition-transform hover:scale-105">
+            <p className="text-xs font-semibold text-orange-700 uppercase tracking-wide mb-2">{brandName} Rank</p>
+            <p className="text-2xl font-bold text-orange-900">
               #{brandRank}
             </p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <p className="text-xs text-gray-500 mb-1">{brandName} Visibility</p>
-            <p className="text-lg font-semibold text-black">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 p-4 text-center transition-transform hover:scale-105">
+            <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">{brandName} Visibility</p>
+            <p className="text-2xl font-bold text-green-900">
               {brandVisibility}%
             </p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <p className="text-xs text-gray-500 mb-1">Share of Voice</p>
-            <p className="text-lg font-semibold text-black">{shareOfVoice}%</p>
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 p-4 text-center transition-transform hover:scale-105">
+            <p className="text-xs font-semibold text-purple-700 uppercase tracking-wide mb-2">Share of Voice</p>
+            <p className="text-2xl font-bold text-purple-900">{shareOfVoice}%</p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <p className="text-xs text-gray-500 mb-1">Average Position</p>
-            <p className="text-lg font-semibold text-black">#{averagePosition}</p>
+          <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 border border-indigo-200 p-4 text-center transition-transform hover:scale-105">
+            <p className="text-xs font-semibold text-indigo-700 uppercase tracking-wide mb-2">Average Position</p>
+            <p className="text-2xl font-bold text-indigo-900">#{averagePosition}</p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <p className="text-xs text-gray-500 mb-1">Sentiment Score</p>
-            <p className="text-lg font-semibold text-black">{sentimentScore}%</p>
+          <div className="bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 p-4 text-center transition-transform hover:scale-105">
+            <p className="text-xs font-semibold text-pink-700 uppercase tracking-wide mb-2">Sentiment Score</p>
+            <p className="text-2xl font-bold text-pink-900">{sentimentScore}%</p>
           </div>
         </div>
       </CardContent>

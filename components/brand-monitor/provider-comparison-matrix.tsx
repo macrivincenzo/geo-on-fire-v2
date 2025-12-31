@@ -96,9 +96,14 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
   
   if (!data || data.length === 0) {
     return (
-      <div className="text-center py-12 bg-gray-50 rounded-lg">
-        <p className="text-gray-600 text-lg mb-2">No comparison data available</p>
-        <p className="text-gray-500 text-sm">The analysis may still be processing or no providers returned data.</p>
+      <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border-2 border-dashed border-gray-300">
+        <div className="max-w-md mx-auto">
+          <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          <p className="text-xl font-bold text-gray-700 mb-2">No Comparison Data Available</p>
+          <p className="text-sm text-gray-600 leading-relaxed">The analysis may still be processing or no providers returned data. Please try again in a few moments.</p>
+        </div>
       </div>
     );
   }
@@ -127,12 +132,23 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
   //   });
   // });
   
-  // Get background style based on score
+  // Get background style based on score - improved contrast
   const getBackgroundStyle = (score: number) => {
-    const opacity = Math.pow(score / 100, 0.5);
+    if (score === 0) {
+      return {
+        backgroundColor: 'rgb(249, 250, 251)', // light gray
+        color: 'rgb(107, 114, 128)' // gray text
+      };
+    }
+
+    // Use a more sophisticated color scale for better contrast
+    const opacity = Math.pow(score / 100, 0.4); // Adjusted power for better visibility
+    const bgOpacity = Math.max(0.15, opacity); // Minimum 15% opacity for visibility
+
     return {
-      backgroundColor: `rgba(251, 146, 60, ${opacity})`,
-      border: score > 0 ? '1px solid rgb(251, 146, 60)' : undefined
+      backgroundColor: `rgba(251, 146, 60, ${bgOpacity})`,
+      color: score > 50 ? 'rgb(124, 45, 18)' : 'rgb(154, 52, 18)', // Darker text for better contrast
+      fontWeight: '600'
     };
   };
 
@@ -178,8 +194,8 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
   if (providers.length === 0) return null;
   
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table className="w-full border-collapse">
+    <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+      <table className="w-full border-collapse bg-white">
         <thead>
           <tr>
             <th className="bg-gray-50 border-b border-r border-gray-200 w-[180px]">
@@ -234,18 +250,29 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
                 {providers.map((provider, index) => {
                   const providerData = competitor.providers[provider];
                   const score = providerData?.visibilityScore || 0;
-                  
+                  const styleProps = getBackgroundStyle(score);
+
                   return (
-                    <td 
-                      key={provider} 
-                      className={`text-center p-3 ${
+                    <td
+                      key={provider}
+                      className={`text-center p-4 transition-colors ${
                         index < providers.length - 1 ? 'border-r border-gray-200' : ''
                       }`}
-                      style={getBackgroundStyle(score)}
+                      style={styleProps}
                     >
-                      <span className="text-orange-900 font-medium text-xs">
-                        {score}%
-                      </span>
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-sm" style={{ color: styleProps.color, fontWeight: styleProps.fontWeight }}>
+                          {score}%
+                        </span>
+                        {score > 0 && (
+                          <div className="w-full bg-white bg-opacity-30 h-1 overflow-hidden">
+                            <div
+                              className="h-full bg-orange-600 transition-all duration-300"
+                              style={{ width: `${score}%` }}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </td>
                   );
                 })}

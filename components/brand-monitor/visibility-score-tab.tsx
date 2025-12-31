@@ -27,19 +27,19 @@ export function VisibilityScoreTab({
       <VisibilityScoreExplanation score={brandData.visibilityScore} rank={brandRank} />
       
       {/* Main Content Card */}
-      <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm border-gray-200 h-full flex flex-col">
-        <CardHeader className="border-b">
+      <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-md hover:shadow-lg transition-shadow border-gray-200 h-full flex flex-col">
+        <CardHeader className="border-b pb-5">
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle className="text-xl font-semibold">Visibility Score</CardTitle>
-              <CardDescription className="text-sm text-gray-600 mt-1">
+              <CardTitle className="text-2xl font-bold text-gray-900">Visibility Score</CardTitle>
+              <CardDescription className="text-base text-gray-600 mt-2">
                 Your brand visibility across AI providers
               </CardDescription>
             </div>
             {/* Visibility Score in top right */}
             <div className="text-right">
-              <p className="text-3xl font-bold text-orange-600">{brandData.visibilityScore}%</p>
-              <p className="text-xs text-gray-500 mt-1">Overall Score</p>
+              <p className="text-4xl font-bold text-orange-600">{brandData.visibilityScore}%</p>
+              <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Overall Score</p>
             </div>
           </div>
         </CardHeader>
@@ -111,10 +111,10 @@ export function VisibilityScoreTab({
                 
                 {/* Center text showing relative performance */}
                 <div className="absolute top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                  <p className="text-3xl font-bold text-gray-900">#{brandRank}</p>
-                  <p className="text-sm text-gray-500 mt-1">Rank</p>
+                  <p className="text-4xl font-bold text-gray-900">#{brandRank}</p>
+                  <p className="text-xs uppercase tracking-wider text-gray-500 mt-1 font-semibold">Rank</p>
                   {difference !== 0 && (
-                    <p className={`text-xs mt-2 font-medium ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className={`text-xs mt-2 font-semibold ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {difference > 0 ? '+' : ''}{Math.abs(difference).toFixed(1)}% vs #1
                     </p>
                   )}
@@ -163,11 +163,11 @@ export function VisibilityScoreTab({
                         </div>
                       </div>
                       <span className={`text-sm truncate ${
-                        competitor.isOwn ? 'font-semibold text-orange-600' : 'text-gray-700'
+                        competitor.isOwn ? 'font-bold text-orange-600' : 'font-medium text-gray-700'
                       }`}>
                         {competitor.name}
                       </span>
-                      <span className="text-sm font-medium text-gray-900 ml-auto">
+                      <span className="text-sm font-bold text-gray-900 ml-auto">
                         {competitor.visibilityScore}%
                       </span>
                     </div>

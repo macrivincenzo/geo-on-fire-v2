@@ -114,7 +114,7 @@ export function PromptsResponsesTab({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search prompts and responses..."
-              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
+              className="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm font-medium placeholder:text-gray-500 placeholder:font-normal"
             />
             <svg 
               className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
@@ -206,11 +206,11 @@ export function PromptsResponsesTab({
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{promptData.prompt}</p>
+                  <p className="text-base font-semibold text-gray-900 truncate">{promptData.prompt}</p>
                   {hasBrandMention && (
-                    <Badge 
-                      variant="default" 
-                      className="text-xs bg-green-100 text-green-800 shrink-0"
+                    <Badge
+                      variant="default"
+                      className="text-xs font-semibold bg-green-100 text-green-800 shrink-0"
                       title={`Brand mentioned by ${promptResponses.filter(r => r.brandMentioned).length} of ${promptResponses.length} provider(s) for this prompt`}
                     >
                       Brand Mentioned
@@ -272,9 +272,9 @@ export function PromptsResponsesTab({
                       return (
                       <div key={providerName} className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-2">
                             {getProviderIcon(response.provider)}
-                            <span className="font-medium text-sm text-gray-900">{response.provider}</span>
+                            <span className="font-bold text-sm text-gray-900">{response.provider}</span>
                           </div>
                           {isFailed ? (
                             <Badge variant="destructive" className="text-xs bg-red-100 text-red-800">
@@ -291,9 +291,9 @@ export function PromptsResponsesTab({
                             </Badge>
                           )}
                         </div>
-                        <div className="bg-gray-50 rounded-md p-3 text-sm text-gray-700 select-text cursor-text">
+                        <div className="bg-gray-50 rounded-md p-4 text-sm text-gray-700 leading-relaxed select-text cursor-text">
                           {isFailed ? (
-                            <div className="text-red-600 italic">
+                            <div className="text-red-600 font-medium italic">
                               Response failed or returned empty content
                             </div>
                           ) : (
@@ -302,7 +302,7 @@ export function PromptsResponsesTab({
                               brandName={brandName}
                               competitors={competitors}
                               showHighlighting={true}
-                              highlightClassName="bg-green-100 text-green-900 px-0.5 rounded font-medium"
+                              highlightClassName="bg-green-100 text-green-900 px-0.5 rounded font-semibold"
                               renderMarkdown={true}
                             />
                           )}
@@ -312,7 +312,13 @@ export function PromptsResponsesTab({
                     })}
                   </div>
                 ) : (
-                  <div className="text-gray-500 text-sm text-center py-4">No responses available for this prompt</div>
+                  <div className="text-center py-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-dashed border-gray-300">
+                    <svg className="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <p className="text-sm font-semibold text-gray-600">No responses available for this prompt</p>
+                    <p className="text-xs text-gray-500 mt-1">Responses may still be loading</p>
+                  </div>
                 )}
               </div>
             </div>
@@ -322,9 +328,9 @@ export function PromptsResponsesTab({
       
       {/* No results message */}
       {searchQuery && filteredPromptIndices.length === 0 && (
-        <div className="text-center py-8 bg-gray-50 rounded-lg">
-          <p className="text-gray-600 mb-2">No results found for "{searchQuery}"</p>
-          <p className="text-gray-500 text-sm">Try searching for different keywords</p>
+        <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+          <p className="text-lg font-semibold text-gray-700 mb-2">No results found for "{searchQuery}"</p>
+          <p className="text-sm text-gray-500">Try searching for different keywords</p>
         </div>
       )}
     </div>
