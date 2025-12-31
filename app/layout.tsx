@@ -92,9 +92,12 @@ export const metadata: Metadata = {
     canonical: 'https://www.aibrandtrack.com',
   },
   icons: {
-    icon: '/ai-brand-track-logo.jpeg',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '48x48' }
+    ],
     apple: '/ai-brand-track-logo.jpeg',
-    shortcut: '/ai-brand-track-logo.jpeg',
+    shortcut: '/favicon.svg',
   },
 };
 
