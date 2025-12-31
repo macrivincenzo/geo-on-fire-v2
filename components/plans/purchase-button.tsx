@@ -56,33 +56,10 @@ export default function PurchaseButton({ productId, disabled, className, childre
       const checkoutUrl = result?.data?.checkout_url || result?.checkout_url;
 
       if (checkoutUrl) {
-        console.log('Opening checkout in new tab:', checkoutUrl);
+        console.log('Redirecting to checkout:', checkoutUrl);
 
-        // Open checkout in a new tab/window
-        const newWindow = window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
-
-        // Check if popup was blocked
-        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-          console.warn('Popup was blocked by browser');
-          // Show user a message instead of auto-navigating
-          const userWantsToOpen = confirm(
-            'Your browser blocked the checkout popup. Click OK to open checkout in a new tab, or Cancel to copy the checkout link instead.'
-          );
-
-          if (userWantsToOpen) {
-            window.open(checkoutUrl, '_blank');
-          } else {
-            // Copy to clipboard
-            navigator.clipboard.writeText(checkoutUrl).then(() => {
-              alert('Checkout link copied to clipboard! Paste it in a new tab to complete your purchase.');
-            }).catch(() => {
-              alert(`Please copy this link to complete your purchase:\n\n${checkoutUrl}`);
-            });
-          }
-        }
-
-        // Just reset loading state - DO NOT navigate anywhere
-        setLoading(false);
+        // Directly navigate to checkout in the same tab
+        window.location.href = checkoutUrl;
       } else {
         console.warn('No checkout URL found in response:', result);
         setLoading(false);
