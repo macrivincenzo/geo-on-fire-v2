@@ -56,10 +56,13 @@ export default function PurchaseButton({ productId, disabled, className, childre
       const checkoutUrl = result?.data?.checkout_url || result?.checkout_url;
 
       if (checkoutUrl) {
-        console.log('Redirecting to checkout:', checkoutUrl);
+        console.log('Opening checkout in new tab:', checkoutUrl);
 
-        // Directly navigate to checkout in the same tab
-        window.location.href = checkoutUrl;
+        // Open checkout in a new tab
+        window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
+
+        // Reset loading state
+        setLoading(false);
       } else {
         console.warn('No checkout URL found in response:', result);
         setLoading(false);
