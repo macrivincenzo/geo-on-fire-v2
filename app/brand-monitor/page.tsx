@@ -62,7 +62,7 @@ function BrandMonitorContent({ session }: { session: any }) {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="bg-white dark:bg-gray-900">
       {/* Hero Header - Clean Minimal */}
       <div className="relative bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="px-4 sm:px-6 lg:px-8 py-12">
@@ -82,11 +82,11 @@ function BrandMonitorContent({ session }: { session: any }) {
         </div>
       </div>
 
-      <div className="flex h-[calc(100vh-12rem)] relative">
+      <div className="flex relative min-h-screen">
         {/* Sidebar Toggle Button - Clean Minimal */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className={`absolute top-2 z-10 p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+          className={`fixed top-[13rem] z-20 p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all ${
             sidebarOpen ? 'left-[324px]' : 'left-4'
           }`}
           aria-label="Toggle sidebar"
@@ -99,8 +99,8 @@ function BrandMonitorContent({ session }: { session: any }) {
         </button>
 
         {/* Sidebar - Clean Minimal */}
-        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col transition-all duration-200`}>
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col transition-all duration-200 fixed left-0 top-0 h-screen z-10`}>
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700 mt-16">
             <Button
               onClick={handleNewAnalysis}
               className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors"
@@ -109,8 +109,8 @@ function BrandMonitorContent({ session }: { session: any }) {
               New Analysis
             </Button>
           </div>
-          
-          <div className="overflow-y-auto flex-1">
+
+          <div className="overflow-y-auto flex-1 pb-6">
             {analysesLoading ? (
               <div className="p-4 text-center text-gray-500">Loading analyses...</div>
             ) : analyses?.length === 0 ? (
@@ -156,10 +156,10 @@ function BrandMonitorContent({ session }: { session: any }) {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="px-6 sm:px-8 lg:px-12 py-8">
-            <BrandMonitor 
-              creditsAvailable={credits} 
+        <div className={`flex-1 transition-all duration-200 ${sidebarOpen ? 'ml-80' : 'ml-0'}`}>
+          <div className="px-6 sm:px-8 lg:px-12 py-8 pb-24">
+            <BrandMonitor
+              creditsAvailable={credits}
               onCreditsUpdate={handleCreditsUpdate}
               selectedAnalysis={selectedAnalysisId ? currentAnalysis : null}
               onSaveAnalysis={(analysis) => {
@@ -170,6 +170,8 @@ function BrandMonitorContent({ session }: { session: any }) {
           </div>
         </div>
       </div>
+
+      {/* Footer will be placed here by layout.tsx - it will scroll naturally */}
       
       <ConfirmationDialog
         open={deleteDialogOpen}
