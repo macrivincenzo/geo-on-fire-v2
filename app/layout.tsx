@@ -17,6 +17,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.aibrandtrack.com'),
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
   title: {
     default: "AI Brand Track - Monitor Your Brand Visibility Across AI Platforms | ChatGPT, Claude, Perplexity & Gemini Tracking",
     template: "%s | AI Brand Track"

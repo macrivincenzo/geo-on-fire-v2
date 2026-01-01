@@ -56,13 +56,11 @@ export default function PurchaseButton({ productId, disabled, className, childre
       const checkoutUrl = result?.data?.checkout_url || result?.checkout_url;
 
       if (checkoutUrl) {
-        console.log('Opening checkout in new tab:', checkoutUrl);
+        console.log('Redirecting to checkout:', checkoutUrl);
 
-        // Open checkout in a new tab
-        window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
-
-        // Reset loading state
-        setLoading(false);
+        // Use window.location.href instead of window.open for better mobile compatibility
+        // This works reliably across all mobile browsers without popup blockers
+        window.location.href = checkoutUrl;
       } else {
         console.warn('No checkout URL found in response:', result);
         setLoading(false);
