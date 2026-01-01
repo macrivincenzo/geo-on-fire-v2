@@ -3,7 +3,7 @@
 import { BrandMonitor } from '@/components/brand-monitor/brand-monitor';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sparkles, Menu, X, Plus, Trash2, Loader2 } from 'lucide-react';
+import { Menu, X, Plus, Trash2, Loader2 } from 'lucide-react';
 import { useCustomer, useRefreshCustomer } from '@/hooks/useAutumnCustomer';
 import { useBrandAnalyses, useBrandAnalysis, useDeleteBrandAnalysis } from '@/hooks/useBrandAnalyses';
 import { Button } from '@/components/ui/button';
@@ -188,7 +188,15 @@ function BrandMonitorContent({ session }: { session: any }) {
 }
 
 export default function BrandMonitorPage() {
+  const router = useRouter();
   const { data: session, isPending } = useSession();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.push('/login?redirect=/brand-monitor');
+    }
+  }, [session, isPending, router]);
 
   if (isPending) {
     return (
@@ -201,9 +209,7 @@ export default function BrandMonitorPage() {
   if (!session) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 dark:text-gray-300">Please log in to access the brand monitor</p>
-        </div>
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
