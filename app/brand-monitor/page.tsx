@@ -14,7 +14,9 @@ import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 // Separate component that uses Autumn hooks
 function BrandMonitorContent({ session }: { session: any }) {
   const router = useRouter();
-  const { customer, isLoading, error } = useCustomer();
+  const { customer, isLoading, error } = useCustomer({
+    skip: !session
+  });
   const refreshCustomer = useRefreshCustomer();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedAnalysisId, setSelectedAnalysisId] = useState<string | null>(null);
@@ -33,7 +35,7 @@ function BrandMonitorContent({ session }: { session: any }) {
   useEffect(() => {
     // If there's an auth error, redirect to login
     if (error?.code === 'UNAUTHORIZED' || error?.code === 'AUTH_ERROR') {
-      router.push('/login');
+      router.push('/login?redirect=/brand-monitor');
     }
   }, [error, router]);
 
