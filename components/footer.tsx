@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
+  const currentYear = 2026;
   
   return (
     <>
