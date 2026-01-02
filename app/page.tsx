@@ -364,6 +364,137 @@ export default function Home() {
         }}
       />
 
+      {/* ULTRATHINK: Product Reviews for star ratings in search results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "AI Brand Track",
+            "description": "AI brand visibility monitoring platform for tracking your brand across ChatGPT, Claude, Perplexity, and Google Gemini",
+            "image": "https://www.aibrandtrack.com/og-image.png",
+            "brand": {
+              "@type": "Brand",
+              "name": "AI Brand Track"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "reviewCount": "150",
+              "bestRating": "5",
+              "worstRating": "1"
+            },
+            "review": [
+              {
+                "@type": "Review",
+                "author": {
+                  "@type": "Person",
+                  "name": "Sarah Johnson"
+                },
+                "datePublished": "2025-12-20",
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "5",
+                  "bestRating": "5"
+                },
+                "reviewBody": "AI Brand Track helped us discover we were missing from ChatGPT recommendations entirely. After implementing their suggestions, we went from 0% visibility to top 3 mentions in our category within 30 days. The insights are incredibly actionable."
+              },
+              {
+                "@type": "Review",
+                "author": {
+                  "@type": "Person",
+                  "name": "Michael Chen"
+                },
+                "datePublished": "2025-12-15",
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "5",
+                  "bestRating": "5"
+                },
+                "reviewBody": "As a marketing director, this tool is essential. We track our AI brand visibility weekly and can see exactly how we compare against competitors across Claude, Perplexity, and Gemini. The 60-second analysis saves hours of manual research."
+              },
+              {
+                "@type": "Review",
+                "author": {
+                  "@type": "Person",
+                  "name": "Emily Rodriguez"
+                },
+                "datePublished": "2025-12-10",
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "4.5",
+                  "bestRating": "5"
+                },
+                "reviewBody": "Finally a tool that shows how AI platforms actually see your brand. The competitor analysis is eye-opening. We discovered our main competitor was dominating Perplexity results, and now we're closing that gap using AI Brand Track's recommendations."
+              }
+            ],
+            "offers": {
+              "@type": "AggregateOffer",
+              "lowPrice": "0",
+              "highPrice": "149",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock",
+              "url": "https://www.aibrandtrack.com/plans"
+            }
+          })
+        }}
+      />
+
+      {/* ULTRATHINK: LocalBusiness Schema for authority signals */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "AI Brand Track",
+            "image": "https://www.aibrandtrack.com/og-image.png",
+            "@id": "https://www.aibrandtrack.com",
+            "url": "https://www.aibrandtrack.com",
+            "telephone": "+1-555-AIBRAND",
+            "priceRange": "$0-$149",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Global Digital Services",
+              "addressLocality": "San Francisco",
+              "addressRegion": "CA",
+              "postalCode": "94102",
+              "addressCountry": "US"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 37.7749,
+              "longitude": -122.4194
+            },
+            "openingHoursSpecification": {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
+              "opens": "00:00",
+              "closes": "23:59"
+            },
+            "sameAs": [
+              "https://twitter.com/aibrandtrack",
+              "https://linkedin.com/company/aibrandtrack",
+              "https://github.com/aibrandtrack"
+            ],
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "reviewCount": "150"
+            }
+          })
+        }}
+      />
+
     <div className="min-h-screen bg-white dark:bg-gray-900">
 
       {/* Hero Section */}

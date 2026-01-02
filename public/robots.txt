@@ -1,0 +1,46 @@
+# AI Brand Track - Optimized for Maximum Crawling
+# Updated: 2026-01-02
+
+User-agent: *
+Allow: /
+
+# Priority Pages - Crawl First
+Crawl-delay: 0
+
+# Sitemap Location
+Sitemap: https://www.aibrandtrack.com/sitemap.xml
+
+# Block unnecessary resources to focus crawl budget
+Disallow: /api/
+Disallow: /_next/static/
+Disallow: /admin/
+Disallow: /*.json$
+
+# Allow all AI bots (ChatGPT, Claude, Perplexity, Gemini)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# Social Media Crawlers
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
