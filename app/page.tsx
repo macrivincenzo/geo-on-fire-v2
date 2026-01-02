@@ -309,6 +309,61 @@ export default function Home() {
         }}
       />
 
+      {/* NEW: Article Schema for better content understanding */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "AI Brand Visibility Monitoring: Track ChatGPT, Claude, Perplexity & Gemini",
+            "description": "Comprehensive guide to AI brand visibility monitoring across ChatGPT, Claude, Perplexity, and Google Gemini. Learn how to track your brand in AI search results.",
+            "image": "https://www.aibrandtrack.com/og-image.png",
+            "author": {
+              "@type": "Organization",
+              "name": "AI Brand Track"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "AI Brand Track",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.aibrandtrack.com/logo.png"
+              }
+            },
+            "datePublished": "2025-01-01",
+            "dateModified": "2026-01-02",
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": "https://www.aibrandtrack.com"
+            },
+            "keywords": "AI brand monitoring, ChatGPT SEO, Claude brand tracking, Perplexity visibility, Gemini AI tracking, AEO optimization, GEO optimization, AI search visibility"
+          })
+        }}
+      />
+
+      {/* NEW: WebSite Schema with search action */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "AI Brand Track",
+            "alternateName": ["AI Brand Monitoring", "AI Brand Visibility Tracker"],
+            "url": "https://www.aibrandtrack.com",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.aibrandtrack.com/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          })
+        }}
+      />
+
     <div className="min-h-screen bg-white dark:bg-gray-900">
 
       {/* Hero Section */}
