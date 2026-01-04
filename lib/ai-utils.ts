@@ -112,39 +112,78 @@ export async function identifyCompetitors(company: Company, progressCallback?: P
     // Detect service type to provide better context
     const serviceType = detectServiceType(company);
     
+    // Build context about the company's niche/positioning
+    const keywords = company.scrapedData?.keywords || [];
+    const mainProducts = company.scrapedData?.mainProducts || [];
+    const description = company.description || '';
+    const allContext = `${description} ${keywords.join(' ')} ${mainProducts.join(' ')}`.toLowerCase();
+    
+    // Detect if it's a niche/DTC brand
+    const isDTC = serviceType.includes('direct-to-consumer') || 
+                  serviceType.includes('dtc') ||
+                  allContext.includes('direct-to-consumer') ||
+                  allContext.includes('dtc');
+    const isNiche = allContext.includes('sustainable') || 
+                    allContext.includes('eco-friendly') ||
+                    allContext.includes('premium') ||
+                    allContext.includes('boutique') ||
+                    serviceType.includes('brand');
+    
     const prompt = `Identify 6-9 REAL, DIRECT competitors of ${company.name} in the ${company.industry || 'technology'} industry.
 
 Company: ${company.name}
 Industry: ${company.industry}
 Service Type: ${serviceType}
 Description: ${company.description}
-${company.scrapedData?.keywords ? `Keywords: ${company.scrapedData.keywords.join(', ')}` : ''}
+${mainProducts.length > 0 ? `Main Products: ${mainProducts.join(', ')}` : ''}
+${keywords.length > 0 ? `Keywords: ${keywords.slice(0, 10).join(', ')}` : ''}
 ${company.scrapedData?.competitors ? `Known competitors: ${company.scrapedData.competitors.join(', ')}` : ''}
 
-CRITICAL: Identify competitors that offer the EXACT SAME type of product/service.
+CRITICAL PRIORITY: Find competitors in the SAME NICHE/MARKET SEGMENT, not just any company in the same industry.
+
+COMPETITOR IDENTIFICATION STRATEGY:
+1. PRIORITIZE niche-specific competitors (similar size, positioning, target market)
+2. Find competitors with SIMILAR business models and customer segments
+3. Look for companies in the SAME market segment/niche
+4. Prefer companies of similar scale/market position
+5. Only include well-known brands if they're truly direct competitors
 
 SPECIFIC EXAMPLES:
 - If ${company.name} is a "brand monitoring tool" or "AI brand visibility tracker" → Find OTHER brand monitoring tools (Brandwatch, SEMrush, Talkwalker, Ahrefs, Meltwater, Sprout Social, Brand24, Crayon, Mention)
-- If ${company.name} is an "AI platform provider" (builds AI models like GPT, Claude, LLMs) → Find OTHER AI platform providers (OpenAI, Anthropic, Google AI, Microsoft Azure, IBM Watson)
-- If ${company.name} is a "web scraping API" → Find OTHER web scraping APIs (Apify, Scrapy, Octoparse, ParseHub, Diffbot)
-- If ${company.name} is a "DTC brand" (sells products directly) → Find OTHER DTC brands in the same product category
-- If ${company.name} is a "SaaS platform" → Find OTHER SaaS platforms in the same category
+- If ${company.name} is a "sustainable DTC shoe brand" (like Allbirds) → Find OTHER sustainable DTC shoe brands (Rothy's, Vessi, Atoms, Cariuma, Thousand Fell), NOT giant athletic brands (Nike, Adidas)
+- If ${company.name} is a "DTC sustainable apparel brand" → Find OTHER DTC sustainable apparel brands (Patagonia, Everlane, Reformation), NOT fast fashion retailers
+- If ${company.name} is a "web scraping API" → Find OTHER web scraping APIs (Apify, Scrapy, Octoparse, ParseHub, Diffbot, Bright Data)
+- If ${company.name} is an "AI platform provider" (builds AI models) → Find OTHER AI platform providers (OpenAI, Anthropic, Google AI, Microsoft Azure, IBM Watson)
+- If ${company.name} is a "productivity SaaS tool" → Find OTHER productivity SaaS tools (Notion → Airtable, Monday.com, ClickUp, Coda)
+- If ${company.name} is a "design tool" → Find OTHER design tools (Figma → Sketch, Adobe XD, InVision, Canva)
+
+${isDTC || isNiche ? `
+SPECIAL INSTRUCTIONS FOR THIS COMPANY (DTC/NICHE BRAND):
+- Find competitors in the SAME niche market segment
+- Prioritize companies with SIMILAR positioning (e.g., sustainable, premium, DTC)
+- Avoid giant multinational corporations unless they're truly in the same niche
+- Focus on companies of similar size and market position
+- Look for brands that customers would directly compare when shopping
+` : ''}
 
 DO NOT:
+- Include giant brands/multinationals if the company is a niche/DTC brand (e.g., don't include Nike for Allbirds)
 - Include AI platform providers (OpenAI, Anthropic, etc.) if the company is a brand monitoring tool or AI application
 - Include AI applications if the company is an AI platform provider
 - Include general retailers or marketplaces unless the company itself is one
-- Mix different business models
+- Mix different business models or market segments
 
-Based on this company's specific business model and target market, identify ONLY direct competitors that:
+Based on this company's specific business model, target market, and positioning, identify ONLY direct competitors that:
 1. Offer the SAME type of products/services
-2. Target the SAME customer segment
-3. Have a SIMILAR business model
-4. Actually compete for the same customers
+2. Target the SAME customer segment and niche market
+3. Have a SIMILAR business model (DTC, B2B SaaS, etc.)
+4. Are in the SAME market segment/positioning
+5. Would be directly compared by customers when making a purchase decision
 
 IMPORTANT: 
 - Only include companies you are confident actually exist
-- Focus on TRUE competitors with similar offerings
+- PRIORITIZE niche competitors over well-known brands
+- Focus on companies in the same market segment/niche
 - Exclude retailers, marketplaces, or aggregators unless the company itself is one
 - Aim for 6-9 competitors total
 - Return full company names (not just initials or abbreviations)`;
@@ -162,21 +201,33 @@ IMPORTANT:
                               company.industry?.toLowerCase().includes('platform') ||
                               company.industry?.toLowerCase().includes('retailer');
     
+    // Filter and sort competitors to prioritize niche competitors
     const competitors = object.competitors
       .filter(c => {
-        // Always include direct competitors with high market overlap
-        if (c.isDirectCompetitor && c.marketOverlap === 'high') return true;
-        
         // Exclude retailers/platforms for product companies
         if (!isRetailOrPlatform && (c.competitorType === 'retailer' || c.competitorType === 'platform')) {
           return false;
         }
         
-        // Include other direct competitors and high-overlap indirect competitors
+        // Include direct competitors and high-overlap indirect competitors
         return c.competitorType === 'direct' || (c.competitorType === 'indirect' && c.marketOverlap === 'high');
       })
+      .sort((a, b) => {
+        // Prioritize: 1) Direct competitors, 2) High market overlap, 3) Direct > Indirect
+        if (a.isDirectCompetitor !== b.isDirectCompetitor) {
+          return a.isDirectCompetitor ? -1 : 1;
+        }
+        if (a.marketOverlap !== b.marketOverlap) {
+          const overlapOrder = { 'high': 0, 'medium': 1, 'low': 2 };
+          return overlapOrder[a.marketOverlap] - overlapOrder[b.marketOverlap];
+        }
+        if (a.competitorType !== b.competitorType) {
+          return a.competitorType === 'direct' ? -1 : 1;
+        }
+        return 0;
+      })
       .map(c => c.name)
-      .slice(0, 9); // Limit to 9 competitors max
+      .slice(0, 9); // Limit to 9 competitors max, prioritizing best matches
 
     // Add any competitors found during scraping
     if (company.scrapedData?.competitors) {
