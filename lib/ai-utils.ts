@@ -4,6 +4,7 @@ import { Company, BrandPrompt, AIResponse, CompanyRanking, CompetitorRanking, Pr
 import { getProviderModel, normalizeProviderName, isProviderConfigured, getConfiguredProviders, PROVIDER_CONFIGS } from './provider-config';
 import { detectBrandMention, detectMultipleBrands, BrandDetectionOptions, smartBrandMatch } from './brand-detection-utils';
 import { getBrandDetectionOptions } from './brand-detection-config';
+import { detectServiceType } from './brand-monitor-utils';
 
 /**
  * Find the matching tracked company name for a given company string
@@ -108,31 +109,45 @@ export async function identifyCompetitors(company: Company, progressCallback?: P
       throw new Error(`${provider.name} model not available`);
     }
     
-    const prompt = `Identify 6-9 real, established competitors of ${company.name} in the ${company.industry || 'technology'} industry.
+    // Detect service type to provide better context
+    const serviceType = detectServiceType(company);
+    
+    const prompt = `Identify 6-9 REAL, DIRECT competitors of ${company.name} in the ${company.industry || 'technology'} industry.
 
 Company: ${company.name}
 Industry: ${company.industry}
+Service Type: ${serviceType}
 Description: ${company.description}
 ${company.scrapedData?.keywords ? `Keywords: ${company.scrapedData.keywords.join(', ')}` : ''}
 ${company.scrapedData?.competitors ? `Known competitors: ${company.scrapedData.competitors.join(', ')}` : ''}
 
-Based on this company's specific business model and target market, identify ONLY direct competitors that:
-1. Offer the SAME type of products/services (not just retailers that sell them)
-2. Target the SAME customer segment
-3. Have a SIMILAR business model (e.g., if it's a DTC brand, find other DTC brands)
-4. Actually compete for the same customers
+CRITICAL: Identify competitors that offer the EXACT SAME type of product/service.
 
-For example:
-- If it's a DTC underwear brand, find OTHER DTC underwear brands (not department stores)
-- If it's a web scraping API, find OTHER web scraping APIs (not general data tools)
-- If it's an AI model provider, find OTHER AI model providers (not AI applications)
+SPECIFIC EXAMPLES:
+- If ${company.name} is a "brand monitoring tool" or "AI brand visibility tracker" → Find OTHER brand monitoring tools (Brandwatch, SEMrush, Talkwalker, Ahrefs, Meltwater, Sprout Social, Brand24, Crayon, Mention)
+- If ${company.name} is an "AI platform provider" (builds AI models like GPT, Claude, LLMs) → Find OTHER AI platform providers (OpenAI, Anthropic, Google AI, Microsoft Azure, IBM Watson)
+- If ${company.name} is a "web scraping API" → Find OTHER web scraping APIs (Apify, Scrapy, Octoparse, ParseHub, Diffbot)
+- If ${company.name} is a "DTC brand" (sells products directly) → Find OTHER DTC brands in the same product category
+- If ${company.name} is a "SaaS platform" → Find OTHER SaaS platforms in the same category
+
+DO NOT:
+- Include AI platform providers (OpenAI, Anthropic, etc.) if the company is a brand monitoring tool or AI application
+- Include AI applications if the company is an AI platform provider
+- Include general retailers or marketplaces unless the company itself is one
+- Mix different business models
+
+Based on this company's specific business model and target market, identify ONLY direct competitors that:
+1. Offer the SAME type of products/services
+2. Target the SAME customer segment
+3. Have a SIMILAR business model
+4. Actually compete for the same customers
 
 IMPORTANT: 
 - Only include companies you are confident actually exist
 - Focus on TRUE competitors with similar offerings
 - Exclude retailers, marketplaces, or aggregators unless the company itself is one
 - Aim for 6-9 competitors total
-- Do NOT include general retailers or platforms that just sell/distribute products`;
+- Return full company names (not just initials or abbreviations)`;
 
     const { object } = await generateObject({
       model,

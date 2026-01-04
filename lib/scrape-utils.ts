@@ -139,10 +139,11 @@ export async function scrapeCompanyInfo(url: string, maxAge?: number): Promise<C
       
       Extract the company name, a brief description, relevant keywords, and identify the PRIMARY industry category. 
       
-      Industry detection rules:
+      Industry detection rules (check in this order):
+      - If the company offers brand monitoring, brand tracking, brand visibility, AI visibility monitoring, social listening, mention tracking, categorize as "brand monitoring"
       - If the company makes coolers, drinkware, outdoor equipment, camping gear, categorize as "outdoor gear"
       - If the company offers web scraping, crawling, data extraction, or HTML parsing tools/services, categorize as "web scraping"
-      - If the company primarily provides AI/ML models or services, categorize as "AI"
+      - If the company primarily provides AI/ML models or services (builds AI models like GPT, Claude, LLMs), categorize as "AI platform provider"
       - If the company offers hosting, deployment, or cloud infrastructure, categorize as "deployment"
       - If the company is an e-commerce platform or online store builder, categorize as "e-commerce platform"
       - If the company sells physical products directly to consumers (clothing, accessories, etc.), categorize as "direct-to-consumer brand"
@@ -155,7 +156,8 @@ export async function scrapeCompanyInfo(url: string, maxAge?: number): Promise<C
       IMPORTANT: 
       1. For mainProducts, list the ACTUAL PRODUCTS (e.g., "coolers", "tumblers", "drinkware") not product categories
       2. For competitors, extract FULL COMPANY NAMES (e.g., "RTIC", "IGLOO", "Coleman") not just initials
-      3. Focus on what the company MAKES/SELLS, not what goes IN their products (e.g., Yeti makes coolers, not beverages)`,
+      3. Focus on what the company MAKES/SELLS, not what goes IN their products (e.g., Yeti makes coolers, not beverages)
+      4. Differentiate between "brand monitoring" (tools that track brand visibility) and "AI platform provider" (companies that build AI models)`,
     });
 
     // Extract logo/image URL - comprehensive multi-source approach

@@ -91,7 +91,24 @@ export function assignUrlToCompetitor(competitorName: string): string | undefine
     'crawlbase': 'crawlbase.com',
     'webharvy': 'webharvy.com',
     
-    // AI companies
+    // Brand monitoring competitors
+    'brandwatch': 'brandwatch.com',
+    'semrush': 'semrush.com',
+    'talkwalker': 'talkwalker.com',
+    'ahrefs': 'ahrefs.com',
+    'meltwater': 'meltwater.com',
+    'sprout social': 'sproutsocial.com',
+    'brand24': 'brand24.com',
+    'crayon': 'crayon.com',
+    'mention': 'mention.com',
+    'socialbakers': 'socialbakers.com',
+    'quintly': 'quintly.com',
+    'nuvi': 'nuvi.com',
+    'sysomos': 'sysomos.com',
+    'netbase quid': 'netbasequid.com',
+    'keyhole': 'keyhole.co',
+    
+    // AI platform providers (companies that build AI models)
     'openai': 'openai.com',
     'anthropic': 'anthropic.com',
     'google ai': 'ai.google',
@@ -140,6 +157,16 @@ export function detectServiceType(company: Company): string {
   const desc = (company.description || '').toLowerCase();
   const content = (company.scrapedData?.mainContent || '').toLowerCase();
   const companyName = (company.name || '').toLowerCase();
+  const keywords = (company.scrapedData?.keywords || []).join(' ').toLowerCase();
+  const allText = `${desc} ${content} ${companyName} ${keywords}`;
+  
+  // Check for brand monitoring FIRST (before generic AI detection)
+  if (allText.includes('brand monitoring') || allText.includes('brand tracking') || 
+      allText.includes('brand visibility') || allText.includes('ai visibility') ||
+      allText.includes('brand mention') || allText.includes('social listening') ||
+      allText.includes('reputation monitoring') || allText.includes('mention tracking')) {
+    return 'brand monitoring';
+  }
   
   // Check for specific industries first
   if (desc.includes('beverage') || desc.includes('drink') || desc.includes('cola') || desc.includes('soda') ||
@@ -157,6 +184,12 @@ export function detectServiceType(company: Company): string {
   } else if (desc.includes('scraping') || desc.includes('crawl') || desc.includes('extract') ||
       content.includes('web scraping') || content.includes('data extraction')) {
     return 'web scraper';
+  } else if ((desc.includes('ai model') || desc.includes('llm') || desc.includes('language model') ||
+      content.includes('gpt') || content.includes('claude') || content.includes('gemini')) &&
+      (desc.includes('platform') || desc.includes('api') || desc.includes('model provider') ||
+       content.includes('build ai') || content.includes('develop ai'))) {
+    // AI platform providers (companies that BUILD AI models like OpenAI, Anthropic)
+    return 'AI platform provider';
   } else if (desc.includes('ai') || desc.includes('artificial intelligence') || desc.includes('llm') ||
       content.includes('machine learning') || content.includes('ai-powered')) {
     return 'AI tool';
@@ -185,7 +218,17 @@ export function getIndustryCompetitors(industry: string): { name: string; url?: 
       { name: 'Bright Data', url: 'brightdata.com' },
       { name: 'Zyte', url: 'zyte.com' }
     ],
-    'AI': [
+    'brand monitoring': [
+      { name: 'Brandwatch', url: 'brandwatch.com' },
+      { name: 'SEMrush', url: 'semrush.com' },
+      { name: 'Talkwalker', url: 'talkwalker.com' },
+      { name: 'Ahrefs', url: 'ahrefs.com' },
+      { name: 'Meltwater', url: 'meltwater.com' },
+      { name: 'Sprout Social', url: 'sproutsocial.com' },
+      { name: 'Brand24', url: 'brand24.com' },
+      { name: 'Crayon', url: 'crayon.com' }
+    ],
+    'AI platform provider': [
       { name: 'OpenAI', url: 'openai.com' },
       { name: 'Anthropic', url: 'anthropic.com' },
       { name: 'Google AI', url: 'ai.google' },
@@ -221,14 +264,46 @@ export function getIndustryCompetitors(industry: string): { name: string; url?: 
   
   const lowerIndustry = industry.toLowerCase();
   
-  // Check for partial matches
+  // Check for exact matches first
+  if (industryDefaults[lowerIndustry]) {
+    return industryDefaults[lowerIndustry];
+  }
+  
+  // Check for partial matches with priority order
+  // Brand monitoring should match before generic AI
+  const matchPriority = ['brand monitoring', 'AI platform provider', 'web scraping', 'SaaS', 'E-commerce', 'Cloud'];
+  
+  for (const key of matchPriority) {
+    const keyLower = key.toLowerCase();
+    if (lowerIndustry.includes(keyLower) || keyLower.includes(lowerIndustry)) {
+      return industryDefaults[key];
+    }
+  }
+  
+  // Also check for related terms
   for (const [key, competitors] of Object.entries(industryDefaults)) {
-    if (lowerIndustry.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerIndustry)) {
+    const keyLower = key.toLowerCase();
+    // Match brand monitoring related terms
+    if (keyLower === 'brand monitoring' && (
+      lowerIndustry.includes('brand track') || 
+      lowerIndustry.includes('brand visibility') || 
+      lowerIndustry.includes('ai visibility') ||
+      lowerIndustry.includes('social listening') ||
+      lowerIndustry.includes('mention tracking')
+    )) {
+      return competitors;
+    }
+    // Match AI platform provider related terms
+    if (keyLower === 'ai platform provider' && (
+      lowerIndustry.includes('ai model') || 
+      lowerIndustry.includes('llm') || 
+      lowerIndustry.includes('language model')
+    )) {
       return competitors;
     }
   }
   
-  // Generic default competitors
+  // Generic default competitors (fallback)
   return [
     { name: 'Competitor 1' },
     { name: 'Competitor 2' },
