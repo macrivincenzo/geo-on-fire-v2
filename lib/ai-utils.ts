@@ -201,25 +201,45 @@ IMPORTANT:
                               company.industry?.toLowerCase().includes('platform') ||
                               company.industry?.toLowerCase().includes('retailer');
     
+    // Well-known giants to exclude for niche/DTC brands (unless they're truly direct competitors)
+    const wellKnownGiants = new Set([
+      'Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour', 'Converse', 'New Balance', 'Vans',
+      'Walmart', 'Target', 'Amazon', 'Costco', 'Best Buy',
+      'Microsoft', 'Google', 'Apple', 'Meta', 'Facebook',
+      'Coca-Cola', 'Pepsi', 'Starbucks', 'McDonald\'s', 'Burger King'
+    ]);
+    
     // Filter and sort competitors to prioritize niche competitors
-    const competitors = object.competitors
+    let competitors = object.competitors
       .filter(c => {
         // Exclude retailers/platforms for product companies
         if (!isRetailOrPlatform && (c.competitorType === 'retailer' || c.competitorType === 'platform')) {
           return false;
         }
         
+        // For niche/DTC brands, exclude well-known giants (unless they're truly direct with high overlap)
+        if ((isDTC || isNiche) && wellKnownGiants.has(c.name)) {
+          // Only include if it's a direct competitor with high market overlap
+          if (!(c.isDirectCompetitor && c.marketOverlap === 'high')) {
+            return false;
+          }
+        }
+        
         // Include direct competitors and high-overlap indirect competitors
         return c.competitorType === 'direct' || (c.competitorType === 'indirect' && c.marketOverlap === 'high');
       })
       .sort((a, b) => {
-        // Prioritize: 1) Direct competitors, 2) High market overlap, 3) Direct > Indirect
+        // Prioritize: 1) Direct competitors, 2) High market overlap, 3) Direct > Indirect, 4) Exclude giants
         if (a.isDirectCompetitor !== b.isDirectCompetitor) {
           return a.isDirectCompetitor ? -1 : 1;
         }
         if (a.marketOverlap !== b.marketOverlap) {
           const overlapOrder = { 'high': 0, 'medium': 1, 'low': 2 };
           return overlapOrder[a.marketOverlap] - overlapOrder[b.marketOverlap];
+        }
+        // For niche brands, deprioritize well-known giants
+        if ((isDTC || isNiche) && (wellKnownGiants.has(a.name) !== wellKnownGiants.has(b.name))) {
+          return wellKnownGiants.has(a.name) ? 1 : -1;
         }
         if (a.competitorType !== b.competitorType) {
           return a.competitorType === 'direct' ? -1 : 1;
@@ -228,6 +248,15 @@ IMPORTANT:
       })
       .map(c => c.name)
       .slice(0, 9); // Limit to 9 competitors max, prioritizing best matches
+    
+    // Additional filter: For niche/DTC brands, if we have enough non-giant competitors, remove giants
+    if ((isDTC || isNiche) && competitors.length >= 3) {
+      const nonGiantCompetitors = competitors.filter(c => !wellKnownGiants.has(c));
+      if (nonGiantCompetitors.length >= 3) {
+        // Prefer niche competitors if we have enough
+        competitors = nonGiantCompetitors.slice(0, 9);
+      }
+    }
 
     // Add any competitors found during scraping
     if (company.scrapedData?.competitors) {
