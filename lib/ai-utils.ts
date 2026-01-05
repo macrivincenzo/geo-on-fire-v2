@@ -395,13 +395,20 @@ export async function generatePromptsForCompany(company: Company, competitors: s
   
   // If we have specific products, use those first
   if (mainProducts.length > 0) {
-    productContext = mainProducts.slice(0, 2).join(' and ');
+    // Use the primary product, not multiple products joined
+    productContext = mainProducts[0]; // Use single product for clearer prompts
     // Infer category from products
     const productsLower = mainProducts.join(' ').toLowerCase();
     if (productsLower.includes('cooler') || productsLower.includes('drinkware')) {
       categoryContext = 'outdoor gear brands';
     } else if (productsLower.includes('software') || productsLower.includes('api')) {
       categoryContext = 'software companies';
+    } else if (productsLower.includes('shoe') || productsLower.includes('footwear') || productsLower.includes('sneaker')) {
+      categoryContext = 'shoe brands';
+      productContext = 'shoes'; // Normalize to "shoes"
+    } else if (productsLower.includes('clothing') || productsLower.includes('apparel')) {
+      categoryContext = 'clothing brands';
+      productContext = 'clothing';
     } else {
       categoryContext = `${mainProducts[0]} brands`;
     }
@@ -429,6 +436,9 @@ export async function generatePromptsForCompany(company: Company, competitors: s
     } else if (allContext.includes('software') || allContext.includes('saas') || allContext.includes('application')) {
       productContext = 'software solutions';
       categoryContext = 'SaaS platforms';
+    } else if (allContext.includes('shoe') || allContext.includes('footwear') || allContext.includes('sneaker')) {
+      productContext = 'shoes';
+      categoryContext = 'shoe brands';
     } else if (allContext.includes('clothing') || allContext.includes('apparel') || allContext.includes('fashion')) {
       productContext = 'clothing and apparel';
       categoryContext = 'fashion brands';
@@ -437,15 +447,46 @@ export async function generatePromptsForCompany(company: Company, competitors: s
       categoryContext = 'home furnishing brands';
     } else {
       // Fallback: use the most prominent keywords, but avoid misclassifications
-      productContext = keywords.slice(0, 3).join(' and ') || 'products';
-      categoryContext = company.industry || 'companies';
+      // For DTC brands, try to infer from industry or description
+      if (industryLower.includes('direct-to-consumer') || industryLower.includes('dtc')) {
+        // Try to find the actual product from keywords or description
+        if (allContext.includes('shoe') || allContext.includes('footwear')) {
+          productContext = 'shoes';
+          categoryContext = 'shoe brands';
+        } else if (allContext.includes('clothing') || allContext.includes('apparel')) {
+          productContext = 'clothing';
+          categoryContext = 'clothing brands';
+        } else {
+          productContext = keywords.filter(k => !['sustainable', 'comfortable', 'eco-friendly', 'premium'].includes(k.toLowerCase())).slice(0, 2).join(' and ') || 'products';
+          categoryContext = 'brands';
+        }
+      } else {
+        productContext = keywords.slice(0, 3).join(' and ') || 'products';
+        categoryContext = company.industry || 'companies';
+      }
     }
   }
   
-  // Safety check: if we somehow got "beverage" but it's clearly not a beverage company
+  // Safety checks: Fix common misclassifications
   if (productContext.includes('beverage') && (brandName.toLowerCase() === 'yeti' || allContext.includes('cooler'))) {
     productContext = 'coolers and outdoor gear';
     categoryContext = 'outdoor equipment brands';
+  }
+  
+  // CRITICAL: If productContext contains attribute words instead of actual product, fix it
+  // For example: "sustainable and comfortable" should be "shoes" if context mentions shoes
+  if (allContext.includes('shoe') || allContext.includes('footwear') || allContext.includes('sneaker')) {
+    // Override if we have shoe-related context but productContext is wrong
+    if (!productContext.includes('shoe') && !productContext.includes('footwear')) {
+      productContext = 'shoes';
+      categoryContext = 'shoe brands';
+    }
+  }
+  
+  // Similar fix for clothing
+  if ((allContext.includes('clothing') || allContext.includes('apparel')) && !productContext.includes('clothing') && !productContext.includes('apparel')) {
+    productContext = 'clothing';
+    categoryContext = 'clothing brands';
   }
 
   // Strategic prompt generation following buyer's journey (like NIMT.AI)
