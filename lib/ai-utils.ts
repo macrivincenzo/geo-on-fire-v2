@@ -448,40 +448,139 @@ export async function generatePromptsForCompany(company: Company, competitors: s
     categoryContext = 'outdoor equipment brands';
   }
 
-  // Generate contextually relevant prompts
-  const contextualTemplates = {
-    ranking: [
-      `best ${productContext} in 2024`,
-      `top ${categoryContext} ranked by quality`,
-      mainProducts.length > 0 ? `most recommended ${mainProducts[0]}` : `most recommended ${productContext}`,
-      keywords.length > 0 ? `best brands for ${keywords[0]}` : `popular ${categoryContext}`,
-    ],
-    comparison: [
-      `${brandName} vs ${competitors.slice(0, 2).join(' vs ')} for ${productContext}`,
-      `how does ${brandName} compare to other ${categoryContext}`,
-      competitors[0] && mainProducts[0] ? `${competitors[0]} or ${brandName} which has better ${mainProducts[0]}` : `${brandName} compared to alternatives`,
-    ],
-    alternatives: [
-      `alternatives to ${brandName} ${mainProducts[0] || productContext}`,
-      `${categoryContext} similar to ${brandName}`,
-      `competitors of ${brandName} in ${productContext.split(' ')[0]} market`,
-    ],
-    recommendations: [
-      mainProducts.length > 0 ? `is ${brandName} ${mainProducts[0]} worth buying` : `is ${brandName} worth it for ${productContext}`,
-      `${brandName} ${productContext} reviews and recommendations`,
-      `should I buy ${brandName} or other ${categoryContext}`,
-      `best ${productContext} for ${keywords.includes('professional') ? 'professionals' : keywords.includes('outdoor') ? 'outdoor enthusiasts' : 'everyday use'}`,
-    ],
-  };
-
-  // Generate prompts from contextual templates
-  Object.entries(contextualTemplates).forEach(([category, templates]) => {
-    templates.forEach(prompt => {
-      prompts.push({
-        id: (++promptId).toString(),
-        prompt,
-        category: category as BrandPrompt['category'],
-      });
+  // Strategic prompt generation following buyer's journey (like NIMT.AI)
+  // Structure: Informational → Consideration → Transactional
+  
+  // Detect service type for better prompt context
+  const serviceType = detectServiceType(company);
+  const isB2B = serviceType.includes('SaaS') || serviceType.includes('platform') || 
+                serviceType.includes('tool') || serviceType.includes('software') ||
+                serviceType.includes('brand monitoring') || serviceType.includes('API');
+  const isDTC = serviceType.includes('direct-to-consumer') || serviceType.includes('brand');
+  const isProduct = mainProducts.length > 0 && !isB2B;
+  
+  // Build strategic prompts organized by buyer's journey
+  const strategicPrompts: Array<{prompt: string; category: BrandPrompt['category']; intent: 'informational' | 'consideration' | 'transactional'}> = [];
+  
+  // INFORMATIONAL STAGE (Awareness - "What is...", "How does...", "What are...")
+  const informationalPrompts = [];
+  
+  if (isB2B) {
+    // B2B Informational prompts
+    informationalPrompts.push(
+      `What are the top ${categoryContext} for ${keywords.length > 0 ? keywords[0] : 'businesses'}?`,
+      `How does ${brandName} compare to other ${categoryContext}?`,
+      `What are the most effective ${productContext} for ${keywords.includes('enterprise') ? 'enterprise' : keywords.includes('small business') ? 'small businesses' : 'companies'}?`,
+      `How can ${productContext} improve ${keywords.length > 0 ? keywords[0] : 'business operations'}?`,
+      `What are the latest trends in ${categoryContext}?`
+    );
+  } else if (isDTC || isProduct) {
+    // DTC/Product Informational prompts
+    informationalPrompts.push(
+      `What are the best ${productContext} in ${new Date().getFullYear()}?`,
+      `How does ${brandName} compare to other ${categoryContext}?`,
+      `What are the most popular ${mainProducts.length > 0 ? mainProducts[0] : productContext} today?`,
+      `What makes ${brandName} different from other ${categoryContext}?`,
+      keywords.length > 0 ? `What are the best ${keywords[0]} ${mainProducts.length > 0 ? mainProducts[0] : productContext}?` : `What are the top-rated ${productContext}?`
+    );
+  } else {
+    // Generic Informational prompts
+    informationalPrompts.push(
+      `What are the top ${categoryContext}?`,
+      `How does ${brandName} work?`,
+      `What are the best ${productContext}?`,
+      `What are the most recommended ${categoryContext}?`
+    );
+  }
+  
+  // CONSIDERATION STAGE (Evaluation - "Best services for...", "Which platforms...", "Most effective tools...")
+  const considerationPrompts = [];
+  
+  if (isB2B) {
+    // B2B Consideration prompts
+    considerationPrompts.push(
+      `Best services for ${keywords.length > 0 ? keywords[0] : productContext}?`,
+      `Which platforms offer the best ${productContext}?`,
+      `What are the most effective tools for ${keywords.length > 0 ? keywords[0] : categoryContext}?`,
+      `Which ${categoryContext} provide the best ${keywords.length > 1 ? keywords[1] : 'features'}?`,
+      `What are the top-rated ${productContext} for ${keywords.includes('enterprise') ? 'enterprise' : 'businesses'}?`
+    );
+  } else if (isDTC || isProduct) {
+    // DTC/Product Consideration prompts
+    considerationPrompts.push(
+      `Best ${productContext} for ${keywords.includes('sustainable') ? 'sustainability' : keywords.includes('comfortable') ? 'comfort' : keywords.includes('premium') ? 'quality' : 'value'}?`,
+      `Which ${categoryContext} are most recommended?`,
+      `What are the top ${mainProducts.length > 0 ? mainProducts[0] : productContext} brands?`,
+      `Which ${categoryContext} offer the best ${keywords.length > 0 ? keywords[0] : 'quality'}?`,
+      `What are the most popular ${productContext} right now?`
+    );
+  } else {
+    // Generic Consideration prompts
+    considerationPrompts.push(
+      `Best ${productContext} for ${keywords.length > 0 ? keywords[0] : 'quality'}?`,
+      `Which ${categoryContext} are recommended?`,
+      `What are the top ${productContext}?`
+    );
+  }
+  
+  // TRANSACTIONAL STAGE (Purchase Intent - "Where can I purchase...", "Where to buy...", "How to get...")
+  const transactionalPrompts = [];
+  
+  if (isB2B) {
+    // B2B Transactional prompts
+    transactionalPrompts.push(
+      `Where can I purchase a service for ${productContext}${keywords.includes('US') || keywords.includes('United States') ? ' in the U.S.' : ''}?`,
+      `Where to subscribe to ${productContext}?`,
+      `How to get started with ${categoryContext}?`,
+      `Where can I find ${productContext} for my business?`
+    );
+  } else if (isDTC || isProduct) {
+    // DTC/Product Transactional prompts
+    transactionalPrompts.push(
+      `Where can I buy ${mainProducts.length > 0 ? mainProducts[0] : productContext}?`,
+      `Where to purchase ${brandName} ${mainProducts.length > 0 ? mainProducts[0] : productContext}?`,
+      `How to get ${productContext}?`,
+      `Where can I find ${mainProducts.length > 0 ? mainProducts[0] : productContext} for sale?`
+    );
+  } else {
+    // Generic Transactional prompts
+    transactionalPrompts.push(
+      `Where can I purchase ${productContext}?`,
+      `How to get ${productContext}?`
+    );
+  }
+  
+  // Combine all prompts with proper categorization
+  informationalPrompts.forEach(prompt => {
+    strategicPrompts.push({
+      prompt,
+      category: 'ranking',
+      intent: 'informational'
+    });
+  });
+  
+  considerationPrompts.forEach(prompt => {
+    strategicPrompts.push({
+      prompt,
+      category: 'comparison',
+      intent: 'consideration'
+    });
+  });
+  
+  transactionalPrompts.forEach(prompt => {
+    strategicPrompts.push({
+      prompt,
+      category: 'recommendations',
+      intent: 'transactional'
+    });
+  });
+  
+  // Convert to BrandPrompt format
+  strategicPrompts.forEach(({prompt, category, intent}) => {
+    prompts.push({
+      id: (++promptId).toString(),
+      prompt,
+      category: category as BrandPrompt['category'],
     });
   });
 
