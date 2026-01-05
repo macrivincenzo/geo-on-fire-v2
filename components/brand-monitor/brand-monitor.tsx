@@ -361,10 +361,10 @@ export function BrandMonitor({
           // Just prioritize non-giants in sorting if needed
           return true;
         })
-        .slice(0, 10);
+        .slice(0, 12); // Increased to 12 to show more competitors (mix of niche + big players)
 
-      // Just use the first 6 competitors without AI validation
-      competitors = competitors.slice(0, 6);
+      // Show up to 12 competitors for better competitive analysis
+      // This allows for a good mix: ~7 niche + ~5 big players
       
       console.log('Debug - shouldFilterGiants:', shouldFilterGiants);
       console.log('Debug - companyIsGiant:', companyIsGiant);
