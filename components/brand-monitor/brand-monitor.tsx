@@ -312,10 +312,46 @@ export function BrandMonitor({
       competitorMap.set(normalizedName, { name, url });
     });
     
+    // Well-known giants to filter out for non-giant companies
+    const wellKnownGiants = new Set([
+      'Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour', 'Converse', 'New Balance', 'Vans', 
+      'Hoka', 'Hoka One One', 'On', 'On Running',
+      'Walmart', 'Target', 'Amazon', 'Costco', 'Best Buy', 'Home Depot', 'Lowe\'s',
+      'Microsoft', 'Google', 'Apple', 'Meta', 'Facebook', 'IBM', 'Oracle', 'SAP', 'Salesforce',
+      'Coca-Cola', 'Pepsi', 'Starbucks', 'McDonald\'s', 'Burger King', 'KFC', 'Subway',
+      'Toyota', 'Ford', 'General Motors', 'Volkswagen', 'BMW', 'Mercedes-Benz',
+      'JPMorgan Chase', 'Bank of America', 'Wells Fargo', 'Citigroup', 'Goldman Sachs'
+    ]);
+    
+    // Case-insensitive check if a name is a giant
+    const isGiant = (name: string): boolean => {
+      const normalized = name.trim();
+      for (const giant of wellKnownGiants) {
+        if (normalized.toLowerCase() === giant.toLowerCase()) {
+          return true;
+        }
+      }
+      return false;
+    };
+    
+    // Check if company itself is a giant
+    const companyIsGiant = company ? isGiant(company.name) : false;
+    const shouldFilterGiants = !companyIsGiant;
+    
     let competitors = Array.from(competitorMap.values())
-      .filter(comp => comp.name !== 'Competitor 1' && comp.name !== 'Competitor 2' && 
-                      comp.name !== 'Competitor 3' && comp.name !== 'Competitor 4' && 
-                      comp.name !== 'Competitor 5')
+      .filter(comp => {
+        // Filter out placeholder competitors
+        if (comp.name === 'Competitor 1' || comp.name === 'Competitor 2' || 
+            comp.name === 'Competitor 3' || comp.name === 'Competitor 4' || 
+            comp.name === 'Competitor 5') {
+          return false;
+        }
+        // Filter out giants for non-giant companies
+        if (shouldFilterGiants && isGiant(comp.name)) {
+          return false;
+        }
+        return true;
+      })
       .slice(0, 10);
 
     // Just use the first 6 competitors without AI validation
