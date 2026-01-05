@@ -218,8 +218,19 @@ IMPORTANT:
       'JPMorgan Chase', 'Bank of America', 'Wells Fargo', 'Citigroup', 'Goldman Sachs'
     ]);
     
+    // Helper function for case-insensitive matching
+    const isGiant = (name: string): boolean => {
+      const normalized = name.trim();
+      for (const giant of wellKnownGiants) {
+        if (normalized.toLowerCase() === giant.toLowerCase()) {
+          return true;
+        }
+      }
+      return false;
+    };
+    
     // Detect if the company itself is a giant (if not, filter giants from competitors)
-    const companyIsGiant = wellKnownGiants.has(company.name);
+    const companyIsGiant = isGiant(company.name);
     const shouldFilterGiants = !companyIsGiant; // Filter giants for non-giant companies
     
     // Filter and sort competitors to prioritize niche/similar-sized competitors
@@ -232,7 +243,7 @@ IMPORTANT:
         
         // For non-giant companies, STRICTLY exclude well-known giants
         // Giants like Nike/Adidas are NOT competitors for smaller companies, regardless of AI classification
-        if (shouldFilterGiants && wellKnownGiants.has(c.name)) {
+        if (shouldFilterGiants && isGiant(c.name)) {
           return false; // Always exclude giants for non-giant companies
         }
         
@@ -249,8 +260,8 @@ IMPORTANT:
           return overlapOrder[a.marketOverlap] - overlapOrder[b.marketOverlap];
         }
         // For non-giant companies, deprioritize well-known giants
-        if (shouldFilterGiants && (wellKnownGiants.has(a.name) !== wellKnownGiants.has(b.name))) {
-          return wellKnownGiants.has(a.name) ? 1 : -1;
+        if (shouldFilterGiants && (isGiant(a.name) !== isGiant(b.name))) {
+          return isGiant(a.name) ? 1 : -1;
         }
         if (a.competitorType !== b.competitorType) {
           return a.competitorType === 'direct' ? -1 : 1;
@@ -262,7 +273,7 @@ IMPORTANT:
     
     // Additional filter: For non-giant companies, if we have enough non-giant competitors, remove giants
     if (shouldFilterGiants && competitors.length >= 3) {
-      const nonGiantCompetitors = competitors.filter(c => !wellKnownGiants.has(c));
+      const nonGiantCompetitors = competitors.filter(c => !isGiant(c));
       if (nonGiantCompetitors.length >= 3) {
         // Prefer similar-sized competitors if we have enough
         competitors = nonGiantCompetitors.slice(0, 9);
