@@ -379,252 +379,367 @@ export async function generatePromptsForCompany(company: Company, competitors: s
   const keywords = scrapedData?.keywords || [];
   const mainProducts = scrapedData?.mainProducts || [];
   const description = scrapedData?.description || company.description || '';
+  const industry = company.industry || '';
   
   // Debug log to see what data we're working with
   console.log('Generating prompts for:', {
     brandName,
-    industry: company.industry,
+    industry,
     mainProducts,
     keywords: keywords.slice(0, 5),
     competitors: competitors.slice(0, 5)
   });
   
-  // Build a more specific context from the scraped data
-  let productContext = '';
-  let categoryContext = '';
-  
-  // If we have specific products, use those first
-  if (mainProducts.length > 0) {
-    // Use the primary product, not multiple products joined
-    productContext = mainProducts[0]; // Use single product for clearer prompts
-    // Infer category from products
-    const productsLower = mainProducts.join(' ').toLowerCase();
-    if (productsLower.includes('cooler') || productsLower.includes('drinkware')) {
-      categoryContext = 'outdoor gear brands';
-    } else if (productsLower.includes('software') || productsLower.includes('api')) {
-      categoryContext = 'software companies';
-    } else if (productsLower.includes('shoe') || productsLower.includes('footwear') || productsLower.includes('sneaker')) {
-      categoryContext = 'shoe brands';
-      productContext = 'shoes'; // Normalize to "shoes"
-    } else if (productsLower.includes('clothing') || productsLower.includes('apparel')) {
-      categoryContext = 'clothing brands';
-      productContext = 'clothing';
-    } else {
-      categoryContext = `${mainProducts[0]} brands`;
-    }
-  }
-  
-  // Analyze keywords and description to understand what the company actually does
-  const keywordsLower = keywords.map(k => k.toLowerCase()).join(' ');
-  const descLower = description.toLowerCase();
-  const allContext = `${keywordsLower} ${descLower} ${mainProducts.join(' ')}`;
-  
-  // Only determine category if we don't already have it from mainProducts
-  if (!productContext) {
-    // Check industry first for more accurate categorization
-    const industryLower = (company.industry || '').toLowerCase();
+  // Use AI to generate 20+ high-quality, strategic prompts
+  // This ensures each company gets unique, product-specific prompts that compete with NIMT.AI
+  try {
+    const { getProviderModel } = await import('./provider-config');
+    const model = getProviderModel('openai'); // Use OpenAI for prompt generation
     
-    if (industryLower === 'outdoor gear' || allContext.includes('cooler') || allContext.includes('drinkware') || allContext.includes('tumbler') || allContext.includes('outdoor')) {
-      productContext = 'coolers and drinkware';
-      categoryContext = 'outdoor gear brands';
-    } else if (industryLower === 'web scraping' || allContext.includes('web scraping') || allContext.includes('data extraction') || allContext.includes('crawler')) {
-      productContext = 'web scraping tools';
-      categoryContext = 'data extraction services';
-    } else if (allContext.includes('ai') || allContext.includes('artificial intelligence') || allContext.includes('machine learning')) {
-      productContext = 'AI tools';
-      categoryContext = 'artificial intelligence platforms';
-    } else if (allContext.includes('software') || allContext.includes('saas') || allContext.includes('application')) {
-      productContext = 'software solutions';
-      categoryContext = 'SaaS platforms';
-    } else if (allContext.includes('shoe') || allContext.includes('footwear') || allContext.includes('sneaker')) {
-      productContext = 'shoes';
-      categoryContext = 'shoe brands';
-    } else if (allContext.includes('clothing') || allContext.includes('apparel') || allContext.includes('fashion')) {
-      productContext = 'clothing and apparel';
-      categoryContext = 'fashion brands';
-    } else if (allContext.includes('furniture') || allContext.includes('home') || allContext.includes('decor')) {
-      productContext = 'furniture and home goods';
-      categoryContext = 'home furnishing brands';
-    } else {
-      // Fallback: use the most prominent keywords, but avoid misclassifications
-      // For DTC brands, try to infer from industry or description
-      if (industryLower.includes('direct-to-consumer') || industryLower.includes('dtc')) {
-        // Try to find the actual product from keywords or description
-        if (allContext.includes('shoe') || allContext.includes('footwear')) {
-          productContext = 'shoes';
-          categoryContext = 'shoe brands';
-        } else if (allContext.includes('clothing') || allContext.includes('apparel')) {
-          productContext = 'clothing';
-          categoryContext = 'clothing brands';
-        } else {
-          productContext = keywords.filter(k => !['sustainable', 'comfortable', 'eco-friendly', 'premium'].includes(k.toLowerCase())).slice(0, 2).join(' and ') || 'products';
-          categoryContext = 'brands';
+    if (model) {
+      const currentYear = new Date().getFullYear();
+      const promptGenerationPrompt = `You are an expert at generating strategic search prompts for brand visibility analysis. Generate EXACTLY 22-25 high-quality, diverse search prompts for this company.
+
+Company: ${brandName}
+Industry: ${industry}
+Description: ${description}
+Main Products: ${mainProducts.length > 0 ? mainProducts.join(', ') : 'Not specified'}
+Key Attributes/Keywords: ${keywords.length > 0 ? keywords.slice(0, 15).join(', ') : 'Not specified'}
+Competitors: ${competitors.length > 0 ? competitors.slice(0, 8).join(', ') : 'Not specified'}
+
+CRITICAL REQUIREMENTS - READ CAREFULLY:
+1. Use the ACTUAL PRODUCT NAME (e.g., "shoes", "coolers", "sneakers", "brand monitoring tools") - NEVER use generic terms like "providers", "services", "platforms", "solutions", "companies" unless the company is B2B/SaaS
+2. For physical products: Use natural consumer language ("best shoes", "where to buy sneakers", "comfortable running shoes")
+3. For B2B/SaaS: Use appropriate business terms ("best brand monitoring tools", "top SEO platforms", "AI visibility trackers")
+4. Generate 22-25 prompts covering these categories:
+   - INFORMATIONAL (8-9 prompts): "What are...", "How does...", "What makes...", "Why are...", "What is...", "How to choose...", "What features..."
+   - CONSIDERATION (8-9 prompts): "Best...", "Top...", "Which brands...", "Most recommended...", "Top-rated...", "Leading...", "Popular..."
+   - TRANSACTIONAL (5-6 prompts): "Where to buy...", "How to get...", "Where can I purchase...", "How to order..."
+5. Vary the phrasing - don't repeat the same structure
+6. Include different angles:
+   - Product-specific: "best [product] for [use case]"
+   - Brand comparison: "how does [brand] compare to..."
+   - Feature-focused: "best [product] with [feature]"
+   - Trend-based: "trending [product] in ${currentYear}"
+   - Problem-solving: "best [product] for [problem]"
+   - Quality-focused: "top-rated [product]", "most recommended [product]"
+7. Include year (${currentYear}) in 3-4 prompts for freshness
+8. Use specific product names when available (e.g., "sneakers" not "footwear products", "coolers" not "beverage containers")
+9. Make prompts natural, conversational, and search-engine friendly
+10. Ensure variety - each prompt should be unique and valuable
+
+EXAMPLES FOR DIFFERENT COMPANY TYPES:
+- Shoe brand (Allbirds): 
+  * "What are the best sustainable shoes in ${currentYear}?"
+  * "Best comfortable sneakers for walking?"
+  * "How does Allbirds compare to other eco-friendly shoe brands?"
+  * "Top-rated sustainable footwear brands?"
+  * "Where to buy comfortable running shoes?"
+  * "What makes Allbirds different from other shoe brands?"
+  * "Best shoes for everyday wear?"
+  * "Most popular sustainable sneaker brands?"
+  
+- Cooler brand (Yeti):
+  * "What are the best coolers for camping in ${currentYear}?"
+  * "Top-rated drinkware brands?"
+  * "Best insulated coolers for outdoor adventures?"
+  * "How does Yeti compare to other cooler brands?"
+  * "Where to buy premium coolers?"
+  * "Most durable cooler brands?"
+  
+- Brand monitoring tool:
+  * "What are the best brand monitoring tools in ${currentYear}?"
+  * "Top AI visibility trackers for businesses?"
+  * "Which platforms track brand mentions effectively?"
+  * "Best tools for monitoring brand reputation?"
+  * "How does ${brandName} compare to other brand tracking tools?"
+
+Return ONLY a JSON array with EXACTLY 22-25 prompt strings. No explanations, no markdown, just the array:
+["prompt 1", "prompt 2", "prompt 3", ...]`;
+
+      const { generateText } = await import('ai');
+      const { text } = await generateText({
+        model,
+        prompt: promptGenerationPrompt,
+        temperature: 0.9, // Higher temperature for more creativity
+        maxTokens: 2000, // More tokens for 20+ prompts
+      });
+      
+      // Parse the JSON response
+      try {
+        // Extract JSON from response (handle markdown code blocks if present)
+        let jsonText = text.trim();
+        if (jsonText.includes('```')) {
+          const jsonMatch = jsonText.match(/```(?:json)?\s*(\[[\s\S]*\])\s*```/);
+          if (jsonMatch) {
+            jsonText = jsonMatch[1];
+          }
         }
-      } else {
-        productContext = keywords.slice(0, 3).join(' and ') || 'products';
-        categoryContext = company.industry || 'companies';
+        
+        // Try to extract array if wrapped in other text
+        if (!jsonText.startsWith('[')) {
+          const arrayMatch = jsonText.match(/\[[\s\S]*\]/);
+          if (arrayMatch) {
+            jsonText = arrayMatch[0];
+          }
+        }
+        
+        const aiPrompts = JSON.parse(jsonText);
+        
+        if (Array.isArray(aiPrompts) && aiPrompts.length > 0) {
+          // Remove duplicates and filter empty strings
+          const uniquePrompts = Array.from(new Set(aiPrompts.map((p: string) => p.trim()).filter((p: string) => p.length > 0)));
+          
+          // Categorize prompts by buyer's journey
+          uniquePrompts.forEach((prompt: string) => {
+            let category: BrandPrompt['category'] = 'ranking';
+            const promptLower = prompt.toLowerCase();
+            
+            // Categorize based on intent
+            if (promptLower.includes('where') || promptLower.includes('buy') || promptLower.includes('purchase') || 
+                promptLower.includes('get') || promptLower.includes('order') || promptLower.includes('find')) {
+              category = 'recommendations'; // Transactional
+            } else if (promptLower.includes('best') || promptLower.includes('top') || promptLower.includes('which') || 
+                      promptLower.includes('compare') || promptLower.includes('recommended') || promptLower.includes('leading') ||
+                      promptLower.includes('popular') || promptLower.includes('rated')) {
+              category = 'comparison'; // Consideration
+            } else {
+              category = 'ranking'; // Informational
+            }
+            
+            prompts.push({
+              id: (++promptId).toString(),
+              prompt: prompt.trim(),
+              category,
+            });
+          });
+          
+          // Ensure we have at least 20 prompts
+          if (prompts.length >= 20) {
+            console.log(`Generated ${prompts.length} AI-powered prompts for ${brandName}`);
+            return prompts;
+          } else {
+            console.warn(`Only generated ${prompts.length} prompts, falling back to enhanced templates`);
+            // Fall through to fallback but keep what we have
+          }
+        }
+      } catch (parseError) {
+        console.error('Error parsing AI-generated prompts:', parseError);
+        console.log('Raw AI response:', text.substring(0, 500));
+        // Fall through to fallback
       }
     }
+  } catch (error) {
+    console.error('Error generating AI prompts, using fallback:', error);
+    // Fall through to fallback
   }
   
-  // Safety checks: Fix common misclassifications
-  if (productContext.includes('beverage') && (brandName.toLowerCase() === 'yeti' || allContext.includes('cooler'))) {
-    productContext = 'coolers and outdoor gear';
-    categoryContext = 'outdoor equipment brands';
-  }
+  // FALLBACK: Generate 20+ high-quality prompts using enhanced template-based approach
+  // This ensures we always return at least 20 prompts even if AI generation fails
   
-  // CRITICAL: If productContext contains attribute words instead of actual product, fix it
-  // For example: "sustainable and comfortable" should be "shoes" if context mentions shoes
-  if (allContext.includes('shoe') || allContext.includes('footwear') || allContext.includes('sneaker')) {
-    // Override if we have shoe-related context but productContext is wrong
-    if (!productContext.includes('shoe') && !productContext.includes('footwear')) {
-      productContext = 'shoes';
-      categoryContext = 'shoe brands';
+  const currentYear = new Date().getFullYear();
+  
+  // Detect the actual product/service
+  const allContext = `${keywords.join(' ')} ${description} ${mainProducts.join(' ')}`.toLowerCase();
+  
+  // Determine product type
+  let actualProduct = '';
+  let productType: 'physical' | 'software' | 'service' = 'service';
+  let productVariations: string[] = [];
+  
+  if (mainProducts.length > 0) {
+    actualProduct = mainProducts[0].toLowerCase();
+    if (actualProduct.includes('shoe') || actualProduct.includes('sneaker') || actualProduct.includes('footwear')) {
+      productType = 'physical';
+      actualProduct = 'shoes';
+      productVariations = ['shoes', 'sneakers', 'footwear'];
+    } else if (actualProduct.includes('clothing') || actualProduct.includes('apparel')) {
+      productType = 'physical';
+      actualProduct = 'clothing';
+      productVariations = ['clothing', 'apparel', 'fashion'];
+    } else if (actualProduct.includes('cooler') || actualProduct.includes('drinkware')) {
+      productType = 'physical';
+      actualProduct = 'coolers';
+      productVariations = ['coolers', 'drinkware', 'tumblers'];
+    } else if (actualProduct.includes('software') || actualProduct.includes('api') || actualProduct.includes('tool') || actualProduct.includes('platform')) {
+      productType = 'software';
+      productVariations = [actualProduct];
+    } else {
+      productVariations = [actualProduct];
+    }
+  } else {
+    // Infer from context
+    if (allContext.includes('shoe') || allContext.includes('sneaker') || allContext.includes('footwear')) {
+      actualProduct = 'shoes';
+      productType = 'physical';
+      productVariations = ['shoes', 'sneakers', 'footwear'];
+    } else if (allContext.includes('clothing') || allContext.includes('apparel')) {
+      actualProduct = 'clothing';
+      productType = 'physical';
+      productVariations = ['clothing', 'apparel', 'fashion'];
+    } else if (allContext.includes('cooler') || allContext.includes('drinkware')) {
+      actualProduct = 'coolers';
+      productType = 'physical';
+      productVariations = ['coolers', 'drinkware', 'tumblers'];
+    } else if (allContext.includes('brand monitoring') || allContext.includes('brand tracking')) {
+      actualProduct = 'brand monitoring tools';
+      productType = 'software';
+      productVariations = ['brand monitoring tools', 'brand tracking tools', 'AI visibility trackers'];
+    } else if (allContext.includes('web scraping')) {
+      actualProduct = 'web scraping tools';
+      productType = 'software';
+      productVariations = ['web scraping tools', 'data extraction tools', 'scraping APIs'];
+    } else {
+      actualProduct = keywords.filter(k => 
+        !['sustainable', 'comfortable', 'eco-friendly', 'premium', 'quality', 'best', 'top'].includes(k.toLowerCase())
+      )[0] || 'products';
+      productVariations = [actualProduct];
     }
   }
   
-  // Similar fix for clothing
-  if ((allContext.includes('clothing') || allContext.includes('apparel')) && !productContext.includes('clothing') && !productContext.includes('apparel')) {
-    productContext = 'clothing';
-    categoryContext = 'clothing brands';
+  // Extract key attributes and use cases
+  const keyAttributes = keywords.filter(k => {
+    const kLower = k.toLowerCase();
+    return !kLower.includes(actualProduct) && 
+           !['sustainable', 'comfortable', 'eco-friendly', 'premium', 'quality', 'best', 'top', 'leading'].includes(kLower);
+  }).slice(0, 3);
+  
+  const primaryAttribute = keywords.find(k => 
+    ['sustainable', 'comfortable', 'eco-friendly', 'premium', 'durable', 'affordable'].includes(k.toLowerCase())
+  ) || '';
+  
+  const useCases = keywords.filter(k => {
+    const kLower = k.toLowerCase();
+    return ['running', 'walking', 'camping', 'hiking', 'travel', 'workout', 'everyday', 'outdoor', 'indoor'].includes(kLower);
+  }).slice(0, 2);
+  
+  // Generate 20+ diverse, high-quality prompts
+  if (productType === 'physical') {
+    const product = actualProduct;
+    const productVar1 = productVariations[0] || product;
+    const productVar2 = productVariations[1] || product;
+    
+    // INFORMATIONAL (8-9 prompts)
+    prompts.push(
+      { id: (++promptId).toString(), prompt: `What are the best ${product} in ${currentYear}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `How does ${brandName} compare to other ${product} brands?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What makes ${brandName} different from other ${product} brands?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What are the most popular ${product} right now?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What features should I look for in ${product}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `How to choose the best ${product}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What are the top trends in ${product} for ${currentYear}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `Why are ${primaryAttribute ? primaryAttribute + ' ' : ''}${product} popular?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What are the best ${productVar1} for ${useCases[0] || 'everyday use'}?`, category: 'ranking' }
+    );
+    
+    // CONSIDERATION (8-9 prompts)
+    prompts.push(
+      { id: (++promptId).toString(), prompt: `Best ${primaryAttribute ? primaryAttribute + ' ' : ''}${product}?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Top-rated ${product} brands?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Which ${product} brands are most recommended?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Most popular ${productVar1} brands in ${currentYear}?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Leading ${product} brands for ${primaryAttribute || 'quality'}?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Best ${product} for ${useCases[0] || 'comfort'}?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Top ${productVar2} brands to consider?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Which ${product} offer the best value?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Most trusted ${product} brands?`, category: 'comparison' }
+    );
+    
+    // TRANSACTIONAL (5-6 prompts)
+    prompts.push(
+      { id: (++promptId).toString(), prompt: `Where to buy ${product}?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `Where can I purchase ${brandName} ${product}?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `How to get ${primaryAttribute ? primaryAttribute + ' ' : ''}${product}?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `Where to find the best ${product} deals?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `Where can I order ${productVar1} online?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `Best places to buy ${product} in ${currentYear}?`, category: 'recommendations' }
+    );
+  } else if (productType === 'software') {
+    // Software/B2B - use appropriate business terms
+    const product = actualProduct;
+    
+    // INFORMATIONAL (8-9 prompts)
+    prompts.push(
+      { id: (++promptId).toString(), prompt: `What are the best ${product} in ${currentYear}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `How does ${brandName} compare to other ${product}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What are the most effective ${product}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What features should I look for in ${product}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `How to choose the right ${product} for my business?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What are the latest trends in ${product}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What makes ${brandName} stand out among ${product}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What are the top ${product} for ${keyAttributes[0] || 'businesses'}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `How do ${product} work?`, category: 'ranking' }
+    );
+    
+    // CONSIDERATION (8-9 prompts)
+    prompts.push(
+      { id: (++promptId).toString(), prompt: `Top ${product} for businesses?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Which ${product} are most recommended?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Best ${product} for ${keyAttributes[0] || 'companies'}?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Most popular ${product} in ${currentYear}?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Leading ${product} platforms?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Top-rated ${product} for ${keyAttributes[1] || 'enterprises'}?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Which ${product} offer the best features?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Best ${product} for small businesses?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Most trusted ${product}?`, category: 'comparison' }
+    );
+    
+    // TRANSACTIONAL (5-6 prompts)
+    prompts.push(
+      { id: (++promptId).toString(), prompt: `Where to get started with ${product}?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `How to sign up for ${product}?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `Where can I find ${product}?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `How to access ${product}?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `Where to purchase ${product} subscription?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `Best way to get started with ${product} in ${currentYear}?`, category: 'recommendations' }
+    );
+  } else {
+    // Generic fallback - still generate 20+ prompts
+    const product = actualProduct;
+    
+    prompts.push(
+      { id: (++promptId).toString(), prompt: `What are the best ${product} in ${currentYear}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `How does ${brandName} compare to competitors?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What are the most popular ${product}?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `What makes ${brandName} different?`, category: 'ranking' },
+      { id: (++promptId).toString(), prompt: `Top ${product} brands?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Which ${product} are recommended?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Best ${product} for ${keyAttributes[0] || 'quality'}?`, category: 'comparison' },
+      { id: (++promptId).toString(), prompt: `Where to buy ${product}?`, category: 'recommendations' },
+      { id: (++promptId).toString(), prompt: `How to get ${product}?`, category: 'recommendations' }
+    );
+    
+    // Add more generic prompts to reach 20+
+    for (let i = prompts.length; i < 20; i++) {
+      const variations = [
+        `What are the top ${product}?`,
+        `Best ${product} options?`,
+        `Leading ${product} brands?`,
+        `Most recommended ${product}?`,
+        `Where can I find ${product}?`,
+        `What are the latest ${product}?`,
+        `Top-rated ${product}?`,
+        `Which ${product} should I choose?`,
+        `How to select the best ${product}?`,
+        `What are the best ${product} for ${keyAttributes[0] || 'value'}?`
+      ];
+      const promptText = variations[(i - 9) % variations.length];
+      const category = promptText.toLowerCase().includes('where') || promptText.toLowerCase().includes('get') || promptText.toLowerCase().includes('find') 
+        ? 'recommendations' 
+        : promptText.toLowerCase().includes('best') || promptText.toLowerCase().includes('top') || promptText.toLowerCase().includes('which')
+        ? 'comparison'
+        : 'ranking';
+      prompts.push({ id: (++promptId).toString(), prompt: promptText, category });
+    }
   }
 
-  // Strategic prompt generation following buyer's journey (like NIMT.AI)
-  // Structure: Informational → Consideration → Transactional
-  
-  // Detect service type for better prompt context
-  const serviceType = detectServiceType(company);
-  const isB2B = serviceType.includes('SaaS') || serviceType.includes('platform') || 
-                serviceType.includes('tool') || serviceType.includes('software') ||
-                serviceType.includes('brand monitoring') || serviceType.includes('API');
-  const isDTC = serviceType.includes('direct-to-consumer') || serviceType.includes('brand');
-  const isProduct = mainProducts.length > 0 && !isB2B;
-  
-  // Build strategic prompts organized by buyer's journey
-  const strategicPrompts: Array<{prompt: string; category: BrandPrompt['category']; intent: 'informational' | 'consideration' | 'transactional'}> = [];
-  
-  // INFORMATIONAL STAGE (Awareness - "What is...", "How does...", "What are...")
-  const informationalPrompts = [];
-  
-  if (isB2B) {
-    // B2B Informational prompts
-    informationalPrompts.push(
-      `What are the top ${categoryContext} for ${keywords.length > 0 ? keywords[0] : 'businesses'}?`,
-      `How does ${brandName} compare to other ${categoryContext}?`,
-      `What are the most effective ${productContext} for ${keywords.includes('enterprise') ? 'enterprise' : keywords.includes('small business') ? 'small businesses' : 'companies'}?`,
-      `How can ${productContext} improve ${keywords.length > 0 ? keywords[0] : 'business operations'}?`,
-      `What are the latest trends in ${categoryContext}?`
-    );
-  } else if (isDTC || isProduct) {
-    // DTC/Product Informational prompts
-    informationalPrompts.push(
-      `What are the best ${productContext} in ${new Date().getFullYear()}?`,
-      `How does ${brandName} compare to other ${categoryContext}?`,
-      `What are the most popular ${mainProducts.length > 0 ? mainProducts[0] : productContext} today?`,
-      `What makes ${brandName} different from other ${categoryContext}?`,
-      keywords.length > 0 ? `What are the best ${keywords[0]} ${mainProducts.length > 0 ? mainProducts[0] : productContext}?` : `What are the top-rated ${productContext}?`
-    );
-  } else {
-    // Generic Informational prompts
-    informationalPrompts.push(
-      `What are the top ${categoryContext}?`,
-      `How does ${brandName} work?`,
-      `What are the best ${productContext}?`,
-      `What are the most recommended ${categoryContext}?`
-    );
+  // Ensure we have at least 20 prompts
+  if (prompts.length < 20) {
+    console.warn(`Only generated ${prompts.length} prompts, adding more variations`);
+    // Add more variations if needed
   }
-  
-  // CONSIDERATION STAGE (Evaluation - "Best services for...", "Which platforms...", "Most effective tools...")
-  const considerationPrompts = [];
-  
-  if (isB2B) {
-    // B2B Consideration prompts
-    considerationPrompts.push(
-      `Best services for ${keywords.length > 0 ? keywords[0] : productContext}?`,
-      `Which platforms offer the best ${productContext}?`,
-      `What are the most effective tools for ${keywords.length > 0 ? keywords[0] : categoryContext}?`,
-      `Which ${categoryContext} provide the best ${keywords.length > 1 ? keywords[1] : 'features'}?`,
-      `What are the top-rated ${productContext} for ${keywords.includes('enterprise') ? 'enterprise' : 'businesses'}?`
-    );
-  } else if (isDTC || isProduct) {
-    // DTC/Product Consideration prompts
-    considerationPrompts.push(
-      `Best ${productContext} for ${keywords.includes('sustainable') ? 'sustainability' : keywords.includes('comfortable') ? 'comfort' : keywords.includes('premium') ? 'quality' : 'value'}?`,
-      `Which ${categoryContext} are most recommended?`,
-      `What are the top ${mainProducts.length > 0 ? mainProducts[0] : productContext} brands?`,
-      `Which ${categoryContext} offer the best ${keywords.length > 0 ? keywords[0] : 'quality'}?`,
-      `What are the most popular ${productContext} right now?`
-    );
-  } else {
-    // Generic Consideration prompts
-    considerationPrompts.push(
-      `Best ${productContext} for ${keywords.length > 0 ? keywords[0] : 'quality'}?`,
-      `Which ${categoryContext} are recommended?`,
-      `What are the top ${productContext}?`
-    );
-  }
-  
-  // TRANSACTIONAL STAGE (Purchase Intent - "Where can I purchase...", "Where to buy...", "How to get...")
-  const transactionalPrompts = [];
-  
-  if (isB2B) {
-    // B2B Transactional prompts
-    transactionalPrompts.push(
-      `Where can I purchase a service for ${productContext}${keywords.includes('US') || keywords.includes('United States') ? ' in the U.S.' : ''}?`,
-      `Where to subscribe to ${productContext}?`,
-      `How to get started with ${categoryContext}?`,
-      `Where can I find ${productContext} for my business?`
-    );
-  } else if (isDTC || isProduct) {
-    // DTC/Product Transactional prompts
-    transactionalPrompts.push(
-      `Where can I buy ${mainProducts.length > 0 ? mainProducts[0] : productContext}?`,
-      `Where to purchase ${brandName} ${mainProducts.length > 0 ? mainProducts[0] : productContext}?`,
-      `How to get ${productContext}?`,
-      `Where can I find ${mainProducts.length > 0 ? mainProducts[0] : productContext} for sale?`
-    );
-  } else {
-    // Generic Transactional prompts
-    transactionalPrompts.push(
-      `Where can I purchase ${productContext}?`,
-      `How to get ${productContext}?`
-    );
-  }
-  
-  // Combine all prompts with proper categorization
-  informationalPrompts.forEach(prompt => {
-    strategicPrompts.push({
-      prompt,
-      category: 'ranking',
-      intent: 'informational'
-    });
-  });
-  
-  considerationPrompts.forEach(prompt => {
-    strategicPrompts.push({
-      prompt,
-      category: 'comparison',
-      intent: 'consideration'
-    });
-  });
-  
-  transactionalPrompts.forEach(prompt => {
-    strategicPrompts.push({
-      prompt,
-      category: 'recommendations',
-      intent: 'transactional'
-    });
-  });
-  
-  // Convert to BrandPrompt format
-  strategicPrompts.forEach(({prompt, category, intent}) => {
-    prompts.push({
-      id: (++promptId).toString(),
-      prompt,
-      category: category as BrandPrompt['category'],
-    });
-  });
 
+  console.log(`Generated ${prompts.length} prompts for ${brandName} (${productType} - ${actualProduct})`);
   return prompts;
 }
 
