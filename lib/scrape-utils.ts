@@ -153,13 +153,18 @@ export async function scrapeCompanyInfo(url: string, maxAge?: number): Promise<C
       - For other B2B software, use "SaaS"
       - For other consumer products, use "consumer goods"
       
-      CRITICAL - COMPETITOR EXTRACTION:
+      CRITICAL - COMPETITOR EXTRACTION (PRIORITIZE MIX OF NICHE + BIG PLAYERS):
       - Extract AT LEAST 6-10 competitors if mentioned anywhere on the page
-      - Look for competitor mentions in: product comparisons, "vs" sections, "alternatives", "similar products", blog posts, press mentions
-      - Include BOTH well-known brands AND niche/smaller competitors
-      - Extract FULL COMPANY NAMES (e.g., "RTIC", "IGLOO", "Coleman", "Rothy's", "Vessi") not just initials
+      - PRIORITIZE finding a MIX of both niche/similar-sized competitors AND well-known brands
+      - For niche brands (like Allbirds, Rothy's, sustainable DTC brands), find OTHER niche competitors FIRST:
+        * Example: For Allbirds → Find Rothy's, Vessi, Atoms, Cariuma, Thousand Fell (sustainable DTC shoe brands)
+        * Example: For a niche SaaS → Find other similar-sized SaaS companies, not just Salesforce/Microsoft
+      - ALSO include well-known brands for market context (Nike, Adidas, etc. for shoes)
+      - Look for competitor mentions in: product comparisons, "vs" sections, "alternatives", "similar products", blog posts, press mentions, reviews
+      - Extract FULL COMPANY NAMES (e.g., "RTIC", "IGLOO", "Coleman", "Rothy's", "Vessi", "Atoms") not just initials
       - If competitors are mentioned in text, extract them even if not in a formal list
-      - Look for patterns like "compared to", "versus", "alternative to", "similar to", "competitors include"
+      - Look for patterns like "compared to", "versus", "alternative to", "similar to", "competitors include", "like [brand]"
+      - AIM FOR: 60% niche/similar-sized competitors + 40% well-known brands (if available)
       
       IMPORTANT: 
       1. For mainProducts, list the ACTUAL PRODUCTS (e.g., "coolers", "tumblers", "drinkware") not product categories
