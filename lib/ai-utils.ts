@@ -201,15 +201,28 @@ IMPORTANT:
                               company.industry?.toLowerCase().includes('platform') ||
                               company.industry?.toLowerCase().includes('retailer');
     
-    // Well-known giants to exclude for niche/DTC brands (unless they're truly direct competitors)
+    // Well-known giants across all industries - multinational corporations
+    // These should be filtered out for smaller/niche companies in ANY industry
     const wellKnownGiants = new Set([
-      'Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour', 'Converse', 'New Balance', 'Vans',
-      'Walmart', 'Target', 'Amazon', 'Costco', 'Best Buy',
-      'Microsoft', 'Google', 'Apple', 'Meta', 'Facebook',
-      'Coca-Cola', 'Pepsi', 'Starbucks', 'McDonald\'s', 'Burger King'
+      // Athletic/footwear giants
+      'Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour', 'Converse', 'New Balance', 'Vans', 'Hoka', 'Hoka One One', 'On', 'On Running',
+      // Retail giants
+      'Walmart', 'Target', 'Amazon', 'Costco', 'Best Buy', 'Home Depot', 'Lowe\'s',
+      // Tech giants
+      'Microsoft', 'Google', 'Apple', 'Meta', 'Facebook', 'IBM', 'Oracle', 'SAP', 'Salesforce',
+      // Food/beverage giants
+      'Coca-Cola', 'Pepsi', 'Starbucks', 'McDonald\'s', 'Burger King', 'KFC', 'Subway',
+      // Automotive giants
+      'Toyota', 'Ford', 'General Motors', 'Volkswagen', 'BMW', 'Mercedes-Benz',
+      // Finance giants
+      'JPMorgan Chase', 'Bank of America', 'Wells Fargo', 'Citigroup', 'Goldman Sachs'
     ]);
     
-    // Filter and sort competitors to prioritize niche competitors
+    // Detect if the company itself is a giant (if not, filter giants from competitors)
+    const companyIsGiant = wellKnownGiants.has(company.name);
+    const shouldFilterGiants = !companyIsGiant; // Filter giants for non-giant companies
+    
+    // Filter and sort competitors to prioritize niche/similar-sized competitors
     let competitors = object.competitors
       .filter(c => {
         // Exclude retailers/platforms for product companies
@@ -217,9 +230,11 @@ IMPORTANT:
           return false;
         }
         
-        // For niche/DTC brands, exclude well-known giants (unless they're truly direct with high overlap)
-        if ((isDTC || isNiche) && wellKnownGiants.has(c.name)) {
-          // Only include if it's a direct competitor with high market overlap
+        // For non-giant companies, exclude well-known giants (unless company itself is a giant)
+        // This works for ALL industries, not just DTC/niche
+        if (shouldFilterGiants && wellKnownGiants.has(c.name)) {
+          // Only include giants if they're truly direct competitors with high overlap
+          // But even then, prefer non-giants
           if (!(c.isDirectCompetitor && c.marketOverlap === 'high')) {
             return false;
           }
@@ -229,7 +244,7 @@ IMPORTANT:
         return c.competitorType === 'direct' || (c.competitorType === 'indirect' && c.marketOverlap === 'high');
       })
       .sort((a, b) => {
-        // Prioritize: 1) Direct competitors, 2) High market overlap, 3) Direct > Indirect, 4) Exclude giants
+        // Prioritize: 1) Direct competitors, 2) High market overlap, 3) Direct > Indirect, 4) Prefer non-giants
         if (a.isDirectCompetitor !== b.isDirectCompetitor) {
           return a.isDirectCompetitor ? -1 : 1;
         }
@@ -237,8 +252,8 @@ IMPORTANT:
           const overlapOrder = { 'high': 0, 'medium': 1, 'low': 2 };
           return overlapOrder[a.marketOverlap] - overlapOrder[b.marketOverlap];
         }
-        // For niche brands, deprioritize well-known giants
-        if ((isDTC || isNiche) && (wellKnownGiants.has(a.name) !== wellKnownGiants.has(b.name))) {
+        // For non-giant companies, deprioritize well-known giants
+        if (shouldFilterGiants && (wellKnownGiants.has(a.name) !== wellKnownGiants.has(b.name))) {
           return wellKnownGiants.has(a.name) ? 1 : -1;
         }
         if (a.competitorType !== b.competitorType) {
@@ -249,11 +264,11 @@ IMPORTANT:
       .map(c => c.name)
       .slice(0, 9); // Limit to 9 competitors max, prioritizing best matches
     
-    // Additional filter: For niche/DTC brands, if we have enough non-giant competitors, remove giants
-    if ((isDTC || isNiche) && competitors.length >= 3) {
+    // Additional filter: For non-giant companies, if we have enough non-giant competitors, remove giants
+    if (shouldFilterGiants && competitors.length >= 3) {
       const nonGiantCompetitors = competitors.filter(c => !wellKnownGiants.has(c));
       if (nonGiantCompetitors.length >= 3) {
-        // Prefer niche competitors if we have enough
+        // Prefer similar-sized competitors if we have enough
         competitors = nonGiantCompetitors.slice(0, 9);
       }
     }
