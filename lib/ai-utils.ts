@@ -230,14 +230,10 @@ IMPORTANT:
           return false;
         }
         
-        // For non-giant companies, exclude well-known giants (unless company itself is a giant)
-        // This works for ALL industries, not just DTC/niche
+        // For non-giant companies, STRICTLY exclude well-known giants
+        // Giants like Nike/Adidas are NOT competitors for smaller companies, regardless of AI classification
         if (shouldFilterGiants && wellKnownGiants.has(c.name)) {
-          // Only include giants if they're truly direct competitors with high overlap
-          // But even then, prefer non-giants
-          if (!(c.isDirectCompetitor && c.marketOverlap === 'high')) {
-            return false;
-          }
+          return false; // Always exclude giants for non-giant companies
         }
         
         // Include direct competitors and high-overlap indirect competitors
