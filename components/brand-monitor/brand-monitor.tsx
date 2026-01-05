@@ -20,6 +20,7 @@ import {
   detectServiceType,
   getIndustryCompetitors
 } from '@/lib/brand-monitor-utils';
+import { generatePromptsForCompany } from '@/lib/ai-utils';
 import { getEnabledProviders } from '@/lib/provider-config';
 import { useSaveBrandAnalysis } from '@/hooks/useBrandAnalyses';
 
@@ -371,6 +372,18 @@ export function BrandMonitor({
       console.log('Identified competitors:', competitors);
       dispatch({ type: 'SET_IDENTIFIED_COMPETITORS', payload: competitors });
       
+      // Generate prompts using the new AI-powered function
+      try {
+        const competitorNames = competitors.map(c => c.name);
+        const generatedPrompts = await generatePromptsForCompany(company, competitorNames);
+        const promptStrings = generatedPrompts.map(p => p.prompt);
+        dispatch({ type: 'SET_ANALYZING_PROMPTS', payload: promptStrings });
+        console.log(`Generated ${promptStrings.length} prompts for ${company.name}`);
+      } catch (error) {
+        console.error('Error generating prompts:', error);
+        // Continue even if prompt generation fails
+      }
+      
       // Show competitors on the same page with animation
       dispatch({ type: 'SET_SHOW_COMPETITORS', payload: true });
       dispatch({ type: 'SET_PREPARING_ANALYSIS', payload: false });
@@ -410,95 +423,24 @@ export function BrandMonitor({
       onCreditsUpdate();
     }
 
-    // Collect all prompts (default + custom) - use company keywords/services
-    const generateContextualPrompts = (company: Company): string[] => {
-      const keywords = company.scrapedData?.keywords || [];
-      const mainProducts = company.scrapedData?.mainProducts || [];
-      const description = (company.scrapedData?.description || company.description || '').toLowerCase();
-      const currentYear = new Date().getFullYear();
-      
-      // Detect if this is a marketplace business (where keywords refer to items being sold, not services provided)
-      const isMarketplace = description.includes('marketplace') || 
-                           description.includes('buy and sell') ||
-                           description.includes('buying and selling') ||
-                           (company.industry || '').toLowerCase().includes('marketplace') ||
-                           keywords.some(k => k.toLowerCase() === 'marketplace');
-      
-      // Filter out generic terms that don't make good prompts
-      const genericTerms = ['support', 'service', 'services', 'tool', 'tools', 'solution', 'solutions', 
-                            'platform', 'platforms', 'company', 'companies', 'provider', 'providers',
-                            'customer', 'customers', 'business', 'businesses'];
-      
-      // For marketplace businesses, generate prompts about the marketplace itself, not the items sold
-      if (isMarketplace) {
-        const marketplacePrompts = [
-          `Best marketplace to buy and sell online businesses in ${currentYear}?`,
-          `Top platforms for buying and selling websites and digital assets?`,
-          `Most popular marketplaces for online business transactions today?`,
-          `Recommended platforms to sell websites, apps, and online businesses?`,
-          `Leading marketplaces for entrepreneurs to buy established online businesses?`,
-          `Best platform for buying and selling profitable websites and apps?`
-        ];
-        return marketplacePrompts.slice(0, 6);
-      }
-      
-      // Use keywords if available, otherwise fall back to mainProducts
-      let primaryServices: string[] = [];
-      
-      if (keywords.length > 0) {
-        // Filter out generic terms and get all relevant keywords
-        primaryServices = keywords
-          .filter(k => {
-            const kLower = k.toLowerCase();
-            // Also filter out marketplace-related terms that aren't the service itself
-            if (isMarketplace && (kLower === 'websites' || kLower === 'apps' || kLower === 'digital assets')) {
-              return false; // These are items sold, not services provided
-            }
-            return !genericTerms.some(term => kLower.includes(term) || term.includes(kLower));
-          })
-          .slice(0, 6); // Cap at 6 keywords
-      } else if (mainProducts.length > 0) {
-        primaryServices = mainProducts
-          .filter(p => {
-            const pLower = p.toLowerCase();
-            return !genericTerms.some(term => pLower.includes(term) || term.includes(pLower));
-          })
-          .slice(0, 6);
-      }
-      
-      // If we have specific services/keywords, create prompts for each (up to 6)
-      if (primaryServices.length > 0) {
-        const prompts: string[] = [];
-        const promptTemplates = [
-          (service: string) => `Best ${service} providers in ${currentYear}?`,
-          (service: string) => `Top ${service} services for businesses?`,
-          (service: string) => `Most popular ${service} platforms today?`,
-          (service: string) => `Recommended ${service} solutions?`,
-          (service: string) => `Leading ${service} companies?`,
-          (service: string) => `Best ${service} for startups?`
-        ];
-        
-        // Generate one prompt per keyword, rotating through templates
-        primaryServices.forEach((service, index) => {
-          const templateIndex = index % promptTemplates.length;
-          prompts.push(promptTemplates[templateIndex](service));
-        });
-        
-        return prompts.slice(0, 6); // Cap at 6 prompts
-      }
-      
-      // Fallback to generic prompts based on industry/service type
-    const serviceType = detectServiceType(company);
-      return [
-      `Best ${serviceType}s in ${currentYear}?`,
-      `Top ${serviceType}s for startups?`,
-      `Most popular ${serviceType}s today?`,
-      `Recommended ${serviceType}s for developers?`
-      ];
-    };
+    // Collect all prompts (default + custom) - use already generated prompts or generate new ones
+    // Use prompts from state if available (generated during prepare), otherwise generate new ones
+    const existingPrompts = state.analyzingPrompts || [];
+    let defaultPrompts: string[] = [];
     
-    const defaultPrompts = generateContextualPrompts(company)
-      .filter((_, index) => !removedDefaultPrompts.includes(index));
+    if (existingPrompts.length > 0 && existingPrompts.length >= 5) {
+      // Use already generated prompts (only if we have a good number)
+      defaultPrompts = existingPrompts.filter((_, index) => !removedDefaultPrompts.includes(index));
+    } else {
+      // Generate new prompts if not already generated or if we don't have enough
+      const competitorNames = identifiedCompetitors.map(c => c.name);
+      const generatedPrompts = await generatePromptsForCompany(company, competitorNames);
+      defaultPrompts = generatedPrompts
+        .map(p => p.prompt)
+        .filter((_, index) => !removedDefaultPrompts.includes(index));
+      // Update state with newly generated prompts
+      dispatch({ type: 'SET_ANALYZING_PROMPTS', payload: generatedPrompts.map(p => p.prompt) });
+    }
     
     const allPrompts = [...defaultPrompts, ...customPrompts];
     
@@ -544,7 +486,7 @@ export function BrandMonitor({
     } finally {
       dispatch({ type: 'SET_ANALYZING', payload: false });
     }
-  }, [company, removedDefaultPrompts, customPrompts, identifiedCompetitors, startSSEConnection, creditsAvailable]);
+  }, [company, removedDefaultPrompts, customPrompts, identifiedCompetitors, startSSEConnection, creditsAvailable, state.analyzingPrompts]);
   
   const handleRestart = useCallback(() => {
     dispatch({ type: 'RESET_STATE' });
