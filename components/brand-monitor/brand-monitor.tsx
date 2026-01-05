@@ -258,111 +258,126 @@ export function BrandMonitor({
   }, [url, creditsAvailable, onCreditsUpdate]);
   
   const handlePrepareAnalysis = useCallback(async () => {
-    if (!company) return;
-    
-    dispatch({ type: 'SET_PREPARING_ANALYSIS', payload: true });
-    
-    // Check which providers are available
-    try {
-      const response = await fetch('/api/brand-monitor/check-providers', {
-        method: 'POST',
-      });
-      if (response.ok) {
-        const data = await response.json();
-        dispatch({ type: 'SET_AVAILABLE_PROVIDERS', payload: data.providers || ['OpenAI', 'Anthropic', 'Google'] });
-      }
-    } catch (e) {
-      // Default to providers with API keys if check fails
-      const defaultProviders = [];
-      if (process.env.NEXT_PUBLIC_HAS_OPENAI_KEY) defaultProviders.push('OpenAI');
-      if (process.env.NEXT_PUBLIC_HAS_ANTHROPIC_KEY) defaultProviders.push('Anthropic');
-      dispatch({ type: 'SET_AVAILABLE_PROVIDERS', payload: defaultProviders.length > 0 ? defaultProviders : ['OpenAI', 'Anthropic'] });
+    if (!company) {
+      console.error('No company data available');
+      return;
     }
     
-    // Extract competitors from scraped data or use industry defaults
-    const extractedCompetitors = company.scrapedData?.competitors || [];
-    const industryCompetitors = getIndustryCompetitors(company.industry || '');
-    
-    // Merge extracted competitors with industry defaults, keeping URLs where available
-    const competitorMap = new Map<string, IdentifiedCompetitor>();
-    
-    // Add industry competitors first (they have URLs)
-    industryCompetitors.forEach(comp => {
-      const normalizedName = normalizeCompetitorName(comp.name);
-      competitorMap.set(normalizedName, comp as IdentifiedCompetitor);
-    });
-    
-    // Add extracted competitors and try to match them with known URLs
-    extractedCompetitors.forEach(name => {
-      const normalizedName = normalizeCompetitorName(name);
+    try {
+      dispatch({ type: 'SET_PREPARING_ANALYSIS', payload: true });
       
-      // Check if we already have this competitor
-      const existing = competitorMap.get(normalizedName);
-      if (existing) {
-        // If existing has URL but current doesn't, keep existing
-        if (!existing.url) {
-          const url = assignUrlToCompetitor(name);
-          competitorMap.set(normalizedName, { name, url });
+      // Check which providers are available
+      try {
+        const response = await fetch('/api/brand-monitor/check-providers', {
+          method: 'POST',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          dispatch({ type: 'SET_AVAILABLE_PROVIDERS', payload: data.providers || ['OpenAI', 'Anthropic', 'Google'] });
         }
-        return;
+      } catch (e) {
+        // Default to providers with API keys if check fails
+        const defaultProviders = [];
+        if (process.env.NEXT_PUBLIC_HAS_OPENAI_KEY) defaultProviders.push('OpenAI');
+        if (process.env.NEXT_PUBLIC_HAS_ANTHROPIC_KEY) defaultProviders.push('Anthropic');
+        dispatch({ type: 'SET_AVAILABLE_PROVIDERS', payload: defaultProviders.length > 0 ? defaultProviders : ['OpenAI', 'Anthropic'] });
       }
       
-      // New competitor - try to find a URL for it
-      const url = assignUrlToCompetitor(name);
-      competitorMap.set(normalizedName, { name, url });
-    });
-    
-    // Well-known giants to filter out for non-giant companies
-    const wellKnownGiants = new Set([
-      'Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour', 'Converse', 'New Balance', 'Vans', 
-      'Hoka', 'Hoka One One', 'On', 'On Running',
-      'Walmart', 'Target', 'Amazon', 'Costco', 'Best Buy', 'Home Depot', 'Lowe\'s',
-      'Microsoft', 'Google', 'Apple', 'Meta', 'Facebook', 'IBM', 'Oracle', 'SAP', 'Salesforce',
-      'Coca-Cola', 'Pepsi', 'Starbucks', 'McDonald\'s', 'Burger King', 'KFC', 'Subway',
-      'Toyota', 'Ford', 'General Motors', 'Volkswagen', 'BMW', 'Mercedes-Benz',
-      'JPMorgan Chase', 'Bank of America', 'Wells Fargo', 'Citigroup', 'Goldman Sachs'
-    ]);
-    
-    // Case-insensitive check if a name is a giant
-    const isGiant = (name: string): boolean => {
-      const normalized = name.trim();
-      for (const giant of wellKnownGiants) {
-        if (normalized.toLowerCase() === giant.toLowerCase()) {
+      // Extract competitors from scraped data or use industry defaults
+      const extractedCompetitors = company.scrapedData?.competitors || [];
+      const industryCompetitors = getIndustryCompetitors(company.industry || '');
+      
+      console.log('Debug - extractedCompetitors:', extractedCompetitors);
+      console.log('Debug - industryCompetitors:', industryCompetitors);
+      console.log('Debug - company.industry:', company.industry);
+      
+      // Merge extracted competitors with industry defaults, keeping URLs where available
+      const competitorMap = new Map<string, IdentifiedCompetitor>();
+      
+      // Add industry competitors first (they have URLs)
+      industryCompetitors.forEach(comp => {
+        const normalizedName = normalizeCompetitorName(comp.name);
+        competitorMap.set(normalizedName, comp as IdentifiedCompetitor);
+      });
+      
+      // Add extracted competitors and try to match them with known URLs
+      extractedCompetitors.forEach(name => {
+        const normalizedName = normalizeCompetitorName(name);
+        
+        // Check if we already have this competitor
+        const existing = competitorMap.get(normalizedName);
+        if (existing) {
+          // If existing has URL but current doesn't, keep existing
+          if (!existing.url) {
+            const url = assignUrlToCompetitor(name);
+            competitorMap.set(normalizedName, { name, url });
+          }
+          return;
+        }
+        
+        // New competitor - try to find a URL for it
+        const url = assignUrlToCompetitor(name);
+        competitorMap.set(normalizedName, { name, url });
+      });
+      
+      console.log('Debug - competitorMap before filter:', Array.from(competitorMap.values()));
+      
+      // Well-known giants to filter out for non-giant companies
+      const wellKnownGiants = new Set([
+        'Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour', 'Converse', 'New Balance', 'Vans', 
+        'Hoka', 'Hoka One One', 'On', 'On Running',
+        'Walmart', 'Target', 'Amazon', 'Costco', 'Best Buy', 'Home Depot', 'Lowe\'s',
+        'Microsoft', 'Google', 'Apple', 'Meta', 'Facebook', 'IBM', 'Oracle', 'SAP', 'Salesforce',
+        'Coca-Cola', 'Pepsi', 'Starbucks', 'McDonald\'s', 'Burger King', 'KFC', 'Subway',
+        'Toyota', 'Ford', 'General Motors', 'Volkswagen', 'BMW', 'Mercedes-Benz',
+        'JPMorgan Chase', 'Bank of America', 'Wells Fargo', 'Citigroup', 'Goldman Sachs'
+      ]);
+      
+      // Case-insensitive check if a name is a giant
+      const isGiant = (name: string): boolean => {
+        if (!name) return false;
+        const normalized = name.trim();
+        for (const giant of wellKnownGiants) {
+          if (normalized.toLowerCase() === giant.toLowerCase()) {
+            return true;
+          }
+        }
+        return false;
+      };
+      
+      // Check if company itself is a giant
+      const companyIsGiant = company ? isGiant(company.name) : false;
+      const shouldFilterGiants = !companyIsGiant;
+      
+      let competitors = Array.from(competitorMap.values())
+        .filter(comp => {
+          // Filter out placeholder competitors
+          if (comp.name === 'Competitor 1' || comp.name === 'Competitor 2' || 
+              comp.name === 'Competitor 3' || comp.name === 'Competitor 4' || 
+              comp.name === 'Competitor 5') {
+            return false;
+          }
+          // Don't filter out giants - user wants to see all competitors including big players
+          // Just prioritize non-giants in sorting if needed
           return true;
-        }
-      }
-      return false;
-    };
-    
-    // Check if company itself is a giant
-    const companyIsGiant = company ? isGiant(company.name) : false;
-    const shouldFilterGiants = !companyIsGiant;
-    
-    let competitors = Array.from(competitorMap.values())
-      .filter(comp => {
-        // Filter out placeholder competitors
-        if (comp.name === 'Competitor 1' || comp.name === 'Competitor 2' || 
-            comp.name === 'Competitor 3' || comp.name === 'Competitor 4' || 
-            comp.name === 'Competitor 5') {
-          return false;
-        }
-        // Filter out giants for non-giant companies
-        if (shouldFilterGiants && isGiant(comp.name)) {
-          return false;
-        }
-        return true;
-      })
-      .slice(0, 10);
+        })
+        .slice(0, 10);
 
-    // Just use the first 6 competitors without AI validation
-    competitors = competitors.slice(0, 6);
-    
-    console.log('Identified competitors:', competitors);
-    dispatch({ type: 'SET_IDENTIFIED_COMPETITORS', payload: competitors });
-    
-    // Show competitors on the same page with animation
-    dispatch({ type: 'SET_SHOW_COMPETITORS', payload: true });
-    dispatch({ type: 'SET_PREPARING_ANALYSIS', payload: false });
+      // Just use the first 6 competitors without AI validation
+      competitors = competitors.slice(0, 6);
+      
+      console.log('Debug - shouldFilterGiants:', shouldFilterGiants);
+      console.log('Debug - companyIsGiant:', companyIsGiant);
+      console.log('Identified competitors:', competitors);
+      dispatch({ type: 'SET_IDENTIFIED_COMPETITORS', payload: competitors });
+      
+      // Show competitors on the same page with animation
+      dispatch({ type: 'SET_SHOW_COMPETITORS', payload: true });
+      dispatch({ type: 'SET_PREPARING_ANALYSIS', payload: false });
+    } catch (error) {
+      console.error('Error in handlePrepareAnalysis:', error);
+      dispatch({ type: 'SET_PREPARING_ANALYSIS', payload: false });
+    }
   }, [company]);
   
   const handleProceedToPrompts = useCallback(() => {

@@ -153,11 +153,20 @@ export async function scrapeCompanyInfo(url: string, maxAge?: number): Promise<C
       - For other B2B software, use "SaaS"
       - For other consumer products, use "consumer goods"
       
+      CRITICAL - COMPETITOR EXTRACTION:
+      - Extract AT LEAST 6-10 competitors if mentioned anywhere on the page
+      - Look for competitor mentions in: product comparisons, "vs" sections, "alternatives", "similar products", blog posts, press mentions
+      - Include BOTH well-known brands AND niche/smaller competitors
+      - Extract FULL COMPANY NAMES (e.g., "RTIC", "IGLOO", "Coleman", "Rothy's", "Vessi") not just initials
+      - If competitors are mentioned in text, extract them even if not in a formal list
+      - Look for patterns like "compared to", "versus", "alternative to", "similar to", "competitors include"
+      
       IMPORTANT: 
       1. For mainProducts, list the ACTUAL PRODUCTS (e.g., "coolers", "tumblers", "drinkware") not product categories
       2. For competitors, extract FULL COMPANY NAMES (e.g., "RTIC", "IGLOO", "Coleman") not just initials
       3. Focus on what the company MAKES/SELLS, not what goes IN their products (e.g., Yeti makes coolers, not beverages)
-      4. Differentiate between "brand monitoring" (tools that track brand visibility) and "AI platform provider" (companies that build AI models)`,
+      4. Differentiate between "brand monitoring" (tools that track brand visibility) and "AI platform provider" (companies that build AI models)
+      5. Extract as many competitors as possible - aim for 6-10 minimum if available on the page`,
     });
 
     // Extract logo/image URL - comprehensive multi-source approach
