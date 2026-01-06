@@ -5,6 +5,7 @@ import { getProviderModel, normalizeProviderName, isProviderConfigured, getConfi
 import { detectBrandMention, detectMultipleBrands, BrandDetectionOptions, smartBrandMatch } from './brand-detection-utils';
 import { getBrandDetectionOptions } from './brand-detection-config';
 import { detectServiceType } from './brand-monitor-utils';
+import { extractSourcesFromResponse } from './source-tracker-utils';
 
 /**
  * Find the matching tracked company name for a given company string
@@ -886,6 +887,15 @@ Return a simple analysis:
             competitorDetections.get(c)?.mentioned || false
           );
           
+          // Extract sources from response
+          let extractedSources;
+          try {
+            extractedSources = extractSourcesFromResponse(text);
+          } catch (sourceError) {
+            console.warn(`Failed to extract sources for ${provider}:`, sourceError);
+            extractedSources = [];
+          }
+
           return {
             provider,
             prompt,
@@ -897,6 +907,7 @@ Return a simple analysis:
             sentiment: 'neutral' as const,
             confidence: 0.7,
             timestamp: new Date(),
+            sources: extractedSources.length > 0 ? extractedSources : undefined,
           };
         } catch (fallbackError) {
           console.error('Fallback analysis also failed:', (fallbackError as any).message);
@@ -1030,6 +1041,15 @@ Return a simple analysis:
       });
     }
 
+    // Extract sources from response text
+    let extractedSources;
+    try {
+      extractedSources = extractSourcesFromResponse(text);
+    } catch (sourceError) {
+      console.warn(`Failed to extract sources for ${provider}:`, sourceError);
+      extractedSources = [];
+    }
+
     return {
       provider: providerDisplayName,
       prompt,
@@ -1041,6 +1061,7 @@ Return a simple analysis:
       sentiment: object.analysis.overallSentiment,
       confidence: object.analysis.confidence,
       timestamp: new Date(),
+      sources: extractedSources.length > 0 ? extractedSources : undefined,
       detectionDetails: {
         brandMatches: brandDetectionResult.matches.map(m => ({
           text: m.text,
