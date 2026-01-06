@@ -275,8 +275,23 @@ export function useSSEHandler({ state, dispatch, onCreditsUpdate, onAnalysisComp
       const response = await fetch(url, options);
       
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to analyze');
+        let errorMessage = 'Failed to analyze brand visibility';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error?.message || errorData.error || errorMessage;
+          console.error('Analysis error response:', errorData);
+        } catch (parseError) {
+          // If response isn't JSON, try to get text
+          try {
+            const errorText = await response.text();
+            console.error('Analysis error (non-JSON):', errorText);
+            errorMessage = errorText || errorMessage;
+          } catch (textError) {
+            console.error('Failed to parse error response:', textError);
+            errorMessage = `Server error (${response.status}): ${response.statusText}`;
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       const reader = response.body?.getReader();

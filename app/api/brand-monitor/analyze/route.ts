@@ -112,46 +112,88 @@ export async function POST(request: NextRequest) {
     (async () => {
       try {
         // Send initial credit info
-        await sendEvent({
-          type: 'credits',
-          stage: 'credits',
-          data: {
-            remainingCredits,
-            creditsUsed: CREDITS_PER_BRAND_ANALYSIS
-          },
-          timestamp: new Date()
-        });
+        try {
+          await sendEvent({
+            type: 'credits',
+            stage: 'credits',
+            data: {
+              remainingCredits,
+              creditsUsed: CREDITS_PER_BRAND_ANALYSIS
+            },
+            timestamp: new Date()
+          });
+        } catch (eventError) {
+          console.warn('Failed to send credits event:', eventError);
+          // Continue anyway
+        }
 
         // Perform the analysis using common logic
-        const analysisResult = await performAnalysis({
-          company,
-          customPrompts,
-          userSelectedCompetitors,
-          useWebSearch,
-          sendEvent
-        });
+        let analysisResult;
+        try {
+          analysisResult = await performAnalysis({
+            company,
+            customPrompts,
+            userSelectedCompetitors,
+            useWebSearch,
+            sendEvent
+          });
+        } catch (analysisError) {
+          console.error('Analysis failed:', analysisError);
+          const errorMessage = analysisError instanceof Error 
+            ? analysisError.message 
+            : 'Analysis failed with unknown error';
+          
+          await sendEvent({
+            type: 'error',
+            stage: 'error',
+            data: {
+              message: errorMessage,
+              details: process.env.NODE_ENV === 'development' 
+                ? (analysisError instanceof Error ? analysisError.stack : String(analysisError))
+                : undefined
+            },
+            timestamp: new Date()
+          });
+          return; // Exit early on analysis failure
+        }
 
         // Send final complete event with all data
-        await sendEvent({
-          type: 'complete',
-          stage: 'finalizing',
-          data: {
-            analysis: analysisResult
-          },
-          timestamp: new Date()
-        });
+        try {
+          await sendEvent({
+            type: 'complete',
+            stage: 'finalizing',
+            data: {
+              analysis: analysisResult
+            },
+            timestamp: new Date()
+          });
+        } catch (eventError) {
+          console.warn('Failed to send complete event:', eventError);
+          // Continue to close writer
+        }
       } catch (error) {
-        console.error('Analysis error:', error);
-        await sendEvent({
-          type: 'error',
-          stage: 'error',
-          data: {
-            message: error instanceof Error ? error.message : 'Analysis failed'
-          },
-          timestamp: new Date()
-        });
+        console.error('Unexpected error in analysis process:', error);
+        try {
+          await sendEvent({
+            type: 'error',
+            stage: 'error',
+            data: {
+              message: error instanceof Error ? error.message : 'Unexpected error occurred',
+              details: process.env.NODE_ENV === 'development' 
+                ? (error instanceof Error ? error.stack : String(error))
+                : undefined
+            },
+            timestamp: new Date()
+          });
+        } catch (eventError) {
+          console.error('Failed to send error event:', eventError);
+        }
       } finally {
-        await writer.close();
+        try {
+          await writer.close();
+        } catch (closeError) {
+          console.error('Failed to close writer:', closeError);
+        }
       }
     })();
 
