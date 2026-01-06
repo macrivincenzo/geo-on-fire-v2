@@ -93,6 +93,14 @@ export interface AIResponse {
   sentiment: 'positive' | 'neutral' | 'negative';
   confidence: number;
   timestamp: Date;
+  // Source tracking - which domains/pages were cited
+  sources?: Array<{
+    url: string;
+    title?: string;
+    domain: string;
+    domainName?: string;
+    citedText?: string;
+  }>;
   // Enhanced detection information
   detectionDetails?: {
     brandMatches?: {

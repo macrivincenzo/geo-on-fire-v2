@@ -103,7 +103,7 @@ export interface Analysis {
   errors?: string[];
 }
 
-export type ResultsTab = 'visibility' | 'matrix' | 'rankings' | 'metrics' | 'prompts' | 'insights';
+export type ResultsTab = 'visibility' | 'matrix' | 'rankings' | 'metrics' | 'prompts' | 'insights' | 'sources';
 
 export interface BrandMonitorState {
   // URL and validation

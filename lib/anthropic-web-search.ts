@@ -2,6 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { AIResponse } from './types';
 import { detectBrandMention, stripMarkdown } from './brand-detection-utils';
 import { getBrandDetectionOptions } from './brand-detection-config';
+import { extractDomain, getDomainName } from './source-tracker-utils';
 
 interface WebSearchResult {
   url: string;
@@ -96,6 +97,15 @@ After searching, analyze your response and determine:
       client
     );
 
+    // Extract sources from web search results
+    const sources = webSearchResults.map(result => ({
+      url: result.url,
+      title: result.title,
+      domain: extractDomain(result.url),
+      domainName: getDomainName(result.url),
+      citedText: result.cited_text,
+    }));
+
     return {
       provider: 'Anthropic',
       prompt,
@@ -105,7 +115,8 @@ After searching, analyze your response and determine:
       competitors: analysis.competitorsMentioned,
       sentiment: analysis.sentiment,
       confidence: analysis.confidence,
-      timestamp: new Date()
+      timestamp: new Date(),
+      sources: sources.length > 0 ? sources : undefined,
     };
 
   } catch (error) {

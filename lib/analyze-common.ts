@@ -2,6 +2,7 @@ import { AIResponse, AnalysisProgressData, Company, PartialResultData, ProgressD
 import { generatePromptsForCompany, analyzePromptWithProvider, calculateBrandScores, analyzeCompetitors, identifyCompetitors, analyzeCompetitorsByProvider } from './ai-utils';
 import { analyzePromptWithProvider as analyzePromptWithProviderEnhanced } from './ai-utils-enhanced';
 import { getConfiguredProviders } from './provider-config';
+import { extractSourcesFromResponse } from './source-tracker-utils';
 
 export interface AnalysisConfig {
   company: Company;
@@ -222,7 +223,7 @@ export async function performAnalysis({
           // Choose the appropriate analysis function based on useWebSearch
           const analyzeFunction = useWebSearch ? analyzePromptWithProviderEnhanced : analyzePromptWithProvider;
           
-          const response = await analyzeFunction(
+          let response = await analyzeFunction(
             prompt.prompt, 
             provider.name, 
             company.name, 
@@ -231,10 +232,22 @@ export async function performAnalysis({
             ...(useWebSearch ? [true] : []) // Pass web search flag only for enhanced version
           );
           
+          // Extract sources from response if not already included
+          if (response && !response.sources) {
+            const extractedSources = extractSourcesFromResponse(response.response);
+            if (extractedSources.length > 0) {
+              response = {
+                ...response,
+                sources: extractedSources,
+              };
+            }
+          }
+          
           console.log(`Analysis completed for ${provider.name}:`, {
             hasResponse: !!response,
             provider: response?.provider,
-            brandMentioned: response?.brandMentioned
+            brandMentioned: response?.brandMentioned,
+            sourcesCount: response?.sources?.length || 0
           });
           
           // Skip if provider returned null (not configured)

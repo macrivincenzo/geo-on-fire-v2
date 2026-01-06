@@ -105,11 +105,76 @@ export const brandAnalyses = pgTable('brand_analyses', {
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()),
 });
 
+// Source Tracker - Track which domains/pages cite the brand
+export const sourceDomains = pgTable('source_domains', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  brandAnalysisId: uuid('brand_analysis_id').notNull().references(() => brandAnalyses.id, { onDelete: 'cascade' }),
+  domain: text('domain').notNull(), // e.g., 'reddit.com'
+  domainName: text('domain_name'), // e.g., 'Reddit'
+  timesCited: integer('times_cited').default(0),
+  shareOfCitations: integer('share_of_citations'), // Percentage (0-100)
+  category: text('category'), // 'Industry & Network', 'Social', 'Competitor', etc.
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const sourcePages = pgTable('source_pages', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  brandAnalysisId: uuid('brand_analysis_id').notNull().references(() => brandAnalyses.id, { onDelete: 'cascade' }),
+  domainId: uuid('domain_id').references(() => sourceDomains.id, { onDelete: 'cascade' }),
+  url: text('url').notNull(), // Full URL
+  title: text('title'), // Page title
+  timesCited: integer('times_cited').default(0),
+  shareOfCitations: integer('share_of_citations'), // Percentage (0-100)
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+// Historical Tracking - Store snapshots of metrics over time
+export const brandAnalysisSnapshots = pgTable('brand_analysis_snapshots', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  brandAnalysisId: uuid('brand_analysis_id').notNull().references(() => brandAnalyses.id, { onDelete: 'cascade' }),
+  visibilityScore: integer('visibility_score'), // 0-100
+  sentimentScore: integer('sentiment_score'), // 0-100
+  shareOfVoice: integer('share_of_voice'), // 0-100
+  averagePosition: integer('average_position'),
+  rank: integer('rank'), // 1, 2, 3, etc.
+  snapshotDate: timestamp('snapshot_date').defaultNow(),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
 // Relations
-export const brandAnalysesRelations = relations(brandAnalyses, ({ one }) => ({
+export const brandAnalysesRelations = relations(brandAnalyses, ({ one, many }) => ({
   userProfile: one(userProfile, {
     fields: [brandAnalyses.userId],
     references: [userProfile.userId],
+  }),
+  sourceDomains: many(sourceDomains),
+  sourcePages: many(sourcePages),
+  snapshots: many(brandAnalysisSnapshots),
+}));
+
+export const sourceDomainsRelations = relations(sourceDomains, ({ one, many }) => ({
+  brandAnalysis: one(brandAnalyses, {
+    fields: [sourceDomains.brandAnalysisId],
+    references: [brandAnalyses.id],
+  }),
+  sourcePages: many(sourcePages),
+}));
+
+export const sourcePagesRelations = relations(sourcePages, ({ one }) => ({
+  brandAnalysis: one(brandAnalyses, {
+    fields: [sourcePages.brandAnalysisId],
+    references: [brandAnalyses.id],
+  }),
+  domain: one(sourceDomains, {
+    fields: [sourcePages.domainId],
+    references: [sourceDomains.id],
+  }),
+}));
+
+export const brandAnalysisSnapshotsRelations = relations(brandAnalysisSnapshots, ({ one }) => ({
+  brandAnalysis: one(brandAnalyses, {
+    fields: [brandAnalysisSnapshots.brandAnalysisId],
+    references: [brandAnalyses.id],
   }),
 }));
 
@@ -126,3 +191,9 @@ export type UserSettings = typeof userSettings.$inferSelect;
 export type NewUserSettings = typeof userSettings.$inferInsert;
 export type BrandAnalysis = typeof brandAnalyses.$inferSelect;
 export type NewBrandAnalysis = typeof brandAnalyses.$inferInsert;
+export type SourceDomain = typeof sourceDomains.$inferSelect;
+export type NewSourceDomain = typeof sourceDomains.$inferInsert;
+export type SourcePage = typeof sourcePages.$inferSelect;
+export type NewSourcePage = typeof sourcePages.$inferInsert;
+export type BrandAnalysisSnapshot = typeof brandAnalysisSnapshots.$inferSelect;
+export type NewBrandAnalysisSnapshot = typeof brandAnalysisSnapshots.$inferInsert;

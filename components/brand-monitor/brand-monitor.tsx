@@ -38,6 +38,7 @@ import { ProviderComparisonMatrix } from './provider-comparison-matrix';
 import { ProviderRankingsTabs } from './provider-rankings-tabs';
 import { ComparisonMatrixExplanation, PromptsResponsesExplanation } from './explanation-card';
 import { StrategicInsightsTab } from './strategic-insights-tab';
+import { SourceTrackerTab } from './source-tracker-tab';
 
 // Hooks
 import { useSSEHandler } from './hooks/use-sse-handler';
@@ -612,6 +613,13 @@ export function BrandMonitor({
                   <StrategicInsightsTab
                     brandData={brandData}
                     competitors={analysis.competitors}
+                    responses={analysis.responses}
+                    brandName={company?.name || 'Your Brand'}
+                  />
+                )}
+
+                {activeResultsTab === 'sources' && analysis?.responses && (
+                  <SourceTrackerTab
                     responses={analysis.responses}
                     brandName={company?.name || 'Your Brand'}
                   />

@@ -5,6 +5,7 @@ import { getProviderModel, normalizeProviderName, isProviderConfigured, getProvi
 import { analyzeWithAnthropicWebSearch } from './anthropic-web-search';
 import { detectBrandMention, stripMarkdown } from './brand-detection-utils';
 import { getBrandDetectionOptions } from './brand-detection-config';
+import { extractDomain, getDomainName } from './source-tracker-utils';
 
 const RankingSchema = z.object({
   rankings: z.array(z.object({
@@ -197,6 +198,18 @@ Be very thorough in detecting company names - they might appear in different con
                                provider === 'perplexity' ? 'Perplexity' :
                                provider; // fallback to original
 
+    // Format sources if available
+    const formattedSources = sources?.map((source: any) => {
+      const url = typeof source === 'string' ? source : source.url || source;
+      return {
+        url,
+        title: typeof source === 'object' ? source.title : undefined,
+        domain: extractDomain(url),
+        domainName: getDomainName(url),
+        citedText: typeof source === 'object' ? source.citedText : undefined,
+      };
+    });
+
     return {
       provider: providerDisplayName,
       prompt,
@@ -208,6 +221,7 @@ Be very thorough in detecting company names - they might appear in different con
       sentiment: object.analysis.overallSentiment,
       confidence: object.analysis.confidence,
       timestamp: new Date(),
+      sources: formattedSources && formattedSources.length > 0 ? formattedSources : undefined,
     };
   } catch (error) {
     console.error(`Error with ${provider}:`, error);
