@@ -322,6 +322,32 @@ export function BrandMonitor({
         competitorMap.set(normalizedName, { name, url });
       });
       
+      // If we don't have enough competitors, use AI to identify them
+      if (competitorMap.size === 0 || Array.from(competitorMap.values()).every(c => 
+        c.name === 'Competitor 1' || c.name === 'Competitor 2' || 
+        c.name === 'Competitor 3' || c.name === 'Competitor 4' || 
+        c.name === 'Competitor 5'
+      )) {
+        console.log('No real competitors found, using AI to identify competitors...');
+        try {
+          const { identifyCompetitors } = await import('@/lib/ai-utils');
+          const aiIdentifiedCompetitors = await identifyCompetitors(company);
+          console.log('AI identified competitors:', aiIdentifiedCompetitors);
+          
+          // Add AI-identified competitors to the map
+          aiIdentifiedCompetitors.forEach(name => {
+            const normalizedName = normalizeCompetitorName(name);
+            if (!competitorMap.has(normalizedName)) {
+              const url = assignUrlToCompetitor(name);
+              competitorMap.set(normalizedName, { name, url });
+            }
+          });
+        } catch (aiError) {
+          console.error('Error identifying competitors with AI:', aiError);
+          // Continue with whatever competitors we have
+        }
+      }
+      
       console.log('Debug - competitorMap before filter:', Array.from(competitorMap.values()));
       
       // Well-known giants to filter out for non-giant companies

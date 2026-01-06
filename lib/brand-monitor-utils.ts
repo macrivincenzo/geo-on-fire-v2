@@ -336,7 +336,14 @@ export function getIndustryCompetitors(industry: string): { name: string; url?: 
     }
   }
   
-  // If no match found, return empty array instead of placeholder competitors
-  // Placeholders get filtered out anyway, so better to return empty and let AI identify competitors
-  return [];
+  // Generic default competitors (fallback)
+  // These will be used if no industry match is found
+  // The AI competitor identification will still run and find real competitors
+  return [
+    { name: 'Competitor 1' },
+    { name: 'Competitor 2' },
+    { name: 'Competitor 3' },
+    { name: 'Competitor 4' },
+    { name: 'Competitor 5' }
+  ];
 }
