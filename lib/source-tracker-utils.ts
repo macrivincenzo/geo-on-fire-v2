@@ -26,11 +26,50 @@ export function extractUrlsFromText(text: string): string[] {
   }
   
   try {
-    const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
-    const matches = text.match(urlRegex) || [];
+    // More comprehensive URL regex patterns
+    const urlPatterns = [
+      // Standard HTTP/HTTPS URLs
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi,
+      // URLs without protocol (common in AI responses)
+      /(?:^|\s)(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi,
+      // Domain patterns
+      /\b(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(?:\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi,
+    ];
     
-    // Remove duplicates and normalize
-    const uniqueUrls = Array.from(new Set(matches.map(url => url.trim()).filter(url => url.length > 0)));
+    const allMatches: string[] = [];
+    
+    for (const pattern of urlPatterns) {
+      const matches = text.match(pattern) || [];
+      allMatches.push(...matches);
+    }
+    
+    // Clean and normalize URLs
+    const cleanedUrls = allMatches
+      .map(url => {
+        // Remove leading/trailing whitespace and punctuation
+        url = url.trim();
+        // Remove trailing punctuation that might be part of sentence
+        url = url.replace(/[.,;:!?]+$/, '');
+        // Add https:// if missing
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://' + url;
+        }
+        return url;
+      })
+      .filter(url => {
+        // Validate it's a real URL
+        try {
+          new URL(url);
+          return true;
+        } catch {
+          return false;
+        }
+      });
+    
+    // Remove duplicates
+    const uniqueUrls = Array.from(new Set(cleanedUrls));
+    
+    console.log(`[Source Extraction] Found ${uniqueUrls.length} URLs in text (${text.length} chars)`);
     
     return uniqueUrls;
   } catch (error) {

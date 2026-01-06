@@ -35,12 +35,31 @@ export function SourceTrackerTab({ responses, brandName }: SourceTrackerTabProps
       citedText?: string;
     }> = [];
     
+    // Debug logging
+    console.log('[Source Tracker] Processing responses:', responses.length);
+    
     for (const response of responses) {
       if (response.sources && response.sources.length > 0) {
+        console.log(`[Source Tracker] Found ${response.sources.length} sources in ${response.provider} response`);
         sources.push(...response.sources);
+      } else {
+        // Try to extract from response text if sources weren't pre-extracted
+        if (response.response) {
+          try {
+            const { extractSourcesFromResponse } = require('@/lib/source-tracker-utils');
+            const extracted = extractSourcesFromResponse(response.response);
+            if (extracted.length > 0) {
+              console.log(`[Source Tracker] Extracted ${extracted.length} sources from ${response.provider} response text`);
+              sources.push(...extracted);
+            }
+          } catch (error) {
+            console.warn('[Source Tracker] Failed to extract sources from response text:', error);
+          }
+        }
       }
     }
     
+    console.log('[Source Tracker] Total sources found:', sources.length);
     return sources;
   }, [responses]);
 
