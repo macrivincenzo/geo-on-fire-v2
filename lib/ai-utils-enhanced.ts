@@ -199,16 +199,32 @@ Be very thorough in detecting company names - they might appear in different con
                                provider; // fallback to original
 
     // Format sources if available
-    const formattedSources = sources?.map((source: any) => {
-      const url = typeof source === 'string' ? source : source.url || source;
-      return {
-        url,
-        title: typeof source === 'object' ? source.title : undefined,
-        domain: extractDomain(url),
-        domainName: getDomainName(url),
-        citedText: typeof source === 'object' ? source.citedText : undefined,
-      };
-    });
+    let formattedSources;
+    if (sources && Array.isArray(sources) && sources.length > 0) {
+      try {
+        formattedSources = sources.map((source: any) => {
+          if (!source) return null;
+          const url = typeof source === 'string' ? source : (source.url || source);
+          if (!url || typeof url !== 'string') return null;
+          
+          try {
+            return {
+              url,
+              title: typeof source === 'object' && source.title ? source.title : undefined,
+              domain: extractDomain(url),
+              domainName: getDomainName(url),
+              citedText: typeof source === 'object' && source.citedText ? source.citedText : undefined,
+            };
+          } catch (error) {
+            console.warn('Error formatting source:', error);
+            return null;
+          }
+        }).filter((s): s is NonNullable<typeof s> => s !== null);
+      } catch (error) {
+        console.warn('Error processing sources:', error);
+        formattedSources = undefined;
+      }
+    }
 
     return {
       provider: providerDisplayName,
