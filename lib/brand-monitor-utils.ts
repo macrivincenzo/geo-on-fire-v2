@@ -259,6 +259,39 @@ export function getIndustryCompetitors(industry: string): { name: string; url?: 
       { name: 'DigitalOcean', url: 'digitalocean.com' },
       { name: 'Linode', url: 'linode.com' },
       { name: 'Vultr', url: 'vultr.com' }
+    ],
+    'outdoor gear': [
+      { name: 'RTIC', url: 'rticoutdoors.com' },
+      { name: 'Igloo', url: 'igloo.com' },
+      { name: 'Coleman', url: 'coleman.com' },
+      { name: 'Pelican', url: 'pelican.com' },
+      { name: 'Orca', url: 'orcacoolers.com' },
+      { name: 'Engel', url: 'engelcoolers.com' },
+      { name: 'OtterBox', url: 'otterbox.com' },
+      { name: 'Hydro Flask', url: 'hydroflask.com' },
+      { name: 'Klean Kanteen', url: 'kleankanteen.com' }
+    ],
+    'outdoor': [
+      { name: 'RTIC', url: 'rticoutdoors.com' },
+      { name: 'Igloo', url: 'igloo.com' },
+      { name: 'Coleman', url: 'coleman.com' },
+      { name: 'Pelican', url: 'pelican.com' },
+      { name: 'Orca', url: 'orcacoolers.com' },
+      { name: 'Engel', url: 'engelcoolers.com' },
+      { name: 'OtterBox', url: 'otterbox.com' },
+      { name: 'Hydro Flask', url: 'hydroflask.com' },
+      { name: 'Klean Kanteen', url: 'kleankanteen.com' }
+    ],
+    'coolers': [
+      { name: 'RTIC', url: 'rticoutdoors.com' },
+      { name: 'Igloo', url: 'igloo.com' },
+      { name: 'Coleman', url: 'coleman.com' },
+      { name: 'Pelican', url: 'pelican.com' },
+      { name: 'Orca', url: 'orcacoolers.com' },
+      { name: 'Engel', url: 'engelcoolers.com' },
+      { name: 'OtterBox', url: 'otterbox.com' },
+      { name: 'Hydro Flask', url: 'hydroflask.com' },
+      { name: 'Klean Kanteen', url: 'kleankanteen.com' }
     ]
   };
   
@@ -271,7 +304,7 @@ export function getIndustryCompetitors(industry: string): { name: string; url?: 
   
   // Check for partial matches with priority order
   // Brand monitoring should match before generic AI
-  const matchPriority = ['brand monitoring', 'AI platform provider', 'web scraping', 'SaaS', 'E-commerce', 'Cloud'];
+  const matchPriority = ['brand monitoring', 'AI platform provider', 'web scraping', 'outdoor gear', 'outdoor', 'coolers', 'SaaS', 'E-commerce', 'Cloud'];
   
   for (const key of matchPriority) {
     const keyLower = key.toLowerCase();
@@ -303,12 +336,7 @@ export function getIndustryCompetitors(industry: string): { name: string; url?: 
     }
   }
   
-  // Generic default competitors (fallback)
-  return [
-    { name: 'Competitor 1' },
-    { name: 'Competitor 2' },
-    { name: 'Competitor 3' },
-    { name: 'Competitor 4' },
-    { name: 'Competitor 5' }
-  ];
+  // If no match found, return empty array instead of placeholder competitors
+  // Placeholders get filtered out anyway, so better to return empty and let AI identify competitors
+  return [];
 }
