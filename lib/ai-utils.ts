@@ -927,6 +927,15 @@ Return a simple analysis:
         includeVariations: true
       });
       
+      // Extract sources from response
+      let extractedSources;
+      try {
+        extractedSources = extractSourcesFromResponse(text);
+      } catch (sourceError) {
+        console.warn(`Failed to extract sources for ${provider}:`, sourceError);
+        extractedSources = [];
+      }
+      
       return {
         provider,
         prompt,
@@ -938,6 +947,7 @@ Return a simple analysis:
         sentiment: 'neutral' as const,
         confidence: brandDetection.confidence * 0.5, // Lower confidence for fallback
         timestamp: new Date(),
+        sources: extractedSources.length > 0 ? extractedSources : undefined,
       };
     }
 
