@@ -334,6 +334,11 @@ export function BrandMonitor({
           const aiIdentifiedCompetitors = await identifyCompetitors(company);
           console.log('AI identified competitors:', aiIdentifiedCompetitors);
           
+          if (aiIdentifiedCompetitors.length === 0) {
+            // If AI returned empty, it might be due to API issues
+            console.warn('AI competitor identification returned empty array - may be due to API issues or insufficient credits');
+          }
+          
           // Add AI-identified competitors to the map
           aiIdentifiedCompetitors.forEach(name => {
             const normalizedName = normalizeCompetitorName(name);
@@ -342,9 +347,28 @@ export function BrandMonitor({
               competitorMap.set(normalizedName, { name, url });
             }
           });
-        } catch (aiError) {
+        } catch (aiError: any) {
           console.error('Error identifying competitors with AI:', aiError);
-          // Continue with whatever competitors we have
+          
+          // Show user-friendly error message
+          const errorMessage = aiError?.message || 'Unable to identify competitors';
+          if (errorMessage.includes('balance') || errorMessage.includes('credits') || errorMessage.includes('insufficient')) {
+            dispatch({ 
+              type: 'SET_ERROR', 
+              payload: 'Unable to identify competitors: Your OpenAI API balance may be insufficient. Please check your API key and balance.' 
+            });
+          } else if (errorMessage.includes('No AI providers')) {
+            dispatch({ 
+              type: 'SET_ERROR', 
+              payload: 'Unable to identify competitors: No AI providers are configured. Please set up your API keys.' 
+            });
+          } else {
+            dispatch({ 
+              type: 'SET_ERROR', 
+              payload: `Unable to identify competitors: ${errorMessage}. Using industry defaults instead.` 
+            });
+          }
+          // Continue with whatever competitors we have (industry defaults or scraped)
         }
       }
       
