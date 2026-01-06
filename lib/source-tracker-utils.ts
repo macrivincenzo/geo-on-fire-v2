@@ -21,13 +21,22 @@ export interface SourceCategory {
  * Extract URLs from text using regex
  */
 export function extractUrlsFromText(text: string): string[] {
-  const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
-  const matches = text.match(urlRegex) || [];
+  if (!text || typeof text !== 'string') {
+    return [];
+  }
   
-  // Remove duplicates and normalize
-  const uniqueUrls = Array.from(new Set(matches.map(url => url.trim())));
-  
-  return uniqueUrls;
+  try {
+    const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+    const matches = text.match(urlRegex) || [];
+    
+    // Remove duplicates and normalize
+    const uniqueUrls = Array.from(new Set(matches.map(url => url.trim()).filter(url => url.length > 0)));
+    
+    return uniqueUrls;
+  } catch (error) {
+    console.warn('Error extracting URLs from text:', error);
+    return [];
+  }
 }
 
 /**
@@ -116,43 +125,62 @@ export function extractSourcesFromResponse(
   response: string,
   webSearchResults?: Array<{ url: string; title?: string; cited_text?: string }>
 ): SourceInfo[] {
-  const sources: Map<string, SourceInfo> = new Map();
+  if (!response || typeof response !== 'string') {
+    return [];
+  }
   
-  // Add sources from web search results (most reliable)
-  if (webSearchResults) {
-    for (const result of webSearchResults) {
-      if (result.url) {
-        const domain = extractDomain(result.url);
-        const key = result.url.toLowerCase();
-        
-        sources.set(key, {
-          url: result.url,
-          title: result.title,
-          domain,
-          domainName: getDomainName(domain),
-          citedText: result.cited_text,
-        });
+  try {
+    const sources: Map<string, SourceInfo> = new Map();
+    
+    // Add sources from web search results (most reliable)
+    if (webSearchResults && Array.isArray(webSearchResults)) {
+      for (const result of webSearchResults) {
+        if (result && result.url && typeof result.url === 'string') {
+          try {
+            const domain = extractDomain(result.url);
+            const key = result.url.toLowerCase();
+            
+            sources.set(key, {
+              url: result.url,
+              title: result.title,
+              domain,
+              domainName: getDomainName(domain),
+              citedText: result.cited_text,
+            });
+          } catch (error) {
+            console.warn('Error processing web search result:', error);
+            // Continue with next result
+          }
+        }
       }
     }
-  }
-  
-  // Extract URLs from response text (fallback)
-  const urlsFromText = extractUrlsFromText(response);
-  for (const url of urlsFromText) {
-    const key = url.toLowerCase();
     
-    // Don't overwrite if we already have it from web search
-    if (!sources.has(key)) {
-      const domain = extractDomain(url);
-      sources.set(key, {
-        url,
-        domain,
-        domainName: getDomainName(domain),
-      });
+    // Extract URLs from response text (fallback)
+    const urlsFromText = extractUrlsFromText(response);
+    for (const url of urlsFromText) {
+      try {
+        const key = url.toLowerCase();
+        
+        // Don't overwrite if we already have it from web search
+        if (!sources.has(key)) {
+          const domain = extractDomain(url);
+          sources.set(key, {
+            url,
+            domain,
+            domainName: getDomainName(domain),
+          });
+        }
+      } catch (error) {
+        console.warn('Error processing extracted URL:', error);
+        // Continue with next URL
+      }
     }
+    
+    return Array.from(sources.values());
+  } catch (error) {
+    console.warn('Error extracting sources from response:', error);
+    return [];
   }
-  
-  return Array.from(sources.values());
 }
 
 /**

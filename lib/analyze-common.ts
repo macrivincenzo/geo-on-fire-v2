@@ -233,13 +233,18 @@ export async function performAnalysis({
           );
           
           // Extract sources from response if not already included
-          if (response && !response.sources) {
-            const extractedSources = extractSourcesFromResponse(response.response);
-            if (extractedSources.length > 0) {
-              response = {
-                ...response,
-                sources: extractedSources,
-              };
+          if (response && !response.sources && response.response) {
+            try {
+              const extractedSources = extractSourcesFromResponse(response.response);
+              if (extractedSources.length > 0) {
+                response = {
+                  ...response,
+                  sources: extractedSources,
+                };
+              }
+            } catch (sourceError) {
+              // Log but don't fail the analysis if source extraction fails
+              console.warn(`Failed to extract sources for ${provider.name}:`, sourceError);
             }
           }
           
