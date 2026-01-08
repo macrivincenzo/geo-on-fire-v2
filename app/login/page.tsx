@@ -42,9 +42,39 @@ function LoginForm() {
         return;
       }
       
-      // Use router for client-side navigation after successful login
+      // Wait for session cookie to be set before redirecting
+      // This prevents the middleware from redirecting back to login
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Verify session is set by checking the session
+      const { useSession } = await import('@/lib/auth-client');
+      let sessionSet = false;
+      let attempts = 0;
+      const maxAttempts = 10;
+      
+      while (!sessionSet && attempts < maxAttempts) {
+        try {
+          // Try to fetch session to verify it's set
+          const sessionResponse = await fetch('/api/auth/get-session', {
+            credentials: 'include',
+          });
+          if (sessionResponse.ok) {
+            const sessionData = await sessionResponse.json();
+            if (sessionData?.user) {
+              sessionSet = true;
+              break;
+            }
+          }
+        } catch (e) {
+          // Continue trying
+        }
+        await new Promise(resolve => setTimeout(resolve, 200));
+        attempts++;
+      }
+      
+      // Use window.location for hard navigation to ensure cookies are sent
       const returnUrl = searchParams.get('from') || '/dashboard';
-      window.location.replace(returnUrl);
+      window.location.href = returnUrl;
     } catch (err: any) {
       console.error('Login error:', err);
       
