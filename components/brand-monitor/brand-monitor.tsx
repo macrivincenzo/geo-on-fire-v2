@@ -39,6 +39,7 @@ import { ProviderRankingsTabs } from './provider-rankings-tabs';
 import { ComparisonMatrixExplanation, PromptsResponsesExplanation } from './explanation-card';
 import { StrategicInsightsTab } from './strategic-insights-tab';
 import { SourceTrackerTab } from './source-tracker-tab';
+import { HistoricalTrackingTab } from './historical-tracking-tab';
 
 // Hooks
 import { useSSEHandler } from './hooks/use-sse-handler';
@@ -84,6 +85,10 @@ export function BrandMonitor({
         saveAnalysis.mutate(analysisData, {
           onSuccess: (savedAnalysis) => {
             console.log('Analysis saved successfully:', savedAnalysis);
+            // Store the analysis ID in state for historical tracking
+            if (savedAnalysis?.id) {
+              dispatch({ type: 'SET_ANALYSIS_ID', payload: savedAnalysis.id });
+            }
             if (onSaveAnalysis) {
               onSaveAnalysis(savedAnalysis);
             }
@@ -136,6 +141,10 @@ export function BrandMonitor({
       setIsLoadingExistingAnalysis(true);
       // Restore the analysis state from saved data
       dispatch({ type: 'SET_ANALYSIS', payload: selectedAnalysis.analysisData });
+      // Store the analysis ID for historical tracking
+      if (selectedAnalysis.id) {
+        dispatch({ type: 'SET_ANALYSIS_ID', payload: selectedAnalysis.id });
+      }
       if (selectedAnalysis.companyName) {
         dispatch({ type: 'SCRAPE_SUCCESS', payload: {
           name: selectedAnalysis.companyName,
@@ -671,6 +680,13 @@ export function BrandMonitor({
                 {activeResultsTab === 'sources' && analysis?.responses && (
                   <SourceTrackerTab
                     responses={analysis.responses}
+                    brandName={company?.name || 'Your Brand'}
+                  />
+                )}
+
+                {activeResultsTab === 'historical' && (
+                  <HistoricalTrackingTab
+                    analysisId={selectedAnalysis?.id || state.analysisId || null}
                     brandName={company?.name || 'Your Brand'}
                   />
                 )}

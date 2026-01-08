@@ -29,6 +29,7 @@ export type BrandMonitorAction =
   | { type: 'SET_ANALYSIS_TILES'; payload: AnalysisTile[] }
   | { type: 'UPDATE_ANALYSIS_TILE'; payload: { index: number; tile: AnalysisTile } }
   | { type: 'SET_ANALYSIS'; payload: Analysis | null }
+  | { type: 'SET_ANALYSIS_ID'; payload: string | null }
   | { type: 'SET_ACTIVE_RESULTS_TAB'; payload: ResultsTab }
   | { type: 'SET_EXPANDED_PROMPT_INDEX'; payload: number | null }
   | { type: 'TOGGLE_MODAL'; payload: { modal: 'addPrompt' | 'addCompetitor'; show: boolean } }
@@ -103,7 +104,7 @@ export interface Analysis {
   errors?: string[];
 }
 
-export type ResultsTab = 'visibility' | 'matrix' | 'rankings' | 'metrics' | 'prompts' | 'insights' | 'sources';
+export type ResultsTab = 'visibility' | 'matrix' | 'rankings' | 'metrics' | 'prompts' | 'insights' | 'sources' | 'historical';
 
 export interface BrandMonitorState {
   // URL and validation
@@ -120,6 +121,7 @@ export interface BrandMonitorState {
   // Core data
   company: Company | null;
   analysis: Analysis | null;
+  analysisId: string | null;
   
   // UI state
   showInput: boolean;
@@ -317,6 +319,9 @@ export function brandMonitorReducer(
       
     case 'SET_ANALYSIS':
       return { ...state, analysis: action.payload };
+      
+    case 'SET_ANALYSIS_ID':
+      return { ...state, analysisId: action.payload };
       
     case 'SET_ACTIVE_RESULTS_TAB':
       return { ...state, activeResultsTab: action.payload };

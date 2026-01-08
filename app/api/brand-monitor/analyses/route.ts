@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { brandAnalyses } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { handleApiError, AuthenticationError, ValidationError } from '@/lib/api-errors';
+import { extractSnapshotMetrics, saveAnalysisSnapshot } from '@/lib/historical-tracking';
 
 // GET /api/brand-monitor/analyses - Get user's brand analyses
 export async function GET(request: NextRequest) {
@@ -57,6 +58,20 @@ export async function POST(request: NextRequest) {
       prompts: body.prompts,
       creditsUsed: body.creditsUsed || 10,
     }).returning();
+
+    // Save historical snapshot if analysis data is available
+    if (body.analysisData && body.companyName) {
+      try {
+        const metrics = extractSnapshotMetrics(
+          body.analysisData as any,
+          body.companyName
+        );
+        await saveAnalysisSnapshot(analysis.id, metrics);
+      } catch (snapshotError) {
+        console.error('Failed to save snapshot (non-blocking):', snapshotError);
+        // Continue - snapshot saving shouldn't break analysis save
+      }
+    }
 
     return NextResponse.json(analysis);
   } catch (error) {

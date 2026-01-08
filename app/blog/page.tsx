@@ -81,16 +81,16 @@ export default function BlogPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/brand-monitor"
+                href="/blog/preview"
                 className="btn-primary inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-8"
               >
-                Start Monitoring Your Brand
+                Preview Latest Blog Post
               </Link>
               <Link
-                href="/plans"
+                href="/brand-monitor"
                 className="btn-outline inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-8"
               >
-                View Pricing
+                Start Monitoring Your Brand
               </Link>
             </div>
           </div>
