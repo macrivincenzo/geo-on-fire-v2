@@ -44,19 +44,18 @@ function LoginForm() {
       
       // Wait for session cookie to be set before redirecting
       // This prevents the middleware from redirecting back to login
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 300));
       
-      // Verify session is set by checking the session
-      const { useSession } = await import('@/lib/auth-client');
+      // Verify session is set by checking the session API
       let sessionSet = false;
       let attempts = 0;
-      const maxAttempts = 10;
+      const maxAttempts = 5;
       
       while (!sessionSet && attempts < maxAttempts) {
         try {
-          // Try to fetch session to verify it's set
-          const sessionResponse = await fetch('/api/auth/get-session', {
+          const sessionResponse = await fetch('/api/auth/session', {
             credentials: 'include',
+            method: 'GET',
           });
           if (sessionResponse.ok) {
             const sessionData = await sessionResponse.json();
@@ -72,7 +71,7 @@ function LoginForm() {
         attempts++;
       }
       
-      // Use window.location for hard navigation to ensure cookies are sent
+      // Use window.location.href for hard navigation to ensure cookies are sent
       const returnUrl = searchParams.get('from') || '/dashboard';
       window.location.href = returnUrl;
     } catch (err: any) {
