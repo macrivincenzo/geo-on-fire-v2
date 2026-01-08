@@ -3,6 +3,10 @@ import { Pool } from 'pg';
 
 // This is a one-time migration endpoint
 // After running once, you should delete this file for security
+export async function GET(request: NextRequest) {
+  return POST(request);
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Security: Only allow in development or with a secret key
