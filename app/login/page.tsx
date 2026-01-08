@@ -59,7 +59,7 @@ function LoginForm() {
           });
           if (sessionResponse.ok) {
             const sessionData = await sessionResponse.json();
-            if (sessionData?.user) {
+            if (sessionData?.session?.user) {
               sessionSet = true;
               break;
             }
