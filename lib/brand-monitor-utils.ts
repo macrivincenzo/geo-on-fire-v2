@@ -164,7 +164,7 @@ export function assignUrlToCompetitor(competitorName: string): string | undefine
     'camelbak': 'camelbak.com',
     'contigo': 'contigo.com',
     'takeya': 'takeyausa.com',
-    's'well': 'swell.com',
+    's\'well': 'swell.com',
     'yeti': 'yeti.com'
   };
   
