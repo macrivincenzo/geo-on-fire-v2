@@ -5,6 +5,7 @@ import { brandAnalyses } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { handleApiError, AuthenticationError, ValidationError } from '@/lib/api-errors';
 import { extractSnapshotMetrics, saveAnalysisSnapshot } from '@/lib/historical-tracking';
+import { saveSourcesToDatabase } from '@/lib/save-sources';
 
 // GET /api/brand-monitor/analyses - Get user's brand analyses
 export async function GET(request: NextRequest) {
@@ -92,6 +93,16 @@ export async function POST(request: NextRequest) {
         hasAnalysisData: !!body.analysisData,
         hasCompanyName: !!body.companyName,
       });
+    }
+
+    // Save sources to database if responses are available
+    if (body.analysisData?.responses && Array.isArray(body.analysisData.responses)) {
+      try {
+        await saveSourcesToDatabase(analysis.id, body.analysisData.responses);
+      } catch (sourceError) {
+        console.error('[Source Tracker] Failed to save sources (non-blocking):', sourceError);
+        // Continue - source saving shouldn't break analysis save
+      }
     }
 
     return NextResponse.json(analysis);
