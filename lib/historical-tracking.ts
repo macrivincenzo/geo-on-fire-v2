@@ -24,13 +24,32 @@ export function extractSnapshotMetrics(
   analysisResult: AnalysisResult,
   companyName: string
 ): SnapshotMetrics {
+  console.log('[Historical Tracking] Extracting metrics:', {
+    companyName,
+    hasScores: !!analysisResult.scores,
+    hasCompetitors: !!analysisResult.competitors,
+    scoresKeys: analysisResult.scores ? Object.keys(analysisResult.scores) : [],
+    competitorsCount: analysisResult.competitors?.length || 0,
+  });
+  
   const scores = analysisResult.scores;
+  if (!scores) {
+    throw new Error('Analysis result missing scores');
+  }
+  
   const competitors = analysisResult.competitors || [];
   
   // Find brand's position in rankings
   const brandRanking = competitors.find(c => 
     c.name.toLowerCase() === companyName.toLowerCase()
   );
+  
+  if (!brandRanking) {
+    console.warn('[Historical Tracking] Brand not found in competitors list:', {
+      companyName,
+      competitorNames: competitors.map(c => c.name),
+    });
+  }
   
   // Calculate average position from all responses
   let averagePosition: number | null = null;
@@ -45,15 +64,20 @@ export function extractSnapshotMetrics(
       (a, b) => b.visibilityScore - a.visibilityScore
     );
     rank = sortedCompetitors.findIndex(c => c.id === brandRanking.id) + 1;
+    if (rank === 0) rank = 1; // Fix 0-based index
   }
   
-  return {
-    visibilityScore: Math.round(scores.visibilityScore),
-    sentimentScore: Math.round(scores.sentimentScore),
-    shareOfVoice: Math.round(scores.shareOfVoice),
+  const metrics = {
+    visibilityScore: Math.round(scores.visibilityScore || 0),
+    sentimentScore: Math.round(scores.sentimentScore || 0),
+    shareOfVoice: Math.round(scores.shareOfVoice || 0),
     averagePosition,
     rank,
   };
+  
+  console.log('[Historical Tracking] Extracted metrics:', metrics);
+  
+  return metrics;
 }
 
 /**

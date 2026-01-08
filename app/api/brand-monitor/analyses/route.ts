@@ -62,15 +62,36 @@ export async function POST(request: NextRequest) {
     // Save historical snapshot if analysis data is available
     if (body.analysisData && body.companyName) {
       try {
+        console.log('[Historical Tracking] Attempting to save snapshot for:', {
+          analysisId: analysis.id,
+          companyName: body.companyName,
+          hasAnalysisData: !!body.analysisData,
+          analysisDataKeys: body.analysisData ? Object.keys(body.analysisData) : [],
+        });
+        
         const metrics = extractSnapshotMetrics(
           body.analysisData as any,
           body.companyName
         );
+        
+        console.log('[Historical Tracking] Extracted metrics:', metrics);
+        
         await saveAnalysisSnapshot(analysis.id, metrics);
+        
+        console.log('[Historical Tracking] Snapshot saved successfully');
       } catch (snapshotError) {
-        console.error('Failed to save snapshot (non-blocking):', snapshotError);
+        console.error('[Historical Tracking] Failed to save snapshot (non-blocking):', snapshotError);
+        console.error('[Historical Tracking] Error details:', {
+          message: snapshotError instanceof Error ? snapshotError.message : String(snapshotError),
+          stack: snapshotError instanceof Error ? snapshotError.stack : undefined,
+        });
         // Continue - snapshot saving shouldn't break analysis save
       }
+    } else {
+      console.warn('[Historical Tracking] Skipping snapshot - missing data:', {
+        hasAnalysisData: !!body.analysisData,
+        hasCompanyName: !!body.companyName,
+      });
     }
 
     return NextResponse.json(analysis);
