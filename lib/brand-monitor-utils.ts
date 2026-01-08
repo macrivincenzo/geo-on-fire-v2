@@ -146,11 +146,47 @@ export function assignUrlToCompetitor(competitorName: string): string | undefine
     'azure': 'azure.microsoft.com',
     'heroku': 'heroku.com',
     'digitalocean': 'digitalocean.com',
-    'cloudflare': 'cloudflare.com'
+    'cloudflare': 'cloudflare.com',
+    
+    // Outdoor gear & coolers
+    'rtic': 'rticoutdoors.com',
+    'igloo': 'igloo.com',
+    'coleman': 'coleman.com',
+    'pelican': 'pelican.com',
+    'orca': 'orcacoolers.com',
+    'engel': 'engelcoolers.com',
+    'otterbox': 'otterbox.com',
+    'hydro flask': 'hydroflask.com',
+    'klean kanteen': 'kleankanteen.com',
+    'osprey': 'osprey.com',
+    'nalgene': 'nalgene.com',
+    'stanley': 'stanley1913.com',
+    'camelbak': 'camelbak.com',
+    'contigo': 'contigo.com',
+    'takeya': 'takeyausa.com',
+    's'well': 'swell.com',
+    'yeti': 'yeti.com'
   };
   
   const normalized = competitorName.toLowerCase().trim();
-  return urlMappings[normalized];
+  
+  // First, try exact match
+  if (urlMappings[normalized]) {
+    return urlMappings[normalized];
+  }
+  
+  // Try to generate a URL from the name (fallback)
+  // Remove common suffixes and special characters
+  const cleanName = normalized
+    .replace(/\s+/g, '') // Remove spaces
+    .replace(/[^a-z0-9]/g, ''); // Remove special characters
+  
+  // Generate a likely URL (e.g., "Osprey" -> "osprey.com")
+  if (cleanName.length > 0) {
+    return `${cleanName}.com`;
+  }
+  
+  return undefined;
 }
 
 export function detectServiceType(company: Company): string {
