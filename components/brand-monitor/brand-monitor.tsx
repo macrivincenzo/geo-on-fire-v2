@@ -688,6 +688,7 @@ export function BrandMonitor({
                   <HistoricalTrackingTab
                     analysisId={selectedAnalysis?.id || state.analysisId || null}
                     brandName={company?.name || 'Your Brand'}
+                    brandUrl={company?.url || state.url || undefined}
                   />
                 )}
 

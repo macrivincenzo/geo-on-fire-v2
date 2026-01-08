@@ -19,6 +19,7 @@ import { format, subDays, parseISO } from 'date-fns';
 interface HistoricalTrackingTabProps {
   analysisId: string | null;
   brandName: string;
+  brandUrl?: string; // Optional: for tracking by URL instead of analysis ID
 }
 
 interface Snapshot {
@@ -40,7 +41,7 @@ interface Trends {
 
 type DateRange = '7d' | '30d' | '90d' | 'all' | 'custom';
 
-export function HistoricalTrackingTab({ analysisId, brandName }: HistoricalTrackingTabProps) {
+export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: HistoricalTrackingTabProps) {
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [trends, setTrends] = useState<Trends | null>(null);
   const [loading, setLoading] = useState(true);
@@ -76,7 +77,7 @@ export function HistoricalTrackingTab({ analysisId, brandName }: HistoricalTrack
 
   // Fetch historical data
   useEffect(() => {
-    if (!analysisId) {
+    if (!analysisId && !brandUrl) {
       setLoading(false);
       return;
     }
@@ -85,7 +86,8 @@ export function HistoricalTrackingTab({ analysisId, brandName }: HistoricalTrack
       setLoading(true);
       try {
         const params = new URLSearchParams({
-          analysisId,
+          ...(analysisId ? { analysisId } : {}),
+          ...(brandUrl ? { url: brandUrl } : {}),
           ...(dateRange !== 'all' && {
             startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
@@ -108,7 +110,7 @@ export function HistoricalTrackingTab({ analysisId, brandName }: HistoricalTrack
     };
 
     fetchHistoricalData();
-  }, [analysisId, startDate, endDate, dateRange]);
+  }, [analysisId, brandUrl, startDate, endDate, dateRange]);
 
   // Format data for charts
   const chartData = useMemo(() => {
@@ -156,7 +158,7 @@ export function HistoricalTrackingTab({ analysisId, brandName }: HistoricalTrack
     );
   }
 
-  if (!analysisId) {
+  if (!analysisId && !brandUrl) {
     return (
       <Card>
         <CardContent className="py-12 text-center">
