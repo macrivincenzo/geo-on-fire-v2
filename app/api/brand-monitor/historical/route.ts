@@ -4,7 +4,8 @@ import { getHistoricalSnapshots, calculateTrends } from '@/lib/historical-tracki
 import { handleApiError, AuthenticationError, ValidationError } from '@/lib/api-errors';
 import { db } from '@/lib/db';
 import { brandAnalyses } from '@/lib/db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, or, like } from 'drizzle-orm';
+import { normalizeUrlForComparison } from '@/lib/url-normalizer';
 
 /**
  * GET /api/brand-monitor/historical?analysisId=xxx&startDate=xxx&endDate=xxx
@@ -49,21 +50,26 @@ export async function GET(request: NextRequest) {
       
       targetAnalysisId = analysisId;
     } else if (url) {
-      // Find the most recent analysis for this URL (to aggregate all snapshots)
-      const analyses = await db.query.brandAnalyses.findMany({
-        where: and(
-          eq(brandAnalyses.userId, sessionResponse.user.id),
-          eq(brandAnalyses.url, url)
-        ),
+      // Normalize URL for matching
+      const normalizedUrl = normalizeUrlForComparison(url);
+      
+      // Find all analyses for this URL (normalized matching)
+      const allAnalyses = await db.query.brandAnalyses.findMany({
+        where: eq(brandAnalyses.userId, sessionResponse.user.id),
         orderBy: desc(brandAnalyses.createdAt),
-        limit: 1,
       });
 
-      if (analyses.length === 0) {
+      // Filter by normalized URL match
+      const matchingAnalyses = allAnalyses.filter(a => 
+        normalizeUrlForComparison(a.url) === normalizedUrl
+      );
+
+      if (matchingAnalyses.length === 0) {
         throw new ValidationError('No analysis found for this URL');
       }
 
-      analysis = analyses[0];
+      // Use the most recent analysis as the primary one
+      analysis = matchingAnalyses[0];
       targetAnalysisId = analysis.id;
     } else {
       throw new ValidationError('Invalid request');
@@ -76,29 +82,36 @@ export async function GET(request: NextRequest) {
     const startDate = startDateParam ? new Date(startDateParam) : undefined;
     const endDate = endDateParam ? new Date(endDateParam) : undefined;
 
-    // Fetch snapshots for this analysis (or all analyses for this URL)
-    const snapshots = await getHistoricalSnapshots(targetAnalysisId, startDate, endDate);
-    
-    // If tracking by URL, also get snapshots from other analyses for the same URL
-    if (url && !analysisId) {
+    // If URL is provided, aggregate snapshots from all analyses with matching URL
+    if (url) {
+      const normalizedUrl = normalizeUrlForComparison(url);
+      
+      // Get all analyses for this user
       const allAnalyses = await db.query.brandAnalyses.findMany({
-        where: and(
-          eq(brandAnalyses.userId, sessionResponse.user.id),
-          eq(brandAnalyses.url, url)
-        ),
+        where: eq(brandAnalyses.userId, sessionResponse.user.id),
       });
       
-      // Get snapshots from all analyses for this URL
+      // Filter by normalized URL match
+      const matchingAnalyses = allAnalyses.filter(a => 
+        normalizeUrlForComparison(a.url) === normalizedUrl
+      );
+      
+      console.log(`[Historical Tracking] Found ${matchingAnalyses.length} analyses for URL: ${url} (normalized: ${normalizedUrl})`);
+      
+      // Get snapshots from all matching analyses
       const allSnapshots = [];
-      for (const a of allAnalyses) {
+      for (const a of matchingAnalyses) {
         const analysisSnapshots = await getHistoricalSnapshots(a.id, startDate, endDate);
         allSnapshots.push(...analysisSnapshots);
+        console.log(`[Historical Tracking] Found ${analysisSnapshots.length} snapshots for analysis ${a.id}`);
       }
       
       // Sort by date (newest first)
       allSnapshots.sort((a, b) => 
         new Date(b.snapshotDate).getTime() - new Date(a.snapshotDate).getTime()
       );
+      
+      console.log(`[Historical Tracking] Total snapshots aggregated: ${allSnapshots.length}`);
       
       // Calculate trends from all snapshots
       const trends = calculateTrends(allSnapshots);
@@ -109,6 +122,9 @@ export async function GET(request: NextRequest) {
         totalSnapshots: allSnapshots.length,
       });
     }
+    
+    // If only analysisId is provided, get snapshots for that specific analysis
+    const snapshots = await getHistoricalSnapshots(targetAnalysisId, startDate, endDate);
     
     // Calculate trends if we have enough data
     const trends = calculateTrends(snapshots);
