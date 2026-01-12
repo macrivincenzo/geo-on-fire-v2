@@ -7,8 +7,7 @@ import { db } from './db';
 import { sourceDomains, sourcePages } from './db/schema';
 import { 
   aggregateSourcesByDomain, 
-  calculateShareOfCitations,
-  categorizeSource 
+  categorizeDomain 
 } from './source-tracker-utils';
 import { AIResponse } from './types';
 
@@ -43,18 +42,25 @@ export async function saveSourcesToDatabase(
     
     // Aggregate sources by domain
     const domainMap = aggregateSourcesByDomain(allSources);
-    const domainMapWithShares = calculateShareOfCitations(domainMap);
+    
+    // Calculate total citations for share calculation
+    const totalCitations = allSources.length;
     
     // Save domains and pages
-    for (const [domainKey, domainData] of domainMapWithShares.entries()) {
+    for (const [domainKey, domainData] of domainMap.entries()) {
+      // Calculate share of citations for this domain
+      const shareOfCitations = totalCitations > 0 
+        ? Math.round((domainData.timesCited / totalCitations) * 1000) / 10 
+        : 0;
+      
       // Save domain
       const [savedDomain] = await db.insert(sourceDomains).values({
         brandAnalysisId,
         domain: domainData.domain,
         domainName: domainData.domainName,
         timesCited: domainData.timesCited,
-        shareOfCitations: domainData.share,
-        category: categorizeSource(domainData.domain),
+        shareOfCitations,
+        category: categorizeDomain(domainData.domain),
       }).returning();
       
       console.log('[Source Tracker] Saved domain:', savedDomain.domain, 'with', domainData.timesCited, 'citations');
@@ -72,7 +78,7 @@ export async function saveSourcesToDatabase(
       }
     }
     
-    console.log('[Source Tracker] Successfully saved', domainMapWithShares.size, 'domains and', allSources.length, 'pages');
+    console.log('[Source Tracker] Successfully saved', domainMap.size, 'domains and', allSources.length, 'pages');
   } catch (error) {
     console.error('[Source Tracker] Error saving sources to database:', error);
     throw error;
