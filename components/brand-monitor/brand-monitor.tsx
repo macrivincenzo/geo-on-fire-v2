@@ -682,6 +682,8 @@ export function BrandMonitor({
                   <SourceTrackerTab
                     responses={analysis.responses}
                     brandName={company?.name || 'Your Brand'}
+                    brandUrl={company?.url || state.url || undefined}
+                    competitorUrls={identifiedCompetitors.map(c => ({ name: c.name, url: c.url }))}
                   />
                 )}
 

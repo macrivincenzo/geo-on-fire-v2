@@ -169,16 +169,98 @@ export function getDomainName(domain: string): string {
 
 /**
  * Categorize domain based on common patterns
+ * @param domain - The domain to categorize
+ * @param context - Optional context for better categorization (brand URL, competitor URLs)
  */
-export function categorizeDomain(domain: string): string {
+export function categorizeDomain(
+  domain: string, 
+  context?: {
+    brandUrl?: string;
+    competitorUrls?: string[];
+  }
+): string {
   const domainLower = domain.toLowerCase();
+  
+  // Normalize domain for comparison (remove www, protocol)
+  const normalizeForComparison = (url: string): string => {
+    return url.toLowerCase()
+      .replace(/^https?:\/\//, '')
+      .replace(/^www\./, '')
+      .replace(/\/$/, '')
+      .split('/')[0]; // Get just the domain
+  };
+  
+  // Check if domain belongs to a competitor (NEW CATEGORY)
+  if (context?.competitorUrls && context.competitorUrls.length > 0) {
+    const normalizedDomain = normalizeForComparison(domain);
+    for (const competitorUrl of context.competitorUrls) {
+      if (competitorUrl) {
+        const normalizedCompetitor = normalizeForComparison(competitorUrl);
+        if (normalizedDomain === normalizedCompetitor || 
+            normalizedDomain.includes(normalizedCompetitor) ||
+            normalizedCompetitor.includes(normalizedDomain)) {
+          return 'Competitor';
+        }
+      }
+    }
+  }
+  
+  // Check if domain belongs to the brand (should be categorized as "Earned" if it's the brand's own domain)
+  if (context?.brandUrl) {
+    const normalizedDomain = normalizeForComparison(domain);
+    const normalizedBrand = normalizeForComparison(context.brandUrl);
+    if (normalizedDomain === normalizedBrand || 
+        normalizedDomain.includes(normalizedBrand) ||
+        normalizedBrand.includes(normalizedDomain)) {
+      return 'Earned'; // Brand's own domain = earned media
+    }
+  }
+  
+  // Aggregated sites (review sites, comparison sites, aggregators) - NEW CATEGORY
+  if (domainLower.includes('g2.com') ||
+      domainLower.includes('capterra.com') ||
+      domainLower.includes('trustpilot.com') ||
+      domainLower.includes('trustradius.com') ||
+      domainLower.includes('softwareadvice.com') ||
+      domainLower.includes('getapp.com') ||
+      domainLower.includes('alternativeto.net') ||
+      domainLower.includes('producthunt.com') ||
+      domainLower.includes('comparison') ||
+      domainLower.includes('compare') ||
+      domainLower.includes('vs') ||
+      domainLower.includes('best-') ||
+      domainLower.includes('top-') ||
+      domainLower.includes('review') ||
+      domainLower.includes('reviews') ||
+      domainLower.includes('roundup') ||
+      domainLower.includes('aggregator')) {
+    return 'Aggregated';
+  }
+  
+  // Paid/Advertising indicators - NEW CATEGORY
+  if (domainLower.includes('ads.') ||
+      domainLower.includes('advertising') ||
+      domainLower.includes('sponsored') ||
+      domainLower.includes('promo') ||
+      domainLower.includes('affiliate') ||
+      domainLower.includes('commission') ||
+      domainLower.includes('adnetwork') ||
+      domainLower.includes('doubleclick') ||
+      domainLower.includes('googleads') ||
+      domainLower.includes('facebook.com/ads') ||
+      domainLower.includes('linkedin.com/ads')) {
+    return 'Paid';
+  }
   
   // Social media
   if (domainLower.includes('reddit') || 
       domainLower.includes('twitter') || 
       domainLower.includes('facebook') ||
       domainLower.includes('linkedin') ||
-      domainLower.includes('instagram')) {
+      domainLower.includes('instagram') ||
+      domainLower.includes('tiktok') ||
+      domainLower.includes('pinterest') ||
+      domainLower.includes('snapchat')) {
     return 'Social';
   }
   
@@ -196,14 +278,22 @@ export function categorizeDomain(domain: string): string {
   if (domainLower.includes('news') || 
       domainLower.includes('blog') ||
       domainLower.includes('medium') ||
-      domainLower.includes('substack')) {
+      domainLower.includes('substack') ||
+      domainLower.includes('techcrunch') ||
+      domainLower.includes('theverge') ||
+      domainLower.includes('wired') ||
+      domainLower.includes('forbes') ||
+      domainLower.includes('businessinsider')) {
     return 'News & Media';
   }
   
   // Forums/Communities
   if (domainLower.includes('forum') || 
       domainLower.includes('community') ||
-      domainLower.includes('discussion')) {
+      domainLower.includes('discussion') ||
+      domainLower.includes('stackoverflow') ||
+      domainLower.includes('stackexchange') ||
+      domainLower.includes('discourse')) {
     return 'Community';
   }
   
@@ -211,12 +301,16 @@ export function categorizeDomain(domain: string): string {
   if (domainLower.includes('shop') || 
       domainLower.includes('store') ||
       domainLower.includes('amazon') ||
-      domainLower.includes('ebay')) {
+      domainLower.includes('ebay') ||
+      domainLower.includes('etsy') ||
+      domainLower.includes('shopify') ||
+      domainLower.includes('woocommerce')) {
     return 'E-commerce';
   }
   
-  // Default category
-  return 'Industry & Network';
+  // Default category - most domains are "Earned" (organic mentions)
+  // unless they're clearly paid/advertising
+  return 'Earned';
 }
 
 /**
@@ -287,8 +381,16 @@ export function extractSourcesFromResponse(
 
 /**
  * Aggregate sources by domain
+ * @param sources - Array of source information
+ * @param context - Optional context for categorization (brand URL, competitor URLs)
  */
-export function aggregateSourcesByDomain(sources: SourceInfo[]): Map<string, {
+export function aggregateSourcesByDomain(
+  sources: SourceInfo[],
+  context?: {
+    brandUrl?: string;
+    competitorUrls?: string[];
+  }
+): Map<string, {
   domain: string;
   domainName: string;
   pages: SourceInfo[];
@@ -312,7 +414,7 @@ export function aggregateSourcesByDomain(sources: SourceInfo[]): Map<string, {
         domainName: source.domainName || getDomainName(domain),
         pages: [],
         timesCited: 0,
-        category: categorizeDomain(domain),
+        category: categorizeDomain(domain, context),
       });
     }
     

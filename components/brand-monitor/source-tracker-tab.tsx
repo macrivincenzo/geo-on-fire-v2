@@ -22,9 +22,16 @@ import {
 interface SourceTrackerTabProps {
   responses: AIResponse[];
   brandName: string;
+  brandUrl?: string;
+  competitorUrls?: Array<{ name: string; url?: string }>;
 }
 
-export function SourceTrackerTab({ responses, brandName }: SourceTrackerTabProps) {
+export function SourceTrackerTab({ 
+  responses, 
+  brandName, 
+  brandUrl,
+  competitorUrls = []
+}: SourceTrackerTabProps) {
   // Extract all sources from responses
   const allSources = useMemo(() => {
     const sources: Array<{
@@ -51,10 +58,14 @@ export function SourceTrackerTab({ responses, brandName }: SourceTrackerTabProps
     return sources;
   }, [responses]);
 
-  // Aggregate by domain
+  // Aggregate by domain with context for categorization
   const domainMap = useMemo(() => {
-    return aggregateSourcesByDomain(allSources);
-  }, [allSources]);
+    const context = {
+      brandUrl,
+      competitorUrls: competitorUrls.map(c => c.url).filter((url): url is string => !!url)
+    };
+    return aggregateSourcesByDomain(allSources, context);
+  }, [allSources, brandUrl, competitorUrls]);
 
   // Calculate categories
   const categories = useMemo(() => {

@@ -117,7 +117,13 @@ export default async function BlogPreviewPage() {
     );
   }
 
-  const { topic, content, seoOptimization, qualityScore, faq, topics } = blogData || {};
+  // Safely extract data with defaults
+  const topic = blogData?.topic || 'Blog Post';
+  const content = blogData?.content || '';
+  const seoOptimization = blogData?.seoOptimization || null;
+  const qualityScore = blogData?.qualityScore || null;
+  const faq = blogData?.faq || null;
+  const topics = blogData?.topics || null;
   const metaTitle = seoOptimization?.metaTitle || topic || 'Blog Post';
   const metaDescription = seoOptimization?.metaDescription || '';
   const publishDate = seoOptimization?.schemaMarkup?.datePublished || new Date().toISOString().split('T')[0];

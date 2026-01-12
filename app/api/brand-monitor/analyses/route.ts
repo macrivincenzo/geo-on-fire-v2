@@ -98,7 +98,35 @@ export async function POST(request: NextRequest) {
     // Save sources to database if responses are available
     if (body.analysisData?.responses && Array.isArray(body.analysisData.responses)) {
       try {
-        await saveSourcesToDatabase(analysis.id, body.analysisData.responses);
+        // Extract competitor URLs from competitors data
+        const competitorUrls: string[] = [];
+        if (body.competitors && Array.isArray(body.competitors)) {
+          const { assignUrlToCompetitor } = await import('@/lib/brand-monitor-utils');
+          
+          for (const comp of body.competitors) {
+            if (typeof comp === 'object') {
+              // Object format: { name: string, url?: string }
+              if (comp.url) {
+                competitorUrls.push(comp.url);
+              } else if (comp.name) {
+                // Try to get URL from name
+                const url = assignUrlToCompetitor(comp.name);
+                if (url) competitorUrls.push(url);
+              }
+            } else if (typeof comp === 'string') {
+              // String format: just the competitor name
+              const url = assignUrlToCompetitor(comp);
+              if (url) competitorUrls.push(url);
+            }
+          }
+        }
+        
+        const context = {
+          brandUrl: body.url,
+          competitorUrls
+        };
+        
+        await saveSourcesToDatabase(analysis.id, body.analysisData.responses, context);
       } catch (sourceError) {
         console.error('[Source Tracker] Failed to save sources (non-blocking):', sourceError);
         // Continue - source saving shouldn't break analysis save

@@ -13,7 +13,11 @@ import { AIResponse } from './types';
 
 export async function saveSourcesToDatabase(
   brandAnalysisId: string,
-  responses: AIResponse[]
+  responses: AIResponse[],
+  context?: {
+    brandUrl?: string;
+    competitorUrls?: string[];
+  }
 ): Promise<void> {
   try {
     console.log('[Source Tracker] Saving sources to database for analysis:', brandAnalysisId);
@@ -40,8 +44,8 @@ export async function saveSourcesToDatabase(
       return;
     }
     
-    // Aggregate sources by domain
-    const domainMap = aggregateSourcesByDomain(allSources);
+    // Aggregate sources by domain with context for categorization
+    const domainMap = aggregateSourcesByDomain(allSources, context);
     
     // Calculate total citations for share calculation
     const totalCitations = allSources.length;
@@ -53,14 +57,14 @@ export async function saveSourcesToDatabase(
         ? Math.round((domainData.timesCited / totalCitations) * 1000) / 10 
         : 0;
       
-      // Save domain
+      // Save domain (category is already set by aggregateSourcesByDomain with context)
       const [savedDomain] = await db.insert(sourceDomains).values({
         brandAnalysisId,
         domain: domainData.domain,
         domainName: domainData.domainName,
         timesCited: domainData.timesCited,
         shareOfCitations,
-        category: categorizeDomain(domainData.domain),
+        category: domainData.category, // Already categorized with context
       }).returning();
       
       console.log('[Source Tracker] Saved domain:', savedDomain.domain, 'with', domainData.timesCited, 'citations');
