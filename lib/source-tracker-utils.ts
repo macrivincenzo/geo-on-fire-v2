@@ -3,6 +3,8 @@
  * Extracts and tracks which domains/pages cite the brand in AI responses
  */
 
+import { normalizeUrlForComparison } from '@/lib/url-normalizer';
+
 export interface SourceInfo {
   url: string;
   title?: string;
@@ -181,38 +183,28 @@ export function categorizeDomain(
 ): string {
   const domainLower = domain.toLowerCase();
   
-  // Normalize domain for comparison (remove www, protocol)
-  const normalizeForComparison = (url: string): string => {
-    return url.toLowerCase()
-      .replace(/^https?:\/\//, '')
-      .replace(/^www\./, '')
-      .replace(/\/$/, '')
-      .split('/')[0]; // Get just the domain
-  };
+  // Normalize domain for comparison using existing utility
+  const normalizedDomain = normalizeUrlForComparison(domain);
   
-  // Check if domain belongs to a competitor (NEW CATEGORY)
-  if (context?.competitorUrls && context.competitorUrls.length > 0) {
-    const normalizedDomain = normalizeForComparison(domain);
-    for (const competitorUrl of context.competitorUrls) {
-      if (competitorUrl) {
-        const normalizedCompetitor = normalizeForComparison(competitorUrl);
-        if (normalizedDomain === normalizedCompetitor || 
-            normalizedDomain.includes(normalizedCompetitor) ||
-            normalizedCompetitor.includes(normalizedDomain)) {
-          return 'Competitor';
-        }
-      }
+  // IMPORTANT: Check if domain belongs to the brand FIRST (before competitors)
+  // Brand's own domain should always be "Earned"
+  if (context?.brandUrl) {
+    const normalizedBrand = normalizeUrlForComparison(context.brandUrl);
+    if (normalizedBrand && normalizedDomain === normalizedBrand) {
+      return 'Earned'; // Brand's own domain = earned media
     }
   }
   
-  // Check if domain belongs to the brand (should be categorized as "Earned" if it's the brand's own domain)
-  if (context?.brandUrl) {
-    const normalizedDomain = normalizeForComparison(domain);
-    const normalizedBrand = normalizeForComparison(context.brandUrl);
-    if (normalizedDomain === normalizedBrand || 
-        normalizedDomain.includes(normalizedBrand) ||
-        normalizedBrand.includes(normalizedDomain)) {
-      return 'Earned'; // Brand's own domain = earned media
+  // Check if domain belongs to a competitor (NEW CATEGORY)
+  // Only check if it's not the brand's domain
+  if (context?.competitorUrls && context.competitorUrls.length > 0) {
+    for (const competitorUrl of context.competitorUrls) {
+      if (competitorUrl) {
+        const normalizedCompetitor = normalizeUrlForComparison(competitorUrl);
+        if (normalizedCompetitor && normalizedDomain === normalizedCompetitor) {
+          return 'Competitor';
+        }
+      }
     }
   }
   

@@ -82,7 +82,8 @@ function generateHeadingId(text: string): string {
 
 export default async function BlogPreviewPage() {
   let blogData;
-  let errorMessage = null;
+  let errorMessage: string | null = null;
+  let errorDetails: string | null = null;
   
   try {
     blogData = await getLatestBlogPost();
@@ -92,6 +93,7 @@ export default async function BlogPreviewPage() {
   } catch (error) {
     console.error('Failed to load blog post:', error);
     errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    errorDetails = error instanceof Error ? error.stack || '' : String(error);
   }
   
   if (!blogData) {
@@ -102,9 +104,19 @@ export default async function BlogPreviewPage() {
             <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
               No Blog Post Found
             </h1>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8">
+            <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-4">
               {errorMessage || 'Please run the blog agent first to generate content.'}
             </p>
+            {errorDetails && (
+              <details className="mt-4 text-left max-w-2xl mx-auto">
+                <summary className="cursor-pointer text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300">
+                  Show error details
+                </summary>
+                <pre className="mt-2 p-4 bg-zinc-100 dark:bg-zinc-800 rounded text-xs overflow-auto">
+                  {errorDetails}
+                </pre>
+              </details>
+            )}
             <Link
               href="/blog"
               className="btn-primary inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-8"
