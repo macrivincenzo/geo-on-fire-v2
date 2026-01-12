@@ -15,10 +15,10 @@ export function TableOfContents({ content }: TableOfContentsProps) {
     const headingRegex = /^(#{1,3})\s+(.+)$/gm;
     const matches = Array.from(content.matchAll(headingRegex));
     
-    const extractedHeadings = matches.map((match, index) => {
+    const extractedHeadings = matches.map((match) => {
       const level = match[1].length;
       const text = match[2].trim();
-      const id = `heading-${index}-${text.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
       return { id, text, level };
     });
 

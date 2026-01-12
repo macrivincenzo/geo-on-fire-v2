@@ -40,6 +40,7 @@ import { ComparisonMatrixExplanation, PromptsResponsesExplanation } from './expl
 import { StrategicInsightsTab } from './strategic-insights-tab';
 import { SourceTrackerTab } from './source-tracker-tab';
 import { HistoricalTrackingTab } from './historical-tracking-tab';
+import { DomainComparisonsTab } from './domain-comparisons-tab';
 
 // Hooks
 import { useSSEHandler } from './hooks/use-sse-handler';
@@ -689,6 +690,15 @@ export function BrandMonitor({
                     analysisId={selectedAnalysis?.id || state.analysisId || null}
                     brandName={company?.name || 'Your Brand'}
                     brandUrl={company?.url || state.url || undefined}
+                  />
+                )}
+
+                {activeResultsTab === 'domain-comparisons' && analysis?.responses && (
+                  <DomainComparisonsTab
+                    responses={analysis.responses}
+                    brandName={company?.name || 'Your Brand'}
+                    brandUrl={company?.url || state.url || undefined}
+                    competitorUrls={identifiedCompetitors.map(c => ({ name: c.name, url: c.url }))}
                   />
                 )}
 

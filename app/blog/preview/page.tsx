@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { join } from 'path';
+// Path utilities will be imported dynamically
 import { TableOfContents } from './table-of-contents';
 
 export const metadata: Metadata = {
@@ -12,13 +12,29 @@ export const metadata: Metadata = {
 
 async function getLatestBlogPost() {
   try {
-    const blogAgentPath = join(process.cwd(), '..', 'blog-agent');
     const fs = await import('fs/promises');
+    const path = await import('path');
     
-    try {
-      await fs.access(blogAgentPath);
-    } catch (accessError) {
-      console.error('Blog agent directory not found:', blogAgentPath);
+    // Try multiple possible paths
+    const possiblePaths = [
+      path.join(process.cwd(), '..', 'blog-agent'),
+      path.join(process.cwd(), 'blog-agent'),
+      path.join(__dirname, '..', '..', '..', 'blog-agent'),
+    ];
+    
+    let blogAgentPath: string | null = null;
+    for (const testPath of possiblePaths) {
+      try {
+        await fs.access(testPath);
+        blogAgentPath = testPath;
+        break;
+      } catch {
+        continue;
+      }
+    }
+    
+    if (!blogAgentPath) {
+      console.error('Blog agent directory not found. Tried:', possiblePaths);
       return null;
     }
     
@@ -29,16 +45,21 @@ async function getLatestBlogPost() {
       .reverse();
     
     if (blogFiles.length === 0) {
+      console.error('No blog-results JSON files found in:', blogAgentPath);
       return null;
     }
     
     const latestFile = blogFiles[0];
-    const filePath = join(blogAgentPath, latestFile);
+    const filePath = path.join(blogAgentPath, latestFile);
     const fileContent = await fs.readFile(filePath, 'utf-8');
     const data = JSON.parse(fileContent);
     return data;
   } catch (error) {
     console.error('Error loading blog post:', error);
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
     return null;
   }
 }
@@ -55,8 +76,9 @@ function removeH1FromContent(content: string): string {
 }
 
 // Helper to generate heading IDs
-function generateHeadingId(text: string, index: number): string {
-  return `heading-${index}-${text.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+function generateHeadingId(text: string): string {
+  const cleanText = typeof text === 'string' ? text : String(text);
+  return cleanText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
 export default async function BlogPreviewPage() {
@@ -65,7 +87,11 @@ export default async function BlogPreviewPage() {
   
   try {
     blogData = await getLatestBlogPost();
+    if (!blogData) {
+      errorMessage = 'No blog post data found. Please run the blog agent first.';
+    }
   } catch (error) {
+    console.error('Failed to load blog post:', error);
     errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
   }
   
@@ -105,7 +131,6 @@ export default async function BlogPreviewPage() {
   // Extract headings for TOC
   const headingRegex = /^(#{1,3})\s+(.+)$/gm;
   const headingMatches = Array.from((content || '').matchAll(headingRegex));
-  let headingIndex = 0;
 
   return (
     <>
@@ -206,9 +231,9 @@ export default async function BlogPreviewPage() {
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    h1: ({ node, children, ...props }) => {
-                      const text = String(children);
-                      const id = generateHeadingId(text, headingIndex++);
+                    h1: ({ node, children, ...props }: any) => {
+                      const text = typeof children === 'string' ? children : Array.isArray(children) ? children.join('') : String(children);
+                      const id = generateHeadingId(text);
                       return (
                         <h1 
                           id={id}
@@ -219,9 +244,9 @@ export default async function BlogPreviewPage() {
                         </h1>
                       );
                     },
-                    h2: ({ node, children, ...props }) => {
-                      const text = String(children);
-                      const id = generateHeadingId(text, headingIndex++);
+                    h2: ({ node, children, ...props }: any) => {
+                      const text = typeof children === 'string' ? children : Array.isArray(children) ? children.join('') : String(children);
+                      const id = generateHeadingId(text);
                       return (
                         <h2 
                           id={id}
@@ -232,9 +257,9 @@ export default async function BlogPreviewPage() {
                         </h2>
                       );
                     },
-                    h3: ({ node, children, ...props }) => {
-                      const text = String(children);
-                      const id = generateHeadingId(text, headingIndex++);
+                    h3: ({ node, children, ...props }: any) => {
+                      const text = typeof children === 'string' ? children : Array.isArray(children) ? children.join('') : String(children);
+                      const id = generateHeadingId(text);
                       return (
                         <h3 
                           id={id}

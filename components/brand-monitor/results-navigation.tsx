@@ -106,6 +106,16 @@ export function ResultsNavigation({
         >
           📈 Historical Tracking
         </button>
+        <button
+          onClick={() => handleTabClick('domain-comparisons')}
+          className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors ${
+            activeTab === 'domain-comparisons'
+              ? 'bg-blue-600 text-white'
+              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+          }`}
+        >
+          🌐 Domain Comparisons
+        </button>
         
         </div>
         
