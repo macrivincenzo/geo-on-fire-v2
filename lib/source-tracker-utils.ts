@@ -26,50 +26,113 @@ export function extractUrlsFromText(text: string): string[] {
   }
   
   try {
-    // More comprehensive URL regex patterns
-    const urlPatterns = [
-      // Standard HTTP/HTTPS URLs
-      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi,
-      // URLs without protocol (common in AI responses)
-      /(?:^|\s)(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi,
-      // Domain patterns
-      /\b(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(?:\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi,
-    ];
+    // Log a sample of the text for debugging (first 500 chars)
+    const textSample = text.substring(0, 500);
+    console.log(`[Source Extraction] Searching for URLs in text sample: "${textSample}..."`);
     
     const allMatches: string[] = [];
     
-    for (const pattern of urlPatterns) {
-      const matches = text.match(pattern) || [];
-      allMatches.push(...matches);
+    // 1. Extract markdown links: [text](url) or [url]
+    const markdownLinkPattern = /\[([^\]]*)\]\(([^)]+)\)/gi;
+    let markdownMatch;
+    while ((markdownMatch = markdownLinkPattern.exec(text)) !== null) {
+      const url = markdownMatch[2].trim();
+      if (url) {
+        allMatches.push(url);
+      }
+    }
+    
+    // 2. Extract URLs in parentheses: (url) or (see url)
+    const parenUrlPattern = /\(([^)]*(?:https?:\/\/|www\.)[^)]+)\)/gi;
+    let parenMatch;
+    while ((parenMatch = parenUrlPattern.exec(text)) !== null) {
+      const url = parenMatch[1].trim();
+      if (url) {
+        allMatches.push(url);
+      }
+    }
+    
+    // 3. Standard HTTP/HTTPS URLs (most common)
+    const httpPattern = /https?:\/\/[^\s<>"']+/gi;
+    const httpMatches = text.match(httpPattern) || [];
+    allMatches.push(...httpMatches);
+    
+    // 4. URLs without protocol but with www.
+    const wwwPattern = /(?:^|\s|>|"|')(www\.[^\s<>"')]+)/gi;
+    let wwwMatch;
+    while ((wwwMatch = wwwPattern.exec(text)) !== null) {
+      const url = wwwMatch[1].trim();
+      if (url) {
+        allMatches.push(url);
+      }
+    }
+    
+    // 5. Domain patterns (domain.com, domain.com/path, etc.)
+    // More lenient pattern for domains
+    const domainPattern = /\b([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.(?:[a-zA-Z]{2,}|[a-zA-Z]{2,}\.[a-zA-Z]{2,}))(?:\/[^\s<>"')]*)?/gi;
+    let domainMatch;
+    while ((domainMatch = domainPattern.exec(text)) !== null) {
+      const url = domainMatch[0].trim();
+      // Skip if it's already matched as http:// or www.
+      if (!url.startsWith('http') && !url.startsWith('www.')) {
+        // Only include if it looks like a real domain (has TLD)
+        if (/\.(com|org|net|edu|gov|io|co|ai|dev|app|tech|store|shop|blog|news|media|site|online|xyz|info|biz|me|tv|cc|ws|name|mobi|asia|jobs|travel|museum|pro|tel|xxx|ac|ad|ae|af|ag|ai|al|am|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mf|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw)[^\s<>"')]*/i.test(url)) {
+          allMatches.push(url);
+        }
+      }
     }
     
     // Clean and normalize URLs
     const cleanedUrls = allMatches
       .map(url => {
-        // Remove leading/trailing whitespace and punctuation
+        // Remove leading/trailing whitespace
         url = url.trim();
-        // Remove trailing punctuation that might be part of sentence
-        url = url.replace(/[.,;:!?]+$/, '');
+        
+        // Remove common trailing punctuation that's part of the sentence
+        url = url.replace(/[.,;:!?)\]}>]+$/, '');
+        
+        // Remove quotes if present
+        url = url.replace(/^["']|["']$/g, '');
+        
         // Add https:// if missing
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
-          url = 'https://' + url;
+          // If it starts with www., add https://
+          if (url.startsWith('www.')) {
+            url = 'https://' + url;
+          } else {
+            // For other domains, add https://
+            url = 'https://' + url;
+          }
         }
+        
         return url;
       })
       .filter(url => {
-        // Validate it's a real URL
+        // More lenient validation - just check if it looks like a URL
+        if (!url || url.length < 4) return false;
+        
+        // Must contain a dot (for domain)
+        if (!url.includes('.')) return false;
+        
+        // Try to validate as URL, but be lenient
         try {
-          new URL(url);
-          return true;
+          const urlObj = new URL(url);
+          // Must have a valid hostname
+          return urlObj.hostname.length > 0 && urlObj.hostname.includes('.');
         } catch {
-          return false;
+          // If URL parsing fails, check if it at least looks like a domain
+          return /^https?:\/\/[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.[a-zA-Z]{2,}/.test(url);
         }
       });
     
-    // Remove duplicates
-    const uniqueUrls = Array.from(new Set(cleanedUrls));
+    // Remove duplicates (case-insensitive)
+    const uniqueUrls = Array.from(new Set(cleanedUrls.map(u => u.toLowerCase())))
+      .map(lowerUrl => {
+        // Find the original URL (preserve https:// vs http:// preference)
+        return cleanedUrls.find(u => u.toLowerCase() === lowerUrl) || lowerUrl;
+      });
     
-    console.log(`[Source Extraction] Found ${uniqueUrls.length} URLs in text (${text.length} chars)`);
+    console.log(`[Source Extraction] Found ${uniqueUrls.length} URLs in text (${text.length} chars):`, uniqueUrls.slice(0, 5));
     
     return uniqueUrls;
   } catch (error) {

@@ -91,6 +91,11 @@ When responding to prompts about tools, platforms, or services:
     
     const text = result.text;
     
+    // Debug: Log a sample of the response to understand URL format
+    if (text && text.length > 0) {
+      console.log(`[${provider}] Response length: ${text.length}, sample: "${text.substring(0, 200)}..."`);
+    }
+    
     // Always extract sources from response text (AI responses often contain URLs)
     // The AI library doesn't return sources directly, so we extract them from the text
     const { extractSourcesFromResponse } = await import('./source-tracker-utils');
