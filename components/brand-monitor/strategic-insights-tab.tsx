@@ -31,12 +31,147 @@ import {
   ContentSuggestion,
   ProviderInsight
 } from '@/lib/strategic-insights';
+import { 
+  calculateAIBrandStrength, 
+  calculateAIBrandStrengthForAll,
+  AIBrandStrength 
+} from '@/lib/ai-brand-strength';
 
 interface StrategicInsightsTabProps {
   brandData: CompetitorRanking;
   competitors: CompetitorRanking[];
   responses: AIResponse[];
   brandName: string;
+}
+
+// ============================================
+// AI Brand Strength Card (0-100 score)
+// ============================================
+function AIBrandStrengthCard({ 
+  brandStrength, 
+  competitors, 
+  brandName 
+}: { 
+  brandStrength: AIBrandStrength;
+  competitors: CompetitorRanking[];
+  brandName: string;
+}) {
+  // Calculate strength for top competitors (for comparison bars)
+  const competitorStrengths = useMemo(() => {
+    const strengths = calculateAIBrandStrengthForAll(competitors.filter(c => !c.isOwn));
+    return Array.from(strengths.entries())
+      .map(([name, strength]) => ({ name, strength }))
+      .sort((a, b) => b.strength.score - a.strength.score)
+      .slice(0, 3); // Top 3 competitors
+  }, [competitors]);
+
+  const getScoreColor = (score: number): string => {
+    if (score >= 70) return 'text-green-600';
+    if (score >= 50) return 'text-blue-600';
+    if (score >= 30) return 'text-amber-600';
+    return 'text-red-600';
+  };
+
+  const getScoreBgColor = (score: number): string => {
+    if (score >= 70) return 'bg-green-100 border-green-300';
+    if (score >= 50) return 'bg-blue-100 border-blue-300';
+    if (score >= 30) return 'bg-amber-100 border-amber-300';
+    return 'bg-red-100 border-red-300';
+  };
+
+  return (
+    <Card className={`${getScoreBgColor(brandStrength.score)} border-2 shadow-lg`}>
+      <CardHeader className="pb-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <Trophy className="w-6 h-6" />
+              AI Brand Strength
+            </CardTitle>
+            <CardDescription className="text-sm text-gray-600 mt-1">
+              Composite score based on visibility, sentiment, share of voice, and ranking
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {/* Main Score Display */}
+        <div className="text-center mb-6">
+          <div className={`text-6xl font-bold ${getScoreColor(brandStrength.score)} mb-2`}>
+            {brandStrength.score}
+          </div>
+          <div className="text-2xl font-semibold text-gray-500">/ 100</div>
+          <p className="text-sm text-gray-600 mt-2">
+            {brandName}'s overall AI brand strength
+          </p>
+        </div>
+
+        {/* Breakdown */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="bg-white/60 rounded-lg p-3">
+            <div className="text-xs text-gray-600 mb-1">Visibility</div>
+            <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.visibility}%</div>
+          </div>
+          <div className="bg-white/60 rounded-lg p-3">
+            <div className="text-xs text-gray-600 mb-1">Sentiment</div>
+            <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.sentiment}%</div>
+          </div>
+          <div className="bg-white/60 rounded-lg p-3">
+            <div className="text-xs text-gray-600 mb-1">Share of Voice</div>
+            <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.shareOfVoice}%</div>
+          </div>
+          <div className="bg-white/60 rounded-lg p-3">
+            <div className="text-xs text-gray-600 mb-1">Ranking</div>
+            <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.ranking}%</div>
+          </div>
+        </div>
+
+        {/* Competitor Comparison Bars */}
+        {competitorStrengths.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-gray-300">
+            <p className="text-sm font-semibold text-gray-700 mb-3">Top Competitors</p>
+            <div className="space-y-3">
+              {competitorStrengths.map(({ name, strength }) => (
+                <div key={name} className="flex items-center gap-3">
+                  <div className="w-24 text-xs text-gray-600 truncate">{name}</div>
+                  <div className="flex-1 bg-gray-200 rounded-full h-4 relative overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all ${
+                        strength.score >= 70 ? 'bg-green-500' :
+                        strength.score >= 50 ? 'bg-blue-500' :
+                        strength.score >= 30 ? 'bg-amber-500' : 'bg-red-500'
+                      }`}
+                      style={{ width: `${strength.score}%` }}
+                    />
+                  </div>
+                  <div className="w-12 text-right text-sm font-semibold text-gray-700">
+                    {strength.score}
+                  </div>
+                </div>
+              ))}
+              {/* Your brand bar */}
+              <div className="flex items-center gap-3 pt-2 border-t border-gray-300">
+                <div className="w-24 text-xs font-semibold text-gray-900 truncate">{brandName}</div>
+                <div className="flex-1 bg-gray-200 rounded-full h-5 relative overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      brandStrength.score >= 70 ? 'bg-green-600' :
+                      brandStrength.score >= 50 ? 'bg-blue-600' :
+                      brandStrength.score >= 30 ? 'bg-amber-600' : 'bg-red-600'
+                    }`}
+                    style={{ width: `${brandStrength.score}%` }}
+                  />
+                </div>
+                <div className={`w-12 text-right text-sm font-bold ${getScoreColor(brandStrength.score)}`}>
+                  {brandStrength.score}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 }
 
 // ============================================
@@ -446,9 +581,22 @@ export function StrategicInsightsTab({
     generateStrategicInsights(brandData, competitors, responses, brandName),
     [brandData, competitors, responses, brandName]
   );
+
+  // Calculate AI Brand Strength
+  const brandStrength = useMemo(() => 
+    calculateAIBrandStrength(brandData),
+    [brandData]
+  );
   
   return (
     <div className="space-y-6">
+      {/* AI Brand Strength Score (0-100) - Prominent Display */}
+      <AIBrandStrengthCard 
+        brandStrength={brandStrength}
+        competitors={competitors}
+        brandName={brandName}
+      />
+      
       {/* Health Score Overview */}
       <HealthScoreCard insights={insights} />
       
