@@ -84,8 +84,7 @@ export function DomainComparisonsTab({
     const domainMap = new Map<string, BrandDomainData>();
     const pageMap = new Map<string, Map<string, { url: string; title?: string; timesCited: number }>>();
     
-    const totalCitations = allSources.length;
-    
+    // First pass: collect all brand/competitor domain citations
     for (const source of allSources) {
       const domain = source.domain;
       const normalizedDomain = normalizeUrlForComparison(domain);
@@ -133,21 +132,24 @@ export function DomainComparisonsTab({
       pages.get(pageKey)!.timesCited++;
     }
     
-    // Calculate share of citations and build pages array
+    // Calculate total brand domain citations (only from tracked domains)
+    const totalBrandDomainCitations = Array.from(domainMap.values())
+      .reduce((sum, d) => sum + d.timesCited, 0);
+    
+    // Calculate share of citations based on brand domain citations only
     const result: BrandDomainData[] = [];
     for (const [domain, data] of domainMap.entries()) {
-      data.shareOfCitations = totalCitations > 0 
-        ? Math.round((data.timesCited / totalCitations) * 1000) / 10 
+      data.shareOfCitations = totalBrandDomainCitations > 0 
+        ? Math.round((data.timesCited / totalBrandDomainCitations) * 1000) / 10 
         : 0;
       
       const pages = pageMap.get(domain)!;
-      const pageTotal = Array.from(pages.values()).reduce((sum, p) => sum + p.timesCited, 0);
       
       data.pages = Array.from(pages.values())
         .map(page => ({
           ...page,
-          shareOfCitations: totalCitations > 0 
-            ? Math.round((page.timesCited / totalCitations) * 1000) / 10 
+          shareOfCitations: totalBrandDomainCitations > 0 
+            ? Math.round((page.timesCited / totalBrandDomainCitations) * 1000) / 10 
             : 0
         }))
         .sort((a, b) => b.timesCited - a.timesCited);

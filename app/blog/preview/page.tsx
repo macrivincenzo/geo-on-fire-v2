@@ -19,7 +19,6 @@ async function getLatestBlogPost() {
     const possiblePaths = [
       path.join(process.cwd(), '..', 'blog-agent'),
       path.join(process.cwd(), 'blog-agent'),
-      path.join(__dirname, '..', '..', '..', 'blog-agent'),
     ];
     
     let blogAgentPath: string | null = null;
@@ -118,14 +117,14 @@ export default async function BlogPreviewPage() {
     );
   }
 
-  const { topic, content, seoOptimization, qualityScore, faq, topics } = blogData;
-  const metaTitle = seoOptimization?.metaTitle || topic;
+  const { topic, content, seoOptimization, qualityScore, faq, topics } = blogData || {};
+  const metaTitle = seoOptimization?.metaTitle || topic || 'Blog Post';
   const metaDescription = seoOptimization?.metaDescription || '';
   const publishDate = seoOptimization?.schemaMarkup?.datePublished || new Date().toISOString().split('T')[0];
   const authorName = seoOptimization?.schemaMarkup?.author?.name || 'AI Brand Track Team';
   
   // Extract title and clean content
-  const articleTitle = extractTitle(content || '', topic);
+  const articleTitle = extractTitle(content || '', topic || 'Blog Post');
   const cleanContent = removeH1FromContent(content || '');
   
   // Extract headings for TOC
