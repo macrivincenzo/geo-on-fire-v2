@@ -80,7 +80,7 @@ When responding to prompts about tools, platforms, or services:
 
   try {
     // First, get the response with potential web search
-    const { text, sources } = await generateText({
+    const result = await generateText({
       model,
       system: systemPrompt,
       prompt: enhancedPrompt,
@@ -88,6 +88,39 @@ When responding to prompts about tools, platforms, or services:
       maxTokens: 800,
       ...generateConfig, // Spread generation configuration (includes tools for OpenAI)
     });
+    
+    const text = result.text;
+    
+    // Always extract sources from response text (AI responses often contain URLs)
+    // The AI library doesn't return sources directly, so we extract them from the text
+    const { extractSourcesFromResponse } = await import('./source-tracker-utils');
+    let sources = extractSourcesFromResponse(text);
+    
+    // Also check for sources in tool results if available (for web search providers)
+    const toolResults = (result as any).toolResults || (result as any).toolCalls || [];
+    if (toolResults && toolResults.length > 0) {
+      // Extract URLs from tool results
+      for (const toolResult of toolResults) {
+        if (toolResult && typeof toolResult === 'object') {
+          // Check various possible formats
+          const toolUrl = toolResult.url || toolResult.source?.url || toolResult.result?.url;
+          if (toolUrl && typeof toolUrl === 'string') {
+            const existingSource = sources.find(s => s.url === toolUrl);
+            if (!existingSource) {
+              sources.push({
+                url: toolUrl,
+                title: toolResult.title || toolResult.source?.title,
+                domain: extractDomain(toolUrl),
+                domainName: getDomainName(toolUrl),
+                citedText: toolResult.citedText || toolResult.cited_text,
+              });
+            }
+          }
+        }
+      }
+    }
+    
+    console.log(`[Source Extraction] Found ${sources.length} sources from ${provider} response`);
 
     // Then analyze it with structured output
     const analysisPrompt = `Analyze this AI response about ${brandName} and its competitors:
