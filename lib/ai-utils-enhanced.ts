@@ -71,12 +71,13 @@ When responding to prompts about tools, platforms, or services:
 3. Be objective and factual${useWebSearch ? ', using current web information when available' : ''}
 4. Explain briefly why each tool is ranked where it is
 5. If you don't have enough information about a specific company, you can mention that
-6. ${useWebSearch ? 'Prioritize recent, factual information from web searches' : 'Use your knowledge base'}`;
+6. ${useWebSearch ? 'Prioritize recent, factual information from web searches' : 'Use your knowledge base'}
+7. IMPORTANT: When you reference information from websites, articles, or sources, always include the full URLs (e.g., https://example.com/article) in your response so readers can verify the information.`;
 
   // Enhanced prompt for web search
   const enhancedPrompt = useWebSearch 
-    ? `${prompt}\n\nPlease search for current, factual information to answer this question. Focus on recent data and real user opinions.`
-    : prompt;
+    ? `${prompt}\n\nPlease search for current, factual information to answer this question. Focus on recent data and real user opinions. IMPORTANT: Include the full URLs (e.g., https://example.com) of any websites, articles, or sources you reference in your response.`
+    : `${prompt}\n\nIf you reference any websites, articles, or sources, please include their full URLs (e.g., https://example.com) in your response.`;
 
   try {
     // First, get the response with potential web search

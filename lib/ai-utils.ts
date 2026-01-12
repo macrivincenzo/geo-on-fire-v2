@@ -779,15 +779,19 @@ When responding to prompts about tools, platforms, or services:
 2. Focus on the companies mentioned in the prompt
 3. Be objective and factual
 4. Explain briefly why each tool is ranked where it is
-5. If you don't have enough information about a specific company, you can mention that`;
+5. If you don't have enough information about a specific company, you can mention that
+6. IMPORTANT: When you reference information from websites, articles, or sources, always include the full URLs (e.g., https://example.com/article) in your response so readers can verify the information.`;
+
+  // Enhance the prompt to request URLs
+  const enhancedPrompt = `${prompt}\n\nIf you reference any websites, articles, or sources, please include their full URLs (e.g., https://example.com) in your response.`;
 
   try {
     // First, get the response
-    console.log(`Calling ${provider} with prompt: "${prompt.substring(0, 50)}..."`);
+    console.log(`Calling ${provider} with prompt: "${enhancedPrompt.substring(0, 50)}..."`);
     const { text } = await generateText({
       model,
       system: systemPrompt,
-      prompt,
+      prompt: enhancedPrompt,
       temperature: 0.7,
       maxTokens: 800,
     });
