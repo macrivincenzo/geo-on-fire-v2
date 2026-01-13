@@ -141,8 +141,19 @@ export function BoostActionsTab({
   const ActionCard = ({ action }: { action: ActionWithStatus }) => {
     const CategoryIcon = CATEGORY_ICONS[action.category] || Target;
     
+    const handleCardClick = () => {
+      // Cycle through statuses: todo -> in-progress -> done -> todo
+      const statusCycle: ActionStatus[] = ['todo', 'in-progress', 'done'];
+      const currentIndex = statusCycle.indexOf(action.status);
+      const nextIndex = (currentIndex + 1) % statusCycle.length;
+      handleStatusChange(action.id, statusCycle[nextIndex]);
+    };
+    
     return (
-      <Card className={`${STATUS_COLORS[action.status]} border-2 transition-all hover:shadow-lg cursor-pointer`}>
+      <Card 
+        onClick={handleCardClick}
+        className={`${STATUS_COLORS[action.status]} border-2 transition-all hover:shadow-lg cursor-pointer active:scale-[0.98]`}
+      >
         <CardHeader className="pb-3">
           <div className="flex items-start gap-2">
             <CategoryIcon className="w-5 h-5 mt-0.5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
@@ -177,13 +188,10 @@ export function BoostActionsTab({
             </div>
           )}
           
-          <div className="flex gap-2 pt-2">
+          <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
             {action.status !== 'todo' && (
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleStatusChange(action.id, 'todo');
-                }}
+                onClick={() => handleStatusChange(action.id, 'todo')}
                 className="flex-1 text-xs px-3 py-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded transition-colors flex items-center justify-center gap-1"
               >
                 <Circle className="w-3 h-3" />
@@ -192,10 +200,7 @@ export function BoostActionsTab({
             )}
             {action.status !== 'in-progress' && (
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleStatusChange(action.id, 'in-progress');
-                }}
+                onClick={() => handleStatusChange(action.id, 'in-progress')}
                 className="flex-1 text-xs px-3 py-1.5 bg-blue-200 dark:bg-blue-800 hover:bg-blue-300 dark:hover:bg-blue-700 rounded transition-colors flex items-center justify-center gap-1"
               >
                 <Clock className="w-3 h-3" />
@@ -204,10 +209,7 @@ export function BoostActionsTab({
             )}
             {action.status !== 'done' && (
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleStatusChange(action.id, 'done');
-                }}
+                onClick={() => handleStatusChange(action.id, 'done')}
                 className="flex-1 text-xs px-3 py-1.5 bg-green-200 dark:bg-green-800 hover:bg-green-300 dark:hover:bg-green-700 rounded transition-colors flex items-center justify-center gap-1"
               >
                 <CheckCircle2 className="w-3 h-3" />
