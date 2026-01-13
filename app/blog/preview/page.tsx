@@ -80,6 +80,88 @@ function generateHeadingId(text: string): string {
   return cleanText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
+// Helper to inject infographics into content
+function injectInfographicsIntoContent(content: string, infographics: any[]): string {
+  if (!infographics || infographics.length === 0) return content;
+  
+  let modifiedContent = content;
+  
+  // Sort infographics by section and position
+  const sortedInfographics = [...infographics].sort((a, b) => {
+    // First sort by section order in content
+    const aIndex = content.indexOf(a.section || '');
+    const bIndex = content.indexOf(b.section || '');
+    if (aIndex !== bIndex) return aIndex - bIndex;
+    // Then by position
+    return (a.position || 0) - (b.position || 0);
+  });
+  
+  // Inject each infographic after its corresponding section heading
+  // Process in reverse to maintain correct positions
+  for (let i = sortedInfographics.length - 1; i >= 0; i--) {
+    const infographic = sortedInfographics[i];
+    const section = infographic.section || '';
+    if (!section) continue;
+    
+    // Find the section heading in content (H2 or H3)
+    const headingPattern = new RegExp(`(#{1,2}\\s+${section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\n])`, 'i');
+    const match = modifiedContent.match(headingPattern);
+    
+    if (match && match.index !== undefined) {
+      const insertPosition = match.index + match[0].length;
+      const imageUrl = infographic.imageUrl || infographic.url || `https://placehold.co/1200x600/2563eb/ffffff?text=${encodeURIComponent(infographic.title || 'Infographic')}`;
+      const imageMarkdown = `\n\n![${infographic.altText || infographic.title}](${imageUrl})\n\n*${infographic.description || infographic.title}*\n\n`;
+      
+      modifiedContent = 
+        modifiedContent.slice(0, insertPosition) + 
+        imageMarkdown + 
+        modifiedContent.slice(insertPosition);
+    }
+  }
+  
+  return modifiedContent;
+}
+
+// Helper to inject infographics into content
+function injectInfographicsIntoContent(content: string, infographics: any[]): string {
+  if (!infographics || infographics.length === 0) return content;
+  
+  let modifiedContent = content;
+  
+  // Sort infographics by section and position
+  const sortedInfographics = [...infographics].sort((a, b) => {
+    // First sort by section order in content
+    const aIndex = content.indexOf(a.section || '');
+    const bIndex = content.indexOf(b.section || '');
+    if (aIndex !== bIndex) return aIndex - bIndex;
+    // Then by position
+    return (a.position || 0) - (b.position || 0);
+  });
+  
+  // Inject each infographic after its corresponding section heading
+  sortedInfographics.forEach((infographic) => {
+    const section = infographic.section || '';
+    if (!section) return;
+    
+    // Find the section heading in content
+    const headingRegex = new RegExp(`(#{1,2}\\s+${section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\n])`, 'i');
+    const match = modifiedContent.match(headingRegex);
+    
+    if (match && match.index !== undefined) {
+      const insertPosition = match.index + match[0].length;
+      const imageUrl = infographic.imageUrl || infographic.url || `https://placehold.co/1200x600/2563eb/ffffff?text=${encodeURIComponent(infographic.title || 'Infographic')}`;
+      const imageMarkdown = `\n\n![${infographic.altText || infographic.title}](${imageUrl})\n\n*${infographic.description || infographic.title}*\n\n`;
+      
+      modifiedContent = 
+        modifiedContent.slice(0, insertPosition) + 
+        imageMarkdown + 
+        modifiedContent.slice(insertPosition);
+    }
+  });
+  
+  return modifiedContent;
+}
+
 export default async function BlogPreviewPage() {
   let blogData;
   let errorMessage: string | null = null;
@@ -136,6 +218,7 @@ export default async function BlogPreviewPage() {
   const qualityScore = blogData?.qualityScore || null;
   const faq = blogData?.faq || null;
   const topics = blogData?.topics || null;
+  const infographics = blogData?.infographics || null;
   const metaTitle = seoOptimization?.metaTitle || topic || 'Blog Post';
   const metaDescription = seoOptimization?.metaDescription || '';
   const publishDate = seoOptimization?.schemaMarkup?.datePublished || new Date().toISOString().split('T')[0];
@@ -143,7 +226,12 @@ export default async function BlogPreviewPage() {
   
   // Extract title and clean content
   const articleTitle = extractTitle(content || '', topic || 'Blog Post');
-  const cleanContent = removeH1FromContent(content || '');
+  let cleanContent = removeH1FromContent(content || '');
+  
+  // Inject infographics into content if available
+  if (infographics?.infographics && Array.isArray(infographics.infographics)) {
+    cleanContent = injectInfographicsIntoContent(cleanContent, infographics.infographics);
+  }
   
   // Extract headings for TOC
   const headingRegex = /^(#{1,3})\s+(.+)$/gm;
@@ -205,7 +293,7 @@ export default async function BlogPreviewPage() {
           {/* Three Column Layout - Firecrawl Style */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
             {/* Left Sidebar - Table of Contents */}
-            <aside className="lg:col-span-2 order-2 lg:order-1">
+            <aside className="lg:col-span-3 order-2 lg:order-1">
               <div className="lg:sticky lg:top-24">
                 <div className="bg-white dark:bg-gray-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-5 shadow-sm">
                   <TableOfContents content={content || ''} />
@@ -214,7 +302,7 @@ export default async function BlogPreviewPage() {
             </aside>
 
             {/* Main Content */}
-            <article className="lg:col-span-7 order-1 lg:order-2">
+            <article className="lg:col-span-6 order-1 lg:order-2">
               {/* Article Header */}
               <header className="mb-8 pb-8 border-b border-zinc-200 dark:border-zinc-800">
                 <h1 className="text-4xl lg:text-5xl font-bold text-zinc-900 dark:text-zinc-100 mb-4 leading-tight">
@@ -237,18 +325,6 @@ export default async function BlogPreviewPage() {
                       day: 'numeric' 
                     })}
                   </time>
-                  {qualityScore && (
-                    <>
-                      <span>•</span>
-                      <span className="inline-flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                        Quality: {qualityScore}/100
-                      </span>
-                    </>
-                  )}
-                  <span className="ml-auto text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
-                    Preview Mode
-                  </span>
                 </div>
               </header>
 
@@ -347,6 +423,22 @@ export default async function BlogPreviewPage() {
                         <code className="block bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg overflow-x-auto text-sm font-mono mb-6" {...props} />
                       );
                     },
+                    img: ({ node, src, alt, ...props }: any) => (
+                      <figure className="my-8">
+                        <img
+                          src={src}
+                          alt={alt}
+                          className="w-full rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800"
+                          loading="lazy"
+                          {...props}
+                        />
+                        {alt && (
+                          <figcaption className="mt-3 text-center text-sm text-zinc-600 dark:text-zinc-400 italic">
+                            {alt}
+                          </figcaption>
+                        )}
+                      </figure>
+                    ),
                   }}
                 >
                   {cleanContent}
@@ -444,14 +536,16 @@ export default async function BlogPreviewPage() {
                   </p>
                   <div className="space-y-3">
                     <Link
-                      href="/brand-monitor"
+                      href="/brand-monitor?from=blog"
                       className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-6"
+                      prefetch={false}
                     >
                       Start for free
                     </Link>
                     <Link
-                      href="/plans"
+                      href="/plans?from=blog"
                       className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-6 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-700"
+                      prefetch={false}
                     >
                       See our plans
                     </Link>
