@@ -41,6 +41,7 @@ import { StrategicInsightsTab } from './strategic-insights-tab';
 import { SourceTrackerTab } from './source-tracker-tab';
 import { HistoricalTrackingTab } from './historical-tracking-tab';
 import { DomainComparisonsTab } from './domain-comparisons-tab';
+import { BoostActionsTab } from './boost-actions-tab';
 
 // Hooks
 import { useSSEHandler } from './hooks/use-sse-handler';
@@ -701,6 +702,16 @@ export function BrandMonitor({
                     brandName={company?.name || 'Your Brand'}
                     brandUrl={company?.url || state.url || undefined}
                     competitorUrls={identifiedCompetitors.map(c => ({ name: c.name, url: c.url }))}
+                  />
+                )}
+
+                {activeResultsTab === 'boostActions' && analysis && brandData && (
+                  <BoostActionsTab
+                    brandData={brandData}
+                    competitors={analysis.competitors || []}
+                    responses={analysis.responses || []}
+                    brandName={company?.name || 'Your Brand'}
+                    analysisId={state.analysisId}
                   />
                 )}
 

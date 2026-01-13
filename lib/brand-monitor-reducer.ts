@@ -104,7 +104,7 @@ export interface Analysis {
   errors?: string[];
 }
 
-export type ResultsTab = 'visibility' | 'matrix' | 'rankings' | 'metrics' | 'prompts' | 'insights' | 'sources' | 'historical' | 'domain-comparisons';
+export type ResultsTab = 'visibility' | 'matrix' | 'rankings' | 'metrics' | 'prompts' | 'insights' | 'sources' | 'historical' | 'domain-comparisons' | 'boostActions';
 
 export interface BrandMonitorState {
   // URL and validation
