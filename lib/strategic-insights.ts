@@ -448,18 +448,140 @@ export function generateActionItems(
     }
   }
   
-  // 9. Technical SEO Actions
+  // 9. Always generate visibility improvement action (if not already generated)
+  if (actions.filter(a => a.category === 'visibility').length === 0) {
+    const avgCompetitorVisibility = topCompetitors.length > 0 
+      ? (topCompetitors.reduce((sum, c) => sum + c.visibilityScore, 0) / topCompetitors.length).toFixed(1)
+      : '0';
+    const visibilityGap = parseFloat(avgCompetitorVisibility) - brandData.visibilityScore;
+    
+    if (visibilityGap > 0) {
+      actions.push({
+        id: `action-${actionId++}`,
+        priority: visibilityGap > 20 ? 'high' : 'medium',
+        category: 'visibility',
+        title: `Boost Visibility from ${brandData.visibilityScore}% to ${(brandData.visibilityScore + 15).toFixed(0)}%+`,
+        description: `Your visibility is ${brandData.visibilityScore}% vs ${avgCompetitorVisibility}% industry average (${visibilityGap.toFixed(1)}% gap). You're mentioned ${brandData.mentions} times. Target ${(brandData.visibilityScore + 15).toFixed(0)}%+ to compete effectively.`,
+        impact: `Each 10% visibility increase typically captures 15-20% more AI recommendations. Reaching ${(brandData.visibilityScore + 15).toFixed(0)}% could add ${Math.round(visibilityGap / 2)}% market share.`,
+        effort: 'medium'
+      });
+    } else {
+      actions.push({
+        id: `action-${actionId++}`,
+        priority: 'medium',
+        category: 'visibility',
+        title: `Maintain & Grow ${brandData.visibilityScore}% Visibility`,
+        description: `You're at ${brandData.visibilityScore}% visibility with ${brandData.mentions} mentions. Competitors average ${avgCompetitorVisibility}%. Focus on maintaining your position and pushing to ${(brandData.visibilityScore + 10).toFixed(0)}%+.`,
+        impact: `Maintaining visibility leadership prevents competitors from gaining ground. Growing to ${(brandData.visibilityScore + 10).toFixed(0)}%+ could capture additional market share.`,
+        effort: 'medium'
+      });
+    }
+  }
+  
+  // 10. Always generate ranking improvement action (if not already generated)
+  if (actions.filter(a => a.category === 'competitive' && a.title.includes('Position')).length === 0) {
+    if (brandData.averagePosition > 3) {
+      const top3Count = responses.filter(r => r.brandPosition && r.brandPosition <= 3).length;
+      const totalMentions = responses.filter(r => r.brandMentioned).length;
+      const top3Rate = totalMentions > 0 ? ((top3Count / totalMentions) * 100).toFixed(0) : '0';
+      
+      actions.push({
+        id: `action-${actionId++}`,
+        priority: brandData.averagePosition > 5 ? 'medium' : 'low',
+        category: 'competitive',
+        title: `Improve Ranking from #${Math.round(brandData.averagePosition)} to Top 3`,
+        description: `You rank #${Math.round(brandData.averagePosition)} on average. Only ${top3Rate}% of mentions are in top 3. Top competitors average #${topCompetitors.length > 0 ? Math.round(topCompetitors.reduce((sum, c) => sum + c.averagePosition, 0) / topCompetitors.length) : 'N/A'}.`,
+        impact: `Top 3 positions get 70% of clicks. Moving to #3 could increase visibility by ${Math.round((brandData.averagePosition - 3) * 10)}%.`,
+        effort: brandData.averagePosition <= 4 ? 'easy' : 'medium'
+      });
+    }
+  }
+  
+  // 11. Always generate share of voice action (if not already generated)
+  if (actions.filter(a => a.title.includes('Share of Voice')).length === 0 && topCompetitors.length > 0) {
+    const leader = topCompetitors[0];
+    const shareGap = leader.shareOfVoice - brandData.shareOfVoice;
+    
+    if (shareGap > 5) {
+      actions.push({
+        id: `action-${actionId++}`,
+        priority: shareGap > 20 ? 'high' : 'medium',
+        category: 'competitive',
+        title: `Increase Share of Voice from ${brandData.shareOfVoice.toFixed(1)}% to ${(brandData.shareOfVoice + 10).toFixed(1)}%+`,
+        description: `Your share of voice is ${brandData.shareOfVoice.toFixed(1)}%. ${leader.name} leads with ${leader.shareOfVoice.toFixed(1)}% (${shareGap.toFixed(1)}% gap). Target ${(brandData.shareOfVoice + 10).toFixed(1)}%+ to compete.`,
+        impact: `Each 5% share increase typically captures 1 in 20 more AI recommendations. Reaching ${(brandData.shareOfVoice + 10).toFixed(1)}% could close ${Math.round(shareGap / 2)}% of the gap.`,
+        effort: 'hard'
+      });
+    }
+  }
+  
+  // 12. Always generate sentiment improvement action (if not already generated)
+  if (actions.filter(a => a.category === 'sentiment').length === 0) {
+    const avgCompetitorSentiment = topCompetitors.length > 0 
+      ? (topCompetitors.reduce((sum, c) => sum + c.sentimentScore, 0) / topCompetitors.length).toFixed(0)
+      : '60';
+    const sentimentGap = parseFloat(avgCompetitorSentiment) - brandData.sentimentScore;
+    
+    if (sentimentGap > 5 || brandData.sentimentScore < 70) {
+      actions.push({
+        id: `action-${actionId++}`,
+        priority: sentimentGap > 15 ? 'high' : 'medium',
+        category: 'sentiment',
+        title: `Improve Sentiment from ${brandData.sentimentScore}/100 to ${Math.min(100, brandData.sentimentScore + 15)}+`,
+        description: `Your sentiment is ${brandData.sentimentScore}/100. Competitors average ${avgCompetitorSentiment}/100 (${sentimentGap > 0 ? sentimentGap.toFixed(0) : '0'} point gap). Target ${Math.min(100, brandData.sentimentScore + 15)}+ for better AI recommendations.`,
+        impact: `70+ sentiment increases AI recommendation likelihood by 25%. Each 10-point improvement can boost visibility by 5-8%.`,
+        effort: 'medium'
+      });
+    }
+  }
+  
+  // 13. Always generate content strategy action
+  const mentionedInResponses = responses && responses.length > 0 ? responses.filter(r => r.brandMentioned) : [];
+  const mentionRate = responses.length > 0 ? ((mentionedInResponses.length / responses.length) * 100).toFixed(0) : '0';
+  
+  if (actions.filter(a => a.category === 'content' && a.title.includes('Mention')).length === 0) {
+    if (parseInt(mentionRate) < 50) {
+      actions.push({
+        id: `action-${actionId++}`,
+        priority: parseInt(mentionRate) < 20 ? 'high' : 'medium',
+        category: 'content',
+        title: `Increase AI Mentions from ${mentionRate}% to 50%+`,
+        description: `You're mentioned in ${mentionedInResponses.length}/${responses.length} responses (${mentionRate}% rate). Top brands achieve 50%+ mention rates. Create content that answers common questions in your industry.`,
+        impact: `50%+ mention rate typically results in 40%+ visibility score. Increasing from ${mentionRate}% to 50% could boost visibility by ${Math.round((50 - parseInt(mentionRate)) / 2)}%.`,
+        effort: 'medium'
+      });
+    }
+  }
+  
+  // 14. Always generate comparison content action (enhanced)
+  if (topCompetitors.length > 0 && actions.filter(a => a.title.includes('Comparison')).length === 0) {
+    const top3Competitors = topCompetitors.slice(0, 3);
+    const competitorNames = top3Competitors.map(c => c.name).join(', ');
+    const totalCompetitorMentions = top3Competitors.reduce((sum, c) => sum + c.mentions, 0);
+    
+    actions.push({
+      id: `action-${actionId++}`,
+      priority: 'medium',
+      category: 'content',
+      title: `Create Comparison Pages: ${brandName} vs ${top3Competitors[0]?.name || 'Top Competitors'}`,
+      description: `Create detailed "vs" pages comparing ${brandName} to ${competitorNames}. These competitors are mentioned ${totalCompetitorMentions} times total. AI frequently references comparison content when users ask for alternatives.`,
+      impact: `Comparison content gets 3x more AI citations than standard pages. Top competitor ${top3Competitors[0]?.name || ''} has ${top3Competitors[0]?.mentions || 0} mentions - create content to compete.`,
+      effort: 'easy'
+    });
+  }
+  
+  // 15. Always generate technical SEO action (enhanced)
   actions.push({
     id: `action-${actionId++}`,
     priority: 'low',
     category: 'technical',
-    title: 'Optimize Website Structure for AI Crawlers',
-    description: `Ensure your website has clear structured data, semantic HTML, and comprehensive meta descriptions. AI models reference well-structured content ${brandData.visibilityScore < 30 ? 'more frequently' : 'preferentially'}.`,
-    impact: `Proper structure can improve AI comprehension by 25-30%`,
+    title: `Optimize Website for AI Crawlers (Current: ${brandData.visibilityScore}% visibility)`,
+    description: `Ensure structured data (Schema.org), semantic HTML, comprehensive meta descriptions, and clear content hierarchy. AI models reference well-structured content ${brandData.visibilityScore < 30 ? 'more frequently' : 'preferentially'}. Your current ${brandData.visibilityScore}% visibility suggests room for improvement.`,
+    impact: `Proper structure can improve AI comprehension by 25-30%. Well-structured sites see ${brandData.visibilityScore < 30 ? '2-3x' : '1.5-2x'} more AI citations than poorly structured ones.`,
     effort: 'easy'
   });
   
-  // 10. Provider-Specific Actions (if data available)
+  // 16. Provider-Specific Actions (always generate at least one)
   if (responses.length > 0) {
     const providers = new Set(responses.map(r => r.provider));
     const providerMentions = Array.from(providers).map(provider => {
@@ -468,16 +590,60 @@ export function generateActionItems(
       return { provider, mentions, total: providerResponses.length, rate: (mentions / providerResponses.length) * 100 };
     });
     
-    const weakProvider = providerMentions.find(p => p.rate < 30);
-    if (weakProvider) {
+    // Find weakest provider
+    const weakProvider = providerMentions.sort((a, b) => a.rate - b.rate)[0];
+    if (weakProvider && weakProvider.rate < 50) {
+      actions.push({
+        id: `action-${actionId++}`,
+        priority: weakProvider.rate < 20 ? 'high' : 'medium',
+        category: 'visibility',
+        title: `Improve ${weakProvider.provider} Visibility (${weakProvider.rate.toFixed(0)}% mention rate)`,
+        description: `You're mentioned in only ${weakProvider.mentions}/${weakProvider.total} ${weakProvider.provider} responses (${weakProvider.rate.toFixed(0)}% rate). Other providers: ${providerMentions.filter(p => p.provider !== weakProvider.provider).map(p => `${p.provider} ${p.rate.toFixed(0)}%`).join(', ')}.`,
+        impact: `Improving ${weakProvider.provider} visibility to 50%+ could add ${Math.round((50 - weakProvider.rate) / 5)}% to overall visibility score`,
+        effort: 'medium'
+      });
+    }
+  }
+  
+  // 17. Source Tracking Actions (always check)
+  const totalSources = responses.reduce((sum, r) => sum + (r.sources?.length || 0), 0);
+  if (totalSources > 0) {
+    const brandSources = responses.reduce((sum, r) => {
+      return sum + (r.sources?.filter(s => {
+        const domain = s.domain?.toLowerCase() || '';
+        const brandLower = brandName.toLowerCase().replace(/\s+/g, '');
+        return domain.includes(brandLower) || domain.includes(brandName.toLowerCase().split(' ')[0]);
+      }).length || 0);
+    }, 0);
+    const brandSourceRate = totalSources > 0 ? ((brandSources / totalSources) * 100).toFixed(0) : '0';
+    
+    if (parseInt(brandSourceRate) < 30 && actions.filter(a => a.title.includes('Citations')).length === 0) {
       actions.push({
         id: `action-${actionId++}`,
         priority: 'medium',
-        category: 'visibility',
-        title: `Improve ${weakProvider.provider} Visibility (${weakProvider.rate.toFixed(0)}% mention rate)`,
-        description: `You're mentioned in only ${weakProvider.mentions} out of ${weakProvider.total} ${weakProvider.provider} responses (${weakProvider.rate.toFixed(0)}% rate). Focus on ${weakProvider.provider}-optimized content.`,
-        impact: `Improving ${weakProvider.provider} visibility could add ${Math.round((50 - weakProvider.rate) / 10)}% to overall visibility`,
+        category: 'content',
+        title: `Increase Own Domain Citations from ${brandSourceRate}% to 30%+`,
+        description: `Only ${brandSourceRate}% of ${totalSources} AI-cited sources are from your domain (${brandSources} yours). AI trusts brands that cite their own authoritative content.`,
+        impact: `30%+ own domain citations boost AI trust by 40% and recommendation frequency by 25%. Increasing from ${brandSourceRate}% to 30% could improve visibility by 5-8%.`,
         effort: 'medium'
+      });
+    }
+  }
+  
+  // 18. Always generate competitor analysis action
+  if (topCompetitors.length > 0 && actions.filter(a => a.title.includes('Gap with')).length === 0) {
+    const biggestGap = topCompetitors[0];
+    const gap = biggestGap.visibilityScore - brandData.visibilityScore;
+    
+    if (gap > 10) {
+      actions.push({
+        id: `action-${actionId++}`,
+        priority: gap > 25 ? 'high' : 'medium',
+        category: 'competitive',
+        title: `Analyze & Close ${gap.toFixed(1)}% Gap with ${biggestGap.name}`,
+        description: `${biggestGap.name} leads with ${biggestGap.visibilityScore}% visibility vs your ${brandData.visibilityScore}% (${gap.toFixed(1)}% gap). They're mentioned ${biggestGap.mentions} times vs your ${brandData.mentions}. Analyze their content strategy, keywords, and online presence.`,
+        impact: `Closing this gap could capture ${Math.round(gap / 3)}% more market share. ${biggestGap.name} is ${(gap / brandData.visibilityScore * 100).toFixed(0)}% more visible - study their approach.`,
+        effort: 'hard'
       });
     }
   }

@@ -86,30 +86,64 @@ function injectInfographicsIntoContent(content: string, infographics: any[]): st
   
   let modifiedContent = content;
   
-  // Sort infographics by section and position
-  const sortedInfographics = [...infographics].sort((a, b) => {
-    // First sort by section order in content
-    const aIndex = content.indexOf(a.section || '');
-    const bIndex = content.indexOf(b.section || '');
-    if (aIndex !== bIndex) return aIndex - bIndex;
-    // Then by position
-    return (a.position || 0) - (b.position || 0);
-  });
+  // Separate infographics by placement type
+  const startInfographics = infographics.filter(inf => 
+    inf.section?.toLowerCase() === 'start' || inf.position === 0
+  );
+  const middleInfographics = infographics.filter(inf => 
+    inf.section?.toLowerCase() === 'middle' || inf.position === -1
+  );
+  const sectionInfographics = infographics.filter(inf => 
+    inf.section && 
+    inf.section.toLowerCase() !== 'start' && 
+    inf.section.toLowerCase() !== 'middle' &&
+    inf.position !== 0 && 
+    inf.position !== -1
+  );
   
-  // Inject each infographic after its corresponding section heading
-  // Process in reverse to maintain correct positions
-  for (let i = sortedInfographics.length - 1; i >= 0; i--) {
-    const infographic = sortedInfographics[i];
-    const section = infographic.section || '';
-    if (!section) continue;
+  // Process in reverse order to maintain correct positions
+  const allInfographics = [
+    ...sectionInfographics.sort((a, b) => {
+      const aIndex = content.indexOf(a.section || '');
+      const bIndex = content.indexOf(b.section || '');
+      if (aIndex !== bIndex) return bIndex - aIndex; // Reverse for processing
+      return (b.position || 0) - (a.position || 0);
+    }),
+    ...middleInfographics,
+    ...startInfographics,
+  ];
+  
+  // Inject each infographic
+  for (const infographic of allInfographics) {
+    const section = infographic.section?.toLowerCase() || '';
+    let insertPosition: number | null = null;
     
-    // Find the section heading in content (H2 or H3)
-    const headingPattern = new RegExp(`(#{1,2}\\s+${section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\n])`, 'i');
-    const match = modifiedContent.match(headingPattern);
+    if (section === 'start' || infographic.position === 0) {
+      // Place at start: after first paragraph or intro, before first H2
+      const firstH2Match = modifiedContent.match(/^##\s+/m);
+      if (firstH2Match && firstH2Match.index !== undefined) {
+        insertPosition = firstH2Match.index;
+      } else {
+        // If no H2, place after first 300 characters (intro paragraph)
+        insertPosition = Math.min(300, modifiedContent.length);
+      }
+    } else if (section === 'middle' || infographic.position === -1) {
+      // Place in middle: after 40-60% of content
+      const middlePoint = Math.floor(modifiedContent.length * 0.5);
+      const nextHeading = modifiedContent.indexOf('\n##', middlePoint);
+      insertPosition = nextHeading !== -1 ? nextHeading : middlePoint;
+    } else {
+      // Place after specific section heading
+      const headingPattern = new RegExp(`(#{1,2}\\s+${section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\n])`, 'i');
+      const match = modifiedContent.match(headingPattern);
+      if (match && match.index !== undefined) {
+        insertPosition = match.index + match[0].length;
+      }
+    }
     
-    if (match && match.index !== undefined) {
-      const insertPosition = match.index + match[0].length;
-      const imageUrl = infographic.imageUrl || infographic.url || `https://placehold.co/1200x600/2563eb/ffffff?text=${encodeURIComponent(infographic.title || 'Infographic')}`;
+    if (insertPosition !== null) {
+      const imageUrl = infographic.imageUrl || infographic.url || 
+        `https://placehold.co/1200x600/2563eb/ffffff?text=${encodeURIComponent(infographic.title || 'Infographic')}`;
       const imageMarkdown = `\n\n![${infographic.altText || infographic.title}](${imageUrl})\n\n*${infographic.description || infographic.title}*\n\n`;
       
       modifiedContent = 
@@ -118,46 +152,6 @@ function injectInfographicsIntoContent(content: string, infographics: any[]): st
         modifiedContent.slice(insertPosition);
     }
   }
-  
-  return modifiedContent;
-}
-
-// Helper to inject infographics into content
-function injectInfographicsIntoContent(content: string, infographics: any[]): string {
-  if (!infographics || infographics.length === 0) return content;
-  
-  let modifiedContent = content;
-  
-  // Sort infographics by section and position
-  const sortedInfographics = [...infographics].sort((a, b) => {
-    // First sort by section order in content
-    const aIndex = content.indexOf(a.section || '');
-    const bIndex = content.indexOf(b.section || '');
-    if (aIndex !== bIndex) return aIndex - bIndex;
-    // Then by position
-    return (a.position || 0) - (b.position || 0);
-  });
-  
-  // Inject each infographic after its corresponding section heading
-  sortedInfographics.forEach((infographic) => {
-    const section = infographic.section || '';
-    if (!section) return;
-    
-    // Find the section heading in content
-    const headingRegex = new RegExp(`(#{1,2}\\s+${section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\n])`, 'i');
-    const match = modifiedContent.match(headingRegex);
-    
-    if (match && match.index !== undefined) {
-      const insertPosition = match.index + match[0].length;
-      const imageUrl = infographic.imageUrl || infographic.url || `https://placehold.co/1200x600/2563eb/ffffff?text=${encodeURIComponent(infographic.title || 'Infographic')}`;
-      const imageMarkdown = `\n\n![${infographic.altText || infographic.title}](${imageUrl})\n\n*${infographic.description || infographic.title}*\n\n`;
-      
-      modifiedContent = 
-        modifiedContent.slice(0, insertPosition) + 
-        imageMarkdown + 
-        modifiedContent.slice(insertPosition);
-    }
-  });
   
   return modifiedContent;
 }
