@@ -202,10 +202,19 @@ export default async function BlogPreviewPage() {
             </ol>
           </nav>
 
-          {/* Skyscraper Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Three Column Layout - Firecrawl Style */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            {/* Left Sidebar - Table of Contents */}
+            <aside className="lg:col-span-2 order-2 lg:order-1">
+              <div className="lg:sticky lg:top-24">
+                <div className="bg-white dark:bg-gray-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-5 shadow-sm">
+                  <TableOfContents content={content || ''} />
+                </div>
+              </div>
+            </aside>
+
             {/* Main Content */}
-            <article className="lg:col-span-8">
+            <article className="lg:col-span-7 order-1 lg:order-2">
               {/* Article Header */}
               <header className="mb-8 pb-8 border-b border-zinc-200 dark:border-zinc-800">
                 <h1 className="text-4xl lg:text-5xl font-bold text-zinc-900 dark:text-zinc-100 mb-4 leading-tight">
@@ -420,10 +429,34 @@ export default async function BlogPreviewPage() {
               </div>
             </article>
 
-            {/* Sidebar - Table of Contents */}
-            <aside className="lg:col-span-4">
+            {/* Right Sidebar - CTA */}
+            <aside className="lg:col-span-3 order-3">
               <div className="lg:sticky lg:top-24">
-                <TableOfContents content={content || ''} />
+                <div className="bg-white dark:bg-gray-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-6 shadow-sm">
+                  <div className="text-center mb-4">
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">// Get started \\</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-4 text-center">
+                    Ready to build?
+                  </h3>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6 leading-relaxed text-center">
+                    Start tracking your AI brand visibility for free and scale seamlessly as your project expands. No credit card needed.
+                  </p>
+                  <div className="space-y-3">
+                    <Link
+                      href="/brand-monitor"
+                      className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-6"
+                    >
+                      Start for free
+                    </Link>
+                    <Link
+                      href="/plans"
+                      className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-6 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-700"
+                    >
+                      See our plans
+                    </Link>
+                  </div>
+                </div>
               </div>
             </aside>
           </div>

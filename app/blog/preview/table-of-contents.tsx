@@ -55,41 +55,39 @@ export function TableOfContents({ content }: TableOfContentsProps) {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
-      <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-6 border border-zinc-200 dark:border-zinc-800">
-        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4 uppercase tracking-wide">
-          Table of Contents
-        </h3>
-        <ul className="space-y-2">
-          {headings.map((heading) => (
-            <li key={heading.id}>
-              <a
-                href={`#${heading.id}`}
-                className={`block text-sm transition-colors ${
-                  heading.level === 1
-                    ? 'font-semibold text-zinc-900 dark:text-zinc-100'
-                    : heading.level === 2
-                    ? 'font-medium text-zinc-700 dark:text-zinc-300 ml-0'
-                    : 'text-zinc-600 dark:text-zinc-400 ml-4'
-                } ${
-                  activeId === heading.id
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'hover:text-blue-600 dark:hover:text-blue-400'
-                }`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.getElementById(heading.id);
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                }}
-              >
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <nav className="max-h-[calc(100vh-8rem)] overflow-y-auto">
+      <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4 uppercase tracking-wide">
+        Table of Contents
+      </h3>
+      <ul className="space-y-2">
+        {headings.map((heading) => (
+          <li key={heading.id}>
+            <a
+              href={`#${heading.id}`}
+              className={`block text-sm transition-colors ${
+                heading.level === 1
+                  ? 'font-semibold text-zinc-900 dark:text-zinc-100'
+                  : heading.level === 2
+                  ? 'font-medium text-zinc-700 dark:text-zinc-300 ml-0'
+                  : 'text-zinc-600 dark:text-zinc-400 ml-4'
+              } ${
+                activeId === heading.id
+                  ? 'text-blue-600 dark:text-blue-400'
+                  : 'hover:text-blue-600 dark:hover:text-blue-400'
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                const element = document.getElementById(heading.id);
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 }

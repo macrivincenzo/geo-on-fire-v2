@@ -12,8 +12,7 @@ import {
   Zap,
   AlertTriangle,
   FileText,
-  Users,
-  GripVertical
+  Users
 } from 'lucide-react';
 import { AIResponse, CompetitorRanking } from '@/lib/types';
 import { ActionItem, generateStrategicInsights } from '@/lib/strategic-insights';
@@ -143,16 +142,14 @@ export function BoostActionsTab({
     const CategoryIcon = CATEGORY_ICONS[action.category] || Target;
     
     return (
-      <Card className={`${STATUS_COLORS[action.status]} border-2 transition-all hover:shadow-lg`}>
+      <Card className={`${STATUS_COLORS[action.status]} border-2 transition-all hover:shadow-lg cursor-pointer`}>
         <CardHeader className="pb-3">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex items-start gap-2 flex-1">
-              <CategoryIcon className="w-5 h-5 mt-0.5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <CardTitle className="text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
-                  {action.title}
-                </CardTitle>
-              </div>
+          <div className="flex items-start gap-2">
+            <CategoryIcon className="w-5 h-5 mt-0.5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
+                {action.title}
+              </CardTitle>
             </div>
           </div>
         </CardHeader>
