@@ -75,6 +75,8 @@ export function BoostActionsTab({
 
   // Load saved statuses from localStorage
   const [actionStatuses, setActionStatuses] = useState<Record<string, ActionStatus>>({});
+  const [draggedActionId, setDraggedActionId] = useState<string | null>(null);
+  const [dragOverStatus, setDragOverStatus] = useState<ActionStatus | null>(null);
   
   useEffect(() => {
     if (analysisId) {
@@ -137,6 +139,53 @@ export function BoostActionsTab({
     updateActionStatus(actionId, newStatus);
   };
 
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, actionId: string) => {
+    setDraggedActionId(actionId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', actionId);
+    // Add visual feedback
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = '0.5';
+    }
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    setDraggedActionId(null);
+    setDragOverStatus(null);
+    // Reset visual feedback
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = '1';
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent, status: ActionStatus) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverStatus(status);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    // Only clear if we're actually leaving the drop zone (not just moving to a child)
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      setDragOverStatus(null);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, targetStatus: ActionStatus) => {
+    e.preventDefault();
+    setDragOverStatus(null);
+    
+    if (draggedActionId) {
+      updateActionStatus(draggedActionId, targetStatus);
+      setDraggedActionId(null);
+    }
+  };
+
   const getCategoryIcon = (category: ActionItem['category']) => {
     const Icon = CATEGORY_ICONS[category] || Target;
     return <Icon className="w-4 h-4" />;
@@ -144,9 +193,17 @@ export function BoostActionsTab({
 
   const ActionCard = ({ action }: { action: ActionWithStatus }) => {
     const CategoryIcon = CATEGORY_ICONS[action.category] || Target;
+    const isDragging = draggedActionId === action.id;
     
     return (
-      <Card className={`${STATUS_COLORS[action.status]} border-2 transition-all hover:shadow-md cursor-move`}>
+      <Card 
+        draggable
+        onDragStart={(e) => handleDragStart(e, action.id)}
+        onDragEnd={handleDragEnd}
+        className={`${STATUS_COLORS[action.status]} border-2 transition-all hover:shadow-lg cursor-grab active:cursor-grabbing ${
+          isDragging ? 'opacity-50 scale-95' : 'opacity-100'
+        }`}
+      >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-start gap-2 flex-1">
@@ -224,6 +281,89 @@ export function BoostActionsTab({
           </div>
         </CardContent>
       </Card>
+    );
+  };
+
+  const KanbanColumn = ({ 
+    status, 
+    title, 
+    icon: Icon, 
+    count, 
+    actions 
+  }: { 
+    status: ActionStatus;
+    title: string;
+    icon: React.ElementType;
+    count: number;
+    actions: ActionWithStatus[];
+  }) => {
+    const isDragOver = dragOverStatus === status;
+    const isEmpty = actions.length === 0 && !isDragOver;
+    
+    return (
+      <div className="space-y-4">
+        <div className={`flex items-center justify-between p-4 rounded-lg border-2 transition-all ${
+          status === 'todo' 
+            ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700'
+            : status === 'in-progress'
+            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700'
+            : 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
+        } ${isDragOver ? 'ring-4 ring-blue-400 dark:ring-blue-600 scale-105' : ''}`}>
+          <div className="flex items-center gap-2">
+            <Icon className={`w-5 h-5 ${
+              status === 'todo' 
+                ? 'text-gray-600 dark:text-gray-400'
+                : status === 'in-progress'
+                ? 'text-blue-600 dark:text-blue-400'
+                : 'text-green-600 dark:text-green-400'
+            }`} />
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+          </div>
+          <Badge className={
+            status === 'todo'
+              ? 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+              : status === 'in-progress'
+              ? 'bg-blue-200 text-blue-800 dark:bg-blue-800 dark:text-blue-300'
+              : 'bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-300'
+          }>
+            {count}
+          </Badge>
+        </div>
+        
+        <div 
+          className={`space-y-4 min-h-[400px] transition-all ${
+            isDragOver ? 'bg-blue-50/50 dark:bg-blue-900/10 rounded-lg p-2' : ''
+          }`}
+          onDragOver={(e) => handleDragOver(e, status)}
+          onDragLeave={handleDragLeave}
+          onDrop={(e) => handleDrop(e, status)}
+        >
+          {actions.map(action => (
+            <ActionCard key={action.id} action={action} />
+          ))}
+          {isDragOver && draggedActionId && (
+            <Card className="border-dashed border-2 border-blue-400 dark:border-blue-600 bg-blue-50/50 dark:bg-blue-900/20">
+              <CardContent className="pt-6 text-center">
+                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                  Drop here to move to {title}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+          {isEmpty && (
+            <Card className="border-dashed border-2 border-gray-300 dark:border-gray-700">
+              <CardContent className="pt-6 text-center text-gray-400 dark:text-gray-600">
+                <Icon className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">
+                  {status === 'todo' ? 'No actions to do' : 
+                   status === 'in-progress' ? 'No actions in progress' : 
+                   'No completed actions'}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
     );
   };
 
@@ -310,86 +450,29 @@ export function BoostActionsTab({
 
       {/* Kanban Board */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* To Do Column */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border-2 border-gray-300 dark:border-gray-700">
-            <div className="flex items-center gap-2">
-              <Circle className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100">To Do</h3>
-            </div>
-            <Badge className="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-              {todoCount}
-            </Badge>
-          </div>
-          
-          <div className="space-y-4 min-h-[400px]">
-            {actionsByStatus['todo'].map(action => (
-              <ActionCard key={action.id} action={action} />
-            ))}
-            {actionsByStatus['todo'].length === 0 && (
-              <Card className="border-dashed border-2 border-gray-300 dark:border-gray-700">
-                <CardContent className="pt-6 text-center text-gray-400 dark:text-gray-600">
-                  <Circle className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">No actions to do</p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
-
-        {/* In Progress Column */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-2 border-blue-300 dark:border-blue-700">
-            <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100">In Progress</h3>
-            </div>
-            <Badge className="bg-blue-200 text-blue-800 dark:bg-blue-800 dark:text-blue-300">
-              {inProgressCount}
-            </Badge>
-          </div>
-          
-          <div className="space-y-4 min-h-[400px]">
-            {actionsByStatus['in-progress'].map(action => (
-              <ActionCard key={action.id} action={action} />
-            ))}
-            {actionsByStatus['in-progress'].length === 0 && (
-              <Card className="border-dashed border-2 border-blue-300 dark:border-blue-700">
-                <CardContent className="pt-6 text-center text-gray-400 dark:text-gray-600">
-                  <Clock className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">No actions in progress</p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
-
-        {/* Done Column */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border-2 border-green-300 dark:border-green-700">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100">Done</h3>
-            </div>
-            <Badge className="bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-300">
-              {doneCount}
-            </Badge>
-          </div>
-          
-          <div className="space-y-4 min-h-[400px]">
-            {actionsByStatus['done'].map(action => (
-              <ActionCard key={action.id} action={action} />
-            ))}
-            {actionsByStatus['done'].length === 0 && (
-              <Card className="border-dashed border-2 border-green-300 dark:border-green-700">
-                <CardContent className="pt-6 text-center text-gray-400 dark:text-gray-600">
-                  <CheckCircle2 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">No completed actions</p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
+        <KanbanColumn
+          status="todo"
+          title="To Do"
+          icon={Circle}
+          count={todoCount}
+          actions={actionsByStatus['todo']}
+        />
+        
+        <KanbanColumn
+          status="in-progress"
+          title="In Progress"
+          icon={Clock}
+          count={inProgressCount}
+          actions={actionsByStatus['in-progress']}
+        />
+        
+        <KanbanColumn
+          status="done"
+          title="Done"
+          icon={CheckCircle2}
+          count={doneCount}
+          actions={actionsByStatus['done']}
+        />
       </div>
     </div>
   );
