@@ -384,69 +384,9 @@ export function generateActionItems(
     }
   });
   
-  // 6. Content Discovery Actions (with mention rates)
+  // Calculate shared variables once
   const mentionedInResponses = responses && responses.length > 0 ? responses.filter(r => r.brandMentioned) : [];
   const mentionRate = responses.length > 0 ? ((mentionedInResponses.length / responses.length) * 100).toFixed(0) : '0';
-  
-  if (mentionedInResponses.length === 0) {
-    actions.push({
-      id: `action-${actionId++}`,
-      priority: 'high',
-      category: 'content',
-      title: `Zero Mentions in ${responses.length} AI Responses`,
-      description: `Your brand wasn't mentioned in any of the ${responses.length} AI responses analyzed. Create content that answers common industry questions to get discovered.`,
-      impact: `Getting mentioned in even 20% of responses could increase visibility by 15-20%`,
-      effort: 'medium'
-    });
-  } else if (parseInt(mentionRate) < 30) {
-    actions.push({
-      id: `action-${actionId++}`,
-      priority: 'medium',
-      category: 'content',
-      title: `Increase Mention Rate from ${mentionRate}% to 40%+`,
-      description: `You're mentioned in ${mentionedInResponses.length} out of ${responses.length} responses (${mentionRate}% rate). Top competitors average 50%+ mention rates.`,
-      impact: `40%+ mention rate typically results in 35%+ visibility score`,
-      effort: 'medium'
-    });
-  }
-  
-  // 7. Comparison Content Actions (with competitor names)
-  if (topCompetitors.length > 0) {
-    const top3Competitors = topCompetitors.slice(0, 3).map(c => c.name).join(', ');
-    actions.push({
-      id: `action-${actionId++}`,
-      priority: 'medium',
-      category: 'content',
-      title: `Create Comparison Pages: ${brandName} vs ${topCompetitors[0]?.name || 'Competitors'}`,
-      description: `Create "vs" pages comparing ${brandName} to ${top3Competitors}. AI frequently references comparison content - ${topCompetitors[0]?.name || 'competitors'} are mentioned ${topCompetitors[0]?.mentions || 0} times.`,
-      impact: `Comparison content gets 3x more AI citations than standard product pages`,
-      effort: 'easy'
-    });
-  }
-  
-  // 8. Source Tracking Actions (if sources data available)
-  const totalSources = responses.reduce((sum, r) => sum + (r.sources?.length || 0), 0);
-  if (totalSources > 0) {
-    const brandSources = responses.reduce((sum, r) => {
-      return sum + (r.sources?.filter(s => {
-        const domain = s.domain?.toLowerCase() || '';
-        return domain.includes(brandName.toLowerCase().replace(/\s+/g, ''));
-      }).length || 0);
-    }, 0);
-    const brandSourceRate = ((brandSources / totalSources) * 100).toFixed(0);
-    
-    if (parseInt(brandSourceRate) < 20) {
-      actions.push({
-        id: `action-${actionId++}`,
-        priority: 'medium',
-        category: 'content',
-        title: `Increase Own Domain Citations from ${brandSourceRate}% to 30%+`,
-        description: `Only ${brandSourceRate}% of AI-cited sources are from your own domain. ${totalSources} total sources were cited, but only ${brandSources} are yours.`,
-        impact: `30%+ own domain citations significantly boost AI trust and recommendation frequency`,
-        effort: 'medium'
-      });
-    }
-  }
   
   // 9. Always generate visibility improvement action (if not already generated)
   if (actions.filter(a => a.category === 'visibility').length === 0) {
