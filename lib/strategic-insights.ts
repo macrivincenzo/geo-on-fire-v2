@@ -477,15 +477,14 @@ export function generateActionItems(
   
   // 13. Always generate content strategy action (reuse mentionedInResponses and mentionRate from above)
   if (actions.filter(a => a.category === 'content' && a.title.includes('Mention')).length === 0) {
-    const currentMentionRate = responses.length > 0 ? ((mentionedInResponses.length / responses.length) * 100).toFixed(0) : '0';
-    if (parseInt(currentMentionRate) < 50) {
+    if (parseInt(mentionRate) < 50) {
       actions.push({
         id: `action-${actionId++}`,
-        priority: parseInt(currentMentionRate) < 20 ? 'high' : 'medium',
+        priority: parseInt(mentionRate) < 20 ? 'high' : 'medium',
         category: 'content',
-        title: `Increase AI Mentions from ${currentMentionRate}% to 50%+`,
-        description: `You're mentioned in ${mentionedInResponses.length}/${responses.length} responses (${currentMentionRate}% rate). Top brands achieve 50%+ mention rates. Create content that answers common questions in your industry.`,
-        impact: `50%+ mention rate typically results in 40%+ visibility score. Increasing from ${currentMentionRate}% to 50% could boost visibility by ${Math.round((50 - parseInt(currentMentionRate)) / 2)}%.`,
+        title: `Increase AI Mentions from ${mentionRate}% to 50%+`,
+        description: `You're mentioned in ${mentionedInResponses.length}/${responses.length} responses (${mentionRate}% rate). Top brands achieve 50%+ mention rates. Create content that answers common questions in your industry.`,
+        impact: `50%+ mention rate typically results in 40%+ visibility score. Increasing from ${mentionRate}% to 50% could boost visibility by ${Math.round((50 - parseInt(mentionRate)) / 2)}%.`,
         effort: 'medium'
       });
     }
