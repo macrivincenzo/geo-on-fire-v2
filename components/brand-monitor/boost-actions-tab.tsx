@@ -66,7 +66,55 @@ export function BoostActionsTab({
 }: BoostActionsTabProps) {
   // Generate action items from insights
   const insights = useMemo(() => {
-    return generateStrategicInsights(brandData, competitors, responses, brandName);
+    if (!brandData || !brandName) {
+      return {
+        actionItems: [],
+        overallHealth: 'needs-work' as const,
+        healthScore: 0,
+        summary: '',
+        brandQuotes: [],
+        competitorQuotes: new Map(),
+        competitiveGaps: [],
+        biggestThreat: null,
+        biggestOpportunity: null,
+        quickWins: [],
+        strategicPriorities: [],
+        contentSuggestions: [],
+        missingTopics: [],
+        providerInsights: [],
+        bestProvider: null,
+        worstProvider: null,
+        visibilityTrend: 'stable' as const,
+        sentimentTrend: 'stable' as const,
+        competitivePosition: 'niche' as const
+      };
+    }
+    try {
+      return generateStrategicInsights(brandData, competitors || [], responses || [], brandName);
+    } catch (error) {
+      console.error('Error generating strategic insights:', error);
+      return {
+        actionItems: [],
+        overallHealth: 'needs-work' as const,
+        healthScore: 0,
+        summary: 'Error generating insights',
+        brandQuotes: [],
+        competitorQuotes: new Map(),
+        competitiveGaps: [],
+        biggestThreat: null,
+        biggestOpportunity: null,
+        quickWins: [],
+        strategicPriorities: [],
+        contentSuggestions: [],
+        missingTopics: [],
+        providerInsights: [],
+        bestProvider: null,
+        worstProvider: null,
+        visibilityTrend: 'stable' as const,
+        sentimentTrend: 'stable' as const,
+        competitivePosition: 'niche' as const
+      };
+    }
   }, [brandData, competitors, responses, brandName]);
 
   // Load saved statuses from localStorage
@@ -96,11 +144,14 @@ export function BoostActionsTab({
 
   // Merge action items with their statuses - ensure default is 'todo'
   const actionsWithStatus: ActionWithStatus[] = useMemo(() => {
+    if (!insights || !insights.actionItems || !Array.isArray(insights.actionItems)) {
+      return [];
+    }
     return insights.actionItems.map(action => ({
       ...action,
       status: actionStatuses[action.id] || 'todo' as ActionStatus
     }));
-  }, [insights.actionItems, actionStatuses]);
+  }, [insights, actionStatuses]);
 
   // Group actions by status
   const actionsByStatus = useMemo(() => {
@@ -292,6 +343,15 @@ export function BoostActionsTab({
   const doneCount = actionsByStatus['done'].length;
   const totalCount = actionsWithStatus.length;
   const completionRate = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+
+  // Safety check: if no brand data, show message
+  if (!brandData || !brandName) {
+    return (
+      <div className="p-6 text-center text-gray-500">
+        <p>No brand data available. Please run an analysis first.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
