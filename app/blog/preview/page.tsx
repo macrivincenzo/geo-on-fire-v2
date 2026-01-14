@@ -82,8 +82,12 @@ function generateHeadingId(text: string): string {
 
 // Helper to inject infographics into content
 function injectInfographicsIntoContent(content: string, infographics: any[]): string {
-  if (!infographics || infographics.length === 0) return content;
+  if (!infographics || infographics.length === 0) {
+    console.log('⚠️ No infographics to inject');
+    return content;
+  }
   
+  console.log(`🎨 Injecting ${infographics.length} infographics into content`);
   let modifiedContent = content;
   
   // Separate infographics by placement type
@@ -146,10 +150,13 @@ function injectInfographicsIntoContent(content: string, infographics: any[]): st
         `https://placehold.co/1200x600/2563eb/ffffff?text=${encodeURIComponent(infographic.title || 'Infographic')}`;
       const imageMarkdown = `\n\n![${infographic.altText || infographic.title}](${imageUrl})\n\n*${infographic.description || infographic.title}*\n\n`;
       
+      console.log(`✅ Injecting infographic "${infographic.title}" at position ${insertPosition}`);
       modifiedContent = 
         modifiedContent.slice(0, insertPosition) + 
         imageMarkdown + 
         modifiedContent.slice(insertPosition);
+    } else {
+      console.log(`⚠️ Could not find insertion point for infographic "${infographic.title}" in section "${section}"`);
     }
   }
   
@@ -223,8 +230,11 @@ export default async function BlogPreviewPage() {
   let cleanContent = removeH1FromContent(content || '');
   
   // Inject infographics into content if available
-  if (infographics?.infographics && Array.isArray(infographics.infographics)) {
+  if (infographics?.infographics && Array.isArray(infographics.infographics) && infographics.infographics.length > 0) {
+    console.log('📊 Found infographics:', infographics.infographics.length);
     cleanContent = injectInfographicsIntoContent(cleanContent, infographics.infographics);
+  } else {
+    console.log('⚠️ No infographics found in blog data. Generate a new blog post to see infographics.');
   }
   
   // Extract headings for TOC

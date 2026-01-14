@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useReducer, useCallback, useState, useEffect, useRef, Suspense } from 'react';
+import React, { useReducer, useCallback, useState, useEffect, useRef } from 'react';
 import { Company } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
@@ -41,12 +41,7 @@ import { StrategicInsightsTab } from './strategic-insights-tab';
 import { SourceTrackerTab } from './source-tracker-tab';
 import { DomainComparisonsTab } from './domain-comparisons-tab';
 import { BoostActionsTab } from './boost-actions-tab';
-
-// Temporarily commented out due to Turbopack parsing panic
-// TODO: Re-enable once Turbopack issue is resolved
-// const HistoricalTrackingTab = React.lazy(() => 
-//   import('./historical-tracking-tab').then(mod => ({ default: mod.HistoricalTrackingTab }))
-// );
+import { HistoricalTrackingTab } from './historical-tracking-tab';
 
 // Hooks
 import { useSSEHandler } from './hooks/use-sse-handler';
@@ -694,18 +689,11 @@ export function BrandMonitor({
                 )}
 
                 {activeResultsTab === 'historical' && (
-                  <div className="p-6 text-center text-gray-500">
-                    <p>Historical tracking is temporarily unavailable due to a build system issue.</p>
-                    <p className="text-sm mt-2">This feature will be restored shortly.</p>
-                  </div>
-                  // Temporarily disabled due to Turbopack parsing panic
-                  // <Suspense fallback={<div className="p-6 text-center text-gray-500">Loading historical data...</div>}>
-                  //   <HistoricalTrackingTab
-                  //     analysisId={selectedAnalysis?.id || state.analysisId || null}
-                  //     brandName={company?.name || 'Your Brand'}
-                  //     brandUrl={company?.url || state.url || undefined}
-                  //   />
-                  // </Suspense>
+                  <HistoricalTrackingTab
+                    analysisId={selectedAnalysis?.id || state.analysisId || null}
+                    brandName={company?.name || 'Your Brand'}
+                    brandUrl={company?.url || state.url || undefined}
+                  />
                 )}
 
                 {activeResultsTab === 'domain-comparisons' && analysis?.responses && (
