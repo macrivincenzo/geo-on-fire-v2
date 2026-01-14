@@ -45,9 +45,15 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [trends, setTrends] = useState<Trends | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange>('30d');
   const [customStartDate, setCustomStartDate] = useState<string>('');
   const [customEndDate, setCustomEndDate] = useState<string>('');
+
+  // Debug log
+  useEffect(() => {
+    console.log('[Historical Tracking] Component mounted:', { analysisId, brandName, brandUrl });
+  }, []);
 
   // Calculate date range
   const { startDate, endDate } = useMemo(() => {
@@ -96,14 +102,19 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
 
         const response = await fetch(`/api/brand-monitor/historical?${params}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch historical data');
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `Failed to fetch historical data: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
         setSnapshots(data.snapshots || []);
         setTrends(data.trends || null);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching historical data:', error);
+        setError(error?.message || 'Failed to load historical data');
+        // Set empty snapshots on error so UI can show appropriate message
+        setSnapshots([]);
+        setTrends(null);
       } finally {
         setLoading(false);
       }
@@ -155,6 +166,23 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
           <p className="text-gray-600">Loading historical data...</p>
         </div>
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Historical Tracking</CardTitle>
+          <CardDescription>Track your brand metrics over time</CardDescription>
+        </CardHeader>
+        <CardContent className="py-12 text-center">
+          <p className="text-red-600 mb-2">Error: {error}</p>
+          <p className="text-sm text-gray-500">
+            Please check the console for more details or try refreshing the page.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
