@@ -94,11 +94,11 @@ export function BoostActionsTab({
     }
   };
 
-  // Merge action items with their statuses
+  // Merge action items with their statuses - ensure default is 'todo'
   const actionsWithStatus: ActionWithStatus[] = useMemo(() => {
     return insights.actionItems.map(action => ({
       ...action,
-      status: actionStatuses[action.id] || 'todo'
+      status: actionStatuses[action.id] || 'todo' as ActionStatus
     }));
   }, [insights.actionItems, actionStatuses]);
 
@@ -266,10 +266,11 @@ export function BoostActionsTab({
         </div>
         
         <div className="space-y-4 min-h-[400px]">
-          {actions.map(action => (
-            <ActionCard key={action.id} action={action} />
-          ))}
-          {actions.length === 0 && (
+          {actions.length > 0 ? (
+            actions.map(action => (
+              <ActionCard key={action.id} action={action} />
+            ))
+          ) : (
             <Card className="border-dashed border-2 border-gray-300 dark:border-gray-700">
               <CardContent className="pt-6 text-center text-gray-400 dark:text-gray-600">
                 <Icon className="w-12 h-12 mx-auto mb-2 opacity-50" />
@@ -368,7 +369,7 @@ export function BoostActionsTab({
       </Card>
 
       {/* Kanban Board */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <KanbanColumn
           status="todo"
           title="To Do"

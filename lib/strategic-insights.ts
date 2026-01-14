@@ -355,16 +355,17 @@ export function generateActionItems(
   }
   
   // 4. Share of Voice Actions (with percentages)
-  if (brandData.shareOfVoice < 15 && topCompetitors.length > 0) {
+  if (brandData.shareOfVoice < 20 && topCompetitors.length > 0) {
     const leader = topCompetitors[0];
+    const gap = leader.shareOfVoice - brandData.shareOfVoice;
     actions.push({
       id: `action-${actionId++}`,
-      priority: 'high',
+      priority: gap > 10 ? 'high' : 'medium',
       category: 'competitive',
       title: `Increase Share of Voice from ${brandData.shareOfVoice.toFixed(1)}% to 20%+`,
-      description: `Your share of voice is ${brandData.shareOfVoice.toFixed(1)}%. ${leader.name} dominates with ${leader.shareOfVoice.toFixed(1)}% (${(leader.shareOfVoice - brandData.shareOfVoice).toFixed(1)}% gap).`,
-      impact: `Reaching 20%+ share of voice typically captures 1 in 5 AI recommendations in your category`,
-      effort: 'hard'
+      description: `Your share of voice is ${brandData.shareOfVoice.toFixed(1)}%. ${leader.name} leads with ${leader.shareOfVoice.toFixed(1)}% (${gap.toFixed(1)}% gap). Identify and target key competitor mentions where ${leader.name} is mentioned more frequently. Focus on high-impact competitive keywords and content gaps.`,
+      impact: `Reaching 20%+ share of voice typically captures 1 in 5 AI recommendations in your category. Closing the ${gap.toFixed(1)}% gap with ${leader.name} could significantly improve your competitive position.`,
+      effort: gap > 15 ? 'hard' : 'medium'
     });
   }
   
@@ -555,13 +556,14 @@ export function generateActionItems(
     const brandSourceRate = totalSources > 0 ? ((brandSources / totalSources) * 100).toFixed(0) : '0';
     
     if (parseInt(brandSourceRate) < 30 && actions.filter(a => a.title.includes('Citations')).length === 0) {
+      const targetRate = Math.max(30, parseInt(brandSourceRate) + 10);
       actions.push({
         id: `action-${actionId++}`,
-        priority: 'medium',
+        priority: parseInt(brandSourceRate) < 15 ? 'high' : 'medium',
         category: 'content',
-        title: `Increase Own Domain Citations from ${brandSourceRate}% to 30%+`,
-        description: `Only ${brandSourceRate}% of ${totalSources} AI-cited sources are from your domain (${brandSources} yours). AI trusts brands that cite their own authoritative content.`,
-        impact: `30%+ own domain citations boost AI trust by 40% and recommendation frequency by 25%. Increasing from ${brandSourceRate}% to 30% could improve visibility by 5-8%.`,
+        title: `Increase Own Domain Citations from ${brandSourceRate}% to ${targetRate}%+`,
+        description: `Only ${brandSourceRate}% of ${totalSources} AI-cited sources are from your domain (${brandSources} yours). AI trusts brands that cite their own authoritative content. Focus on building high-quality backlinks from authoritative sources that cite ${brandName}.`,
+        impact: `30%+ own domain citations boost AI trust by 40% and recommendation frequency by 25%. Increasing from ${brandSourceRate}% to ${targetRate}% could improve visibility by 5-8%.`,
         effort: 'medium'
       });
     }
