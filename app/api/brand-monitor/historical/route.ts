@@ -13,11 +13,14 @@ import { normalizeUrlForComparison } from '@/lib/url-normalizer';
  */
 export async function GET(request: NextRequest) {
   try {
+    console.log('[Historical Tracking API] Request received');
+    
     const sessionResponse = await auth.api.getSession({
       headers: request.headers,
     });
 
     if (!sessionResponse?.user) {
+      console.log('[Historical Tracking API] No session found');
       throw new AuthenticationError('Please log in to view historical data');
     }
 
@@ -25,7 +28,10 @@ export async function GET(request: NextRequest) {
     const analysisId = searchParams.get('analysisId');
     const url = searchParams.get('url'); // Alternative: track by URL
     
+    console.log('[Historical Tracking API] Parameters:', { analysisId, url, userId: sessionResponse.user.id });
+    
     if (!analysisId && !url) {
+      console.log('[Historical Tracking API] Missing both analysisId and url');
       throw new ValidationError('Invalid request', {
         analysisId: 'Analysis ID or URL is required',
       });
@@ -124,10 +130,13 @@ export async function GET(request: NextRequest) {
     }
     
     // If only analysisId is provided, get snapshots for that specific analysis
+    console.log(`[Historical Tracking API] Fetching snapshots for analysisId: ${targetAnalysisId}`);
     const snapshots = await getHistoricalSnapshots(targetAnalysisId, startDate, endDate);
+    console.log(`[Historical Tracking API] Found ${snapshots.length} snapshots`);
     
     // Calculate trends if we have enough data
     const trends = calculateTrends(snapshots);
+    console.log(`[Historical Tracking API] Trends calculated:`, trends ? 'yes' : 'no (insufficient data)');
 
     return NextResponse.json({
       snapshots,
@@ -135,6 +144,7 @@ export async function GET(request: NextRequest) {
       totalSnapshots: snapshots.length,
     });
   } catch (error) {
+    console.error('[Historical Tracking API] Error:', error);
     return handleApiError(error);
   }
 }
