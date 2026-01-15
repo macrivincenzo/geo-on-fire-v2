@@ -14,53 +14,91 @@ import {
 interface DataExportButtonProps {
   analysisId: string | null;
   brandName?: string;
+  analysisData?: any; // Current analysis data if not saved yet
 }
 
-export function DataExportButton({ analysisId, brandName }: DataExportButtonProps) {
+export function DataExportButton({ analysisId, brandName, analysisData }: DataExportButtonProps) {
   const [isExporting, setIsExporting] = useState(false);
   
   const handleExport = async (format: 'json' | 'csv') => {
-    if (!analysisId) {
-      alert('No analysis data available to export');
+    // If we have analysisId, use the API endpoint
+    if (analysisId) {
+      setIsExporting(true);
+      try {
+        const response = await fetch(
+          `/api/brand-monitor/export?analysisId=${analysisId}&format=${format}`
+        );
+        
+        if (!response.ok) {
+          throw new Error('Export failed');
+        }
+        
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = contentDisposition
+          ? contentDisposition.split('filename=')[1]?.replace(/"/g, '')
+          : `brand-analysis-${analysisId}-${Date.now()}.${format}`;
+        
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Export error:', error);
+        alert('Failed to export data. Please try again.');
+      } finally {
+        setIsExporting(false);
+      }
       return;
     }
     
-    setIsExporting(true);
-    try {
-      const response = await fetch(
-        `/api/brand-monitor/export?analysisId=${analysisId}&format=${format}`
-      );
-      
-      if (!response.ok) {
-        throw new Error('Export failed');
+    // If no analysisId but we have current analysis data, export directly
+    if (analysisData) {
+      setIsExporting(true);
+      try {
+        const { prepareExportData, convertToCSV, convertToJSON } = await import('@/lib/export-utils');
+        
+        const exportData = prepareExportData(
+          analysisData,
+          { id: '', name: brandName || 'Unknown Brand', url: '' },
+          undefined
+        );
+        
+        const content = format === 'csv' 
+          ? convertToCSV(exportData)
+          : convertToJSON(exportData);
+        
+        const blob = new Blob([content], { 
+          type: format === 'csv' ? 'text/csv' : 'application/json' 
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `brand-analysis-${Date.now()}.${format}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Export error:', error);
+        alert('Failed to export data. Please try again.');
+      } finally {
+        setIsExporting(false);
       }
-      
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      
-      const contentDisposition = response.headers.get('Content-Disposition');
-      const filename = contentDisposition
-        ? contentDisposition.split('filename=')[1]?.replace(/"/g, '')
-        : `brand-analysis-${analysisId}-${Date.now()}.${format}`;
-      
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Export error:', error);
-      alert('Failed to export data. Please try again.');
-    } finally {
-      setIsExporting(false);
+      return;
     }
+    
+    alert('No analysis data available to export');
   };
   
   const handleLookerStudio = () => {
     if (!analysisId) {
-      alert('No analysis data available');
+      alert('Looker Studio connection requires a saved analysis. Please save your analysis first.');
       return;
     }
     
@@ -72,7 +110,8 @@ export function DataExportButton({ analysisId, brandName }: DataExportButtonProp
     );
   };
   
-  if (!analysisId) {
+  // Show button if we have either analysisId or current analysis data
+  if (!analysisId && !analysisData) {
     return null;
   }
   

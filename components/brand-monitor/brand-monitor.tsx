@@ -666,6 +666,7 @@ export function BrandMonitor({
                 <DataExportButton
                   analysisId={selectedAnalysis?.id || state.analysisId || null}
                   brandName={company?.name}
+                  analysisData={analysis}
                 />
               </div>
               
