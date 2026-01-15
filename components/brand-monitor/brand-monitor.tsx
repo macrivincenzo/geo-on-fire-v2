@@ -42,6 +42,7 @@ import { SourceTrackerTab } from './source-tracker-tab';
 import { DomainComparisonsTab } from './domain-comparisons-tab';
 import { BoostActionsTab } from './boost-actions-tab';
 import { HistoricalTrackingTab } from './historical-tracking-tab';
+import { DataExportButton } from './data-export-button';
 
 // Hooks
 import { useSSEHandler } from './hooks/use-sse-handler';
@@ -660,6 +661,14 @@ export function BrandMonitor({
             
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col">
+              {/* Export Button - Add this at the top */}
+              <div className="flex justify-end mb-4">
+                <DataExportButton
+                  analysisId={selectedAnalysis?.id || state.analysisId || null}
+                  brandName={company?.name}
+                />
+              </div>
+              
               <div className="w-full flex-1 flex flex-col">
                 {/* Tab Content */}
                 {activeResultsTab === 'visibility' && (
