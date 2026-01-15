@@ -119,30 +119,30 @@ export function prepareExportData(
 
 /**
  * Convert export data to CSV format
+ * Uses clean flat tables for Excel compatibility
  */
 export function convertToCSV(data: ExportData): string {
   const lines: string[] = [];
   
-  // Metadata section
-  lines.push('=== METADATA ===');
-  lines.push(`Brand Name,${data.metadata.brandName}`);
-  lines.push(`Brand URL,${data.metadata.brandUrl}`);
+  // Metadata section - clean key-value pairs
+  lines.push('Metadata Field,Value');
+  lines.push(`Brand Name,${escapeCSV(data.metadata.brandName)}`);
+  lines.push(`Brand URL,${escapeCSV(data.metadata.brandUrl)}`);
   lines.push(`Export Date,${data.metadata.exportDate}`);
   lines.push(`Analysis Date,${data.metadata.analysisDate || ''}`);
-  lines.push('');
+  lines.push(''); // Empty row separator
   
-  // Summary section
-  lines.push('=== SUMMARY ===');
+  // Summary section - clean key-value pairs
+  lines.push('Metric,Value');
   lines.push(`Visibility Score,${data.summary.visibilityScore}`);
   lines.push(`Sentiment Score,${data.summary.sentimentScore}`);
   lines.push(`Share of Voice,${data.summary.shareOfVoice}`);
   lines.push(`Overall Score,${data.summary.overallScore}`);
   lines.push(`Average Position,${data.summary.averagePosition}`);
-  lines.push('');
+  lines.push(''); // Empty row separator
   
-  // Competitors section
-  lines.push('=== COMPETITORS ===');
-  lines.push('Name,Visibility Score,Sentiment Score,Share of Voice,Average Position,Mentions,Sentiment,Weekly Change,Is Own Brand');
+  // Competitors section - clean table
+  lines.push('Competitor Name,Visibility Score,Sentiment Score,Share of Voice,Average Position,Mentions,Sentiment,Weekly Change,Is Own Brand');
   data.competitors.forEach(comp => {
     const row = [
       escapeCSV(comp.name),
@@ -157,10 +157,9 @@ export function convertToCSV(data: ExportData): string {
     ];
     lines.push(row.join(','));
   });
-  lines.push('');
+  lines.push(''); // Empty row separator
   
-  // Responses section
-  lines.push('=== AI RESPONSES ===');
+  // AI Responses section - clean table
   lines.push('Provider,Prompt,Brand Mentioned,Brand Position,Sentiment,Confidence,Timestamp,Sources Count');
   data.responses.forEach(resp => {
     const row = [
@@ -175,19 +174,17 @@ export function convertToCSV(data: ExportData): string {
     ];
     lines.push(row.join(','));
   });
-  lines.push('');
+  lines.push(''); // Empty row separator
   
-  // Prompts section
-  lines.push('=== PROMPTS ===');
+  // Prompts section - clean table
   lines.push('Prompt');
   data.prompts.forEach(prompt => {
     lines.push(escapeCSV(prompt));
   });
-  lines.push('');
+  lines.push(''); // Empty row separator
   
-  // Historical data section (if available)
+  // Historical data section (if available) - clean table
   if (data.historical && data.historical.length > 0) {
-    lines.push('=== HISTORICAL DATA ===');
     lines.push('Date,Visibility Score,Sentiment Score,Share of Voice,Average Position,Rank');
     data.historical.forEach(snapshot => {
       const row = [
