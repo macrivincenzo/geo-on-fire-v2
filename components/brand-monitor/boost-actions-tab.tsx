@@ -12,7 +12,12 @@ import {
   Zap,
   AlertTriangle,
   FileText,
-  Users
+  Users,
+  Play,
+  Loader2,
+  Download,
+  Copy,
+  Check
 } from 'lucide-react';
 import { AIResponse, CompetitorRanking } from '@/lib/types';
 import { ActionItem, generateStrategicInsights } from '@/lib/strategic-insights';
@@ -23,6 +28,7 @@ interface BoostActionsTabProps {
   responses: AIResponse[];
   brandName: string;
   analysisId: string | null;
+  brandUrl?: string;
 }
 
 type ActionStatus = 'todo' | 'in-progress' | 'done';
@@ -62,7 +68,8 @@ export function BoostActionsTab({
   competitors,
   responses,
   brandName,
-  analysisId
+  analysisId,
+  brandUrl
 }: BoostActionsTabProps) {
   // Generate action items from insights
   const insights = useMemo(() => {
@@ -139,6 +146,57 @@ export function BoostActionsTab({
     setActionStatuses(newStatuses);
     if (analysisId) {
       localStorage.setItem(`boostActions_${analysisId}`, JSON.stringify(newStatuses));
+    }
+  };
+
+  // Track executing actions
+  const [executingActions, setExecutingActions] = useState<Set<string>>(new Set());
+  const [executionResults, setExecutionResults] = useState<Record<string, any>>({});
+  const [copiedContent, setCopiedContent] = useState<Set<string>>(new Set());
+
+  // Execute action
+  const handleExecuteAction = async (action: ActionWithStatus) => {
+    if (executingActions.has(action.id)) return;
+
+    setExecutingActions(prev => new Set(prev).add(action.id));
+    
+    try {
+      const response = await fetch('/api/brand-monitor/execute-action', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action,
+          brandName,
+          brandData,
+          competitors,
+          responses,
+          brandUrl,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setExecutionResults(prev => ({
+          ...prev,
+          [action.id]: result
+        }));
+        // Auto-move to in-progress after execution
+        updateActionStatus(action.id, 'in-progress');
+      } else {
+        alert(`Action execution failed: ${result.error || result.message}`);
+      }
+    } catch (error) {
+      console.error('Error executing action:', error);
+      alert('Failed to execute action. Please try again.');
+    } finally {
+      setExecutingActions(prev => {
+        const next = new Set(prev);
+        next.delete(action.id);
+        return next;
+      });
     }
   };
 
@@ -238,8 +296,195 @@ export function BoostActionsTab({
               <p className="text-xs text-gray-600 dark:text-gray-400">{action.impact}</p>
             </div>
           )}
+
+          {/* Execution Results */}
+          {executionResults[action.id] && (
+            <div className="pt-2 border-t border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20 rounded p-2">
+              <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3" />
+                Executed Successfully
+              </p>
+              <p className="text-xs text-gray-700 dark:text-gray-300 mb-2">{executionResults[action.id].message}</p>
+              {executionResults[action.id].data && (
+                <div className="space-y-2">
+                  {/* Display insights/recommendations if available */}
+                  {executionResults[action.id].data.insights && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Key Insights:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                        {executionResults[action.id].data.insights.slice(0, 3).map((insight: string, idx: number) => (
+                          <li key={idx}>{insight}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {executionResults[action.id].data.recommendations && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Recommendations:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                        {executionResults[action.id].data.recommendations.slice(0, 3).map((rec: string, idx: number) => (
+                          <li key={idx}>{rec}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {executionResults[action.id].data.contentPlan && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Content Plan:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                        {executionResults[action.id].data.contentPlan.slice(0, 3).map((item: any, idx: number) => (
+                          <li key={idx}>{item.title} ({item.priority})</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {executionResults[action.id].data.improvementPlan && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Improvement Plan:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                        {executionResults[action.id].data.improvementPlan.slice(0, 3).map((item: any, idx: number) => (
+                          <li key={idx}>{item.action} - {item.impact}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {executionResults[action.id].data.checklist && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Technical Checklist:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                        {executionResults[action.id].data.checklist.slice(0, 3).map((item: any, idx: number) => (
+                          <li key={idx}>{item.item} ({item.priority})</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {/* Generated Content */}
+                  {executionResults[action.id].generatedContent && 
+                   executionResults[action.id].generatedContent.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-green-300 dark:border-green-700">
+                      <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-2">
+                        ✨ Generated Content (Ready to Use):
+                      </p>
+                      <div className="space-y-2">
+                        {executionResults[action.id].generatedContent.map((content: any, idx: number) => {
+                          const contentId = `${action.id}-content-${idx}`;
+                          const isCopied = copiedContent.has(contentId);
+                          
+                          return (
+                            <div key={idx} className="bg-white dark:bg-gray-800 rounded p-3 border border-gray-200 dark:border-gray-700">
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex-1">
+                                  <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                                    {content.title}
+                                  </h4>
+                                  <div className="flex flex-wrap gap-1 text-xs text-gray-500 dark:text-gray-400">
+                                    <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 rounded">
+                                      {content.type}
+                                    </span>
+                                    <span>{content.wordCount} words</span>
+                                    {content.readyToPublish && (
+                                      <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 rounded text-green-700 dark:text-green-300">
+                                        Ready
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex gap-1 ml-2">
+                                  <button
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(content.content);
+                                      setCopiedContent(prev => new Set(prev).add(contentId));
+                                      setTimeout(() => {
+                                        setCopiedContent(prev => {
+                                          const next = new Set(prev);
+                                          next.delete(contentId);
+                                          return next;
+                                        });
+                                      }, 2000);
+                                    }}
+                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
+                                    title="Copy content"
+                                  >
+                                    {isCopied ? (
+                                      <Check className="w-4 h-4 text-green-600" />
+                                    ) : (
+                                      <Copy className="w-4 h-4" />
+                                    )}
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      const blob = new Blob([content.content], { type: 'text/plain' });
+                                      const url = URL.createObjectURL(blob);
+                                      const a = document.createElement('a');
+                                      a.href = url;
+                                      a.download = `${content.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`;
+                                      document.body.appendChild(a);
+                                      a.click();
+                                      document.body.removeChild(a);
+                                      URL.revokeObjectURL(url);
+                                    }}
+                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded transition-colors"
+                                    title="Download content"
+                                  >
+                                    <Download className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                              {content.metaDescription && (
+                                <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 italic">
+                                  {content.metaDescription}
+                                </p>
+                              )}
+                              <details className="mt-2">
+                                <summary className="text-xs text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">
+                                  View Content ({content.wordCount} words)
+                                </summary>
+                                <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
+                                  <pre className="text-xs whitespace-pre-wrap font-sans text-gray-700 dark:text-gray-300 max-h-60 overflow-auto">
+                                    {content.content}
+                                  </pre>
+                                </div>
+                              </details>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Full details toggle */}
+                  <details className="mt-2">
+                    <summary className="text-xs text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">
+                      View Full Details
+                    </summary>
+                    <pre className="text-xs mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded overflow-auto max-h-40">
+                      {JSON.stringify(executionResults[action.id].data, null, 2)}
+                    </pre>
+                  </details>
+                </div>
+              )}
+            </div>
+          )}
           
           <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
+            {/* Execute Button */}
+            <button
+              onClick={() => handleExecuteAction(action)}
+              disabled={executingActions.has(action.id)}
+              className="flex-1 text-xs px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded transition-all flex items-center justify-center gap-1 font-medium shadow-sm hover:shadow-md disabled:cursor-not-allowed"
+            >
+              {executingActions.has(action.id) ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  Executing...
+                </>
+              ) : (
+                <>
+                  <Play className="w-3 h-3" />
+                  Execute
+                </>
+              )}
+            </button>
             {action.status !== 'todo' && (
               <button
                 onClick={() => handleStatusChange(action.id, 'todo')}
@@ -355,6 +600,24 @@ export function BoostActionsTab({
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Sales Message Banner */}
+      <Card className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 border-0 shadow-lg">
+        <CardContent className="pt-6 pb-6">
+          <div className="text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+              LET US IMPROVE, FIX, ACT ON YOUR AI VISIBILITY
+            </h2>
+            <p className="text-white/90 text-sm md:text-base mb-2">
+              Click "Execute" on any action below and we'll generate <strong className="text-white">finished, ready-to-publish content</strong> for you.
+            </p>
+            <p className="text-white/80 text-xs md:text-sm">
+              ✨ Get complete blog posts, comparison pages, FAQs, landing pages, and more - all optimized for SEO and ready to use. 
+              No placeholders, no TODOs - just finished content you can copy, download, and publish immediately.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Header Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-300 dark:border-blue-700">

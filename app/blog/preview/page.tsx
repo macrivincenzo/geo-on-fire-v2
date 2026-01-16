@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 // Path utilities will be imported dynamically
@@ -148,7 +149,9 @@ function injectInfographicsIntoContent(content: string, infographics: any[]): st
     if (insertPosition !== null) {
       const imageUrl = infographic.imageUrl || infographic.url || 
         `https://placehold.co/1200x600/2563eb/ffffff?text=${encodeURIComponent(infographic.title || 'Infographic')}`;
-      const imageMarkdown = `\n\n![${infographic.altText || infographic.title}](${imageUrl})\n\n*${infographic.description || infographic.title}*\n\n`;
+      // Inject image with proper spacing to ensure it's treated as a block element
+      // Use HTML comment as separator to ensure ReactMarkdown treats image as standalone block
+      const imageMarkdown = `\n\n<!-- image-block -->\n\n![${infographic.altText || infographic.title}](${imageUrl})\n\n<!-- /image-block -->\n\n*${infographic.description || infographic.title}*\n\n`;
       
       console.log(`✅ Injecting infographic "${infographic.title}" at position ${insertPosition}`);
       modifiedContent = 
@@ -376,9 +379,41 @@ export default async function BlogPreviewPage() {
                         </h3>
                       );
                     },
-                    p: ({ node, ...props }) => (
-                      <p className="text-lg text-zinc-700 dark:text-zinc-300 mb-6 leading-relaxed" {...props} />
-                    ),
+                    p: ({ node, children, ...props }: any) => {
+                      // Check if paragraph only contains an image
+                      // ReactMarkdown wraps images in <p>, but images should be block-level
+                      const nodeChildren = node?.children || [];
+                      const hasOnlyImage = nodeChildren.length === 1 && 
+                        nodeChildren[0]?.type === 'image';
+                      
+                      // Check if rendered children is just an img element
+                      const childrenArray = React.Children.toArray(children);
+                      const hasOnlyImg = childrenArray.length === 1 && 
+                        React.isValidElement(childrenArray[0]) && 
+                        childrenArray[0].type === 'img';
+                      
+                      if (hasOnlyImage || hasOnlyImg) {
+                        // Wrap image in a div with caption for proper styling
+                        const imgElement = hasOnlyImg ? childrenArray[0] : children;
+                        const altText = React.isValidElement(imgElement) ? imgElement.props?.alt : '';
+                        return (
+                          <div className="my-8">
+                            {imgElement}
+                            {altText && (
+                              <p className="mt-3 text-center text-sm text-zinc-600 dark:text-zinc-400 italic">
+                                {altText}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      }
+                      
+                      return (
+                        <p className="text-lg text-zinc-700 dark:text-zinc-300 mb-6 leading-relaxed" {...props}>
+                          {children}
+                        </p>
+                      );
+                    },
                     strong: ({ node, ...props }) => (
                       <strong className="font-semibold text-zinc-900 dark:text-zinc-100" {...props} />
                     ),
@@ -427,22 +462,18 @@ export default async function BlogPreviewPage() {
                         <code className="block bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg overflow-x-auto text-sm font-mono mb-6" {...props} />
                       );
                     },
-                    img: ({ node, src, alt, ...props }: any) => (
-                      <figure className="my-8">
+                    img: ({ node, src, alt, ...props }: any) => {
+                      // Return just the img - we'll handle wrapping in the p component
+                      return (
                         <img
                           src={src}
                           alt={alt}
-                          className="w-full rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800"
+                          className="w-full rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800 my-8 block"
                           loading="lazy"
                           {...props}
                         />
-                        {alt && (
-                          <figcaption className="mt-3 text-center text-sm text-zinc-600 dark:text-zinc-400 italic">
-                            {alt}
-                          </figcaption>
-                        )}
-                      </figure>
-                    ),
+                      );
+                    },
                   }}
                 >
                   {cleanContent}

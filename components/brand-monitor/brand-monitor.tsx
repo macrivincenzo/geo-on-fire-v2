@@ -722,6 +722,7 @@ export function BrandMonitor({
                     responses={analysis.responses || []}
                     brandName={company?.name || 'Your Brand'}
                     analysisId={state.analysisId}
+                    brandUrl={company?.url || state.url}
                   />
                 )}
 
