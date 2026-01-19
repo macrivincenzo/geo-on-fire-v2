@@ -17,7 +17,9 @@ import {
   Loader2,
   Download,
   Copy,
-  Check
+  Check,
+  Eye,
+  X
 } from 'lucide-react';
 import { AIResponse, CompetitorRanking } from '@/lib/types';
 import { ActionItem, generateStrategicInsights } from '@/lib/strategic-insights';
@@ -153,6 +155,7 @@ export function BoostActionsTab({
   const [executingActions, setExecutingActions] = useState<Set<string>>(new Set());
   const [executionResults, setExecutionResults] = useState<Record<string, any>>({});
   const [copiedContent, setCopiedContent] = useState<Set<string>>(new Set());
+  const [viewingResults, setViewingResults] = useState<string | null>(null);
 
   // Execute action
   const handleExecuteAction = async (action: ActionWithStatus) => {
@@ -183,8 +186,8 @@ export function BoostActionsTab({
           ...prev,
           [action.id]: result
         }));
-        // Auto-move to in-progress after execution
-        updateActionStatus(action.id, 'in-progress');
+        // Don't auto-move - let user control workflow
+        // User can manually move to "In Progress" when they're ready to work on it
       } else {
         alert(`Action execution failed: ${result.error || result.message}`);
       }
@@ -297,14 +300,36 @@ export function BoostActionsTab({
             </div>
           )}
 
-          {/* Execution Results */}
+          {/* Execution Results - Compact View */}
           {executionResults[action.id] && (
             <div className="pt-2 border-t border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20 rounded p-2">
-              <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" />
-                Executed Successfully
-              </p>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-green-600" />
+                  <p className="text-xs font-medium text-green-700 dark:text-green-300">
+                    Content Generated Successfully
+                  </p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setViewingResults(action.id);
+                  }}
+                  className="text-xs px-2 py-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded flex items-center gap-1 transition-all"
+                >
+                  <Eye className="w-3 h-3" />
+                  View Results
+                </button>
+              </div>
               <p className="text-xs text-gray-700 dark:text-gray-300 mb-2">{executionResults[action.id].message}</p>
+              
+              {/* Quick preview of generated content count */}
+              {executionResults[action.id].generatedContent && 
+               executionResults[action.id].generatedContent.length > 0 && (
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  ✨ {executionResults[action.id].generatedContent.length} piece(s) of content ready to use
+                </p>
+              )}
               {executionResults[action.id].data && (
                 <div className="space-y-2">
                   {/* Display insights/recommendations if available */}
@@ -717,6 +742,167 @@ export function BoostActionsTab({
           actions={actionsByStatus['done']}
         />
       </div>
+
+      {/* Results Modal */}
+      {viewingResults && executionResults[viewingResults] && (
+        <div 
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setViewingResults(null)}
+        >
+          <div 
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                  Generated Content & Results
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  {executionResults[viewingResults].message}
+                </p>
+              </div>
+              <button
+                onClick={() => setViewingResults(null)}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              {/* Generated Content Section */}
+              {executionResults[viewingResults].generatedContent && 
+               executionResults[viewingResults].generatedContent.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+                    <FileText className="w-5 h-5" />
+                    Generated Content ({executionResults[viewingResults].generatedContent.length} pieces)
+                  </h3>
+                  <div className="space-y-4">
+                    {executionResults[viewingResults].generatedContent.map((content: any, idx: number) => {
+                      const contentId = `${viewingResults}-content-${idx}`;
+                      const isCopied = copiedContent.has(contentId);
+                      
+                      return (
+                        <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-900/50">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex-1">
+                              <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                                {content.title}
+                              </h4>
+                              <div className="flex flex-wrap gap-2 text-sm">
+                                <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                  {content.type}
+                                </Badge>
+                                <span className="text-gray-600 dark:text-gray-400">{content.wordCount} words</span>
+                                {content.readyToPublish && (
+                                  <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                                    Ready to Publish
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex gap-2 ml-4">
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(content.content);
+                                  setCopiedContent(prev => new Set(prev).add(contentId));
+                                  setTimeout(() => {
+                                    setCopiedContent(prev => {
+                                      const next = new Set(prev);
+                                      next.delete(contentId);
+                                      return next;
+                                    });
+                                  }, 2000);
+                                }}
+                                className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center gap-2"
+                              >
+                                {isCopied ? (
+                                  <>
+                                    <Check className="w-4 h-4" />
+                                    Copied!
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-4 h-4" />
+                                    Copy
+                                  </>
+                                )}
+                              </button>
+                              <button
+                                onClick={() => {
+                                  const blob = new Blob([content.content], { type: 'text/plain' });
+                                  const url = URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = `${content.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`;
+                                  document.body.appendChild(a);
+                                  a.click();
+                                  document.body.removeChild(a);
+                                  URL.revokeObjectURL(url);
+                                }}
+                                className="px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors flex items-center gap-2"
+                              >
+                                <Download className="w-4 h-4" />
+                                Download
+                              </button>
+                            </div>
+                          </div>
+                          
+                          {content.metaDescription && (
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 italic border-l-4 border-blue-500 pl-3">
+                              {content.metaDescription}
+                            </p>
+                          )}
+                          
+                          <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                            <pre className="text-sm whitespace-pre-wrap font-sans text-gray-700 dark:text-gray-300 max-h-96 overflow-auto">
+                              {content.content}
+                            </pre>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Additional Data Section */}
+              {executionResults[viewingResults].data && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Additional Insights</h3>
+                  <div className="space-y-4">
+                    {executionResults[viewingResults].data.insights && (
+                      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Key Insights</h4>
+                        <ul className="list-disc list-inside space-y-1 text-sm text-gray-700 dark:text-gray-300">
+                          {executionResults[viewingResults].data.insights.map((insight: string, idx: number) => (
+                            <li key={idx}>{insight}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {executionResults[viewingResults].data.recommendations && (
+                      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Recommendations</h4>
+                        <ul className="list-disc list-inside space-y-1 text-sm text-gray-700 dark:text-gray-300">
+                          {executionResults[viewingResults].data.recommendations.map((rec: string, idx: number) => (
+                            <li key={idx}>{rec}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
