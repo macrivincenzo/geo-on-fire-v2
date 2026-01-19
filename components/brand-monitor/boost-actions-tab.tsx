@@ -172,7 +172,7 @@ export function BoostActionsTab({
           brandData,
           competitors,
           responses,
-          brandUrl,
+          brandUrl: brandUrl || undefined,
         }),
       });
 

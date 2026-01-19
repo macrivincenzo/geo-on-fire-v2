@@ -52,10 +52,19 @@ export async function POST(request: NextRequest) {
     };
 
     // Execute the action
-    console.log(`[Execute Action] Executing action ${action.id} for brand ${brandName}`);
+    console.log(`[Execute Action] Executing action ${action.id} for brand ${brandName}`, {
+      category: action.category,
+      brandUrl: brandUrl || 'not provided'
+    });
+    
     const result = await executeBoostAction(context);
 
     if (!result.success) {
+      console.error('[Execute Action] Action execution failed:', {
+        actionId: action.id,
+        error: result.error,
+        message: result.message
+      });
       return Response.json(
         { 
           error: result.error || 'Action execution failed',
@@ -65,6 +74,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log(`[Execute Action] Successfully executed action ${action.id}`);
     return Response.json({
       success: true,
       message: result.message,
@@ -73,7 +83,8 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('[Execute Action] Error:', error);
+    console.error('[Execute Action] Unexpected error:', error);
+    console.error('[Execute Action] Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return handleApiError(error);
   }
 }

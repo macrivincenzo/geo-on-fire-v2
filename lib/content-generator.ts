@@ -155,15 +155,24 @@ Write the complete blog post now:`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {
-    throw new Error('No AI provider available for content generation');
+    const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
+    const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
+    throw new Error(`No AI provider available for content generation. OpenAI: ${openaiConfigured}, Anthropic: ${anthropicConfigured}`);
   }
 
-  const { text } = await generateText({
-    model,
-    prompt,
-    maxTokens: 4000,
-    temperature: 0.7,
-  });
+  let text: string;
+  try {
+    const result = await generateText({
+      model,
+      prompt,
+      maxTokens: 4000,
+      temperature: 0.7,
+    });
+    text = result.text;
+  } catch (error) {
+    console.error('[Content Generator] Error generating blog post text:', error);
+    throw new Error(`Failed to generate blog post: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 
   // Extract title and meta description
   const titleMatch = text.match(/^#\s+(.+)$/m) || text.match(/^Title:\s*(.+)$/mi);
@@ -220,15 +229,24 @@ Write the complete comparison page now:`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {
-    throw new Error('No AI provider available for content generation');
+    const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
+    const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
+    throw new Error(`No AI provider available for content generation. OpenAI: ${openaiConfigured}, Anthropic: ${anthropicConfigured}`);
   }
 
-  const { text } = await generateText({
-    model,
-    prompt,
-    maxTokens: 5000,
-    temperature: 0.7,
-  });
+  let text: string;
+  try {
+    const result = await generateText({
+      model,
+      prompt,
+      maxTokens: 5000,
+      temperature: 0.7,
+    });
+    text = result.text;
+  } catch (error) {
+    console.error('[Content Generator] Error generating text:', error);
+    throw new Error(`Failed to generate content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 
   const title = `${brandName} vs ${competitorName}: Complete Comparison`;
   const metaDescription = `Compare ${brandName} and ${competitorName}. See features, pricing, pros, cons, and which is better for your needs.`;
@@ -274,15 +292,24 @@ Write the complete FAQ page now:`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {
-    throw new Error('No AI provider available for content generation');
+    const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
+    const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
+    throw new Error(`No AI provider available for content generation. OpenAI: ${openaiConfigured}, Anthropic: ${anthropicConfigured}`);
   }
 
-  const { text } = await generateText({
-    model,
-    prompt,
-    maxTokens: 3000,
-    temperature: 0.7,
-  });
+  let text: string;
+  try {
+    const result = await generateText({
+      model,
+      prompt,
+      maxTokens: 3000,
+      temperature: 0.7,
+    });
+    text = result.text;
+  } catch (error) {
+    console.error('[Content Generator] Error generating FAQ text:', error);
+    throw new Error(`Failed to generate FAQ content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 
   const title = `${brandName} FAQ: ${action.title}`;
   const metaDescription = `Frequently asked questions about ${brandName}. Get answers about features, pricing, and more.`;
@@ -335,15 +362,24 @@ Write the complete landing page now:`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {
-    throw new Error('No AI provider available for content generation');
+    const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
+    const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
+    throw new Error(`No AI provider available for content generation. OpenAI: ${openaiConfigured}, Anthropic: ${anthropicConfigured}`);
   }
 
-  const { text } = await generateText({
-    model,
-    prompt,
-    maxTokens: 3500,
-    temperature: 0.7,
-  });
+  let text: string;
+  try {
+    const result = await generateText({
+      model,
+      prompt,
+      maxTokens: 3500,
+      temperature: 0.7,
+    });
+    text = result.text;
+  } catch (error) {
+    console.error('[Content Generator] Error generating landing page text:', error);
+    throw new Error(`Failed to generate landing page: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 
   const title = action.title;
   const metaDescription = `${action.description.substring(0, 140)}...`;
@@ -383,15 +419,24 @@ Write the social media content now:`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {
-    throw new Error('No AI provider available for content generation');
+    const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
+    const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
+    throw new Error(`No AI provider available for content generation. OpenAI: ${openaiConfigured}, Anthropic: ${anthropicConfigured}`);
   }
 
-  const { text } = await generateText({
-    model,
-    prompt,
-    maxTokens: 1500,
-    temperature: 0.8,
-  });
+  let text: string;
+  try {
+    const result = await generateText({
+      model,
+      prompt,
+      maxTokens: 1500,
+      temperature: 0.8,
+    });
+    text = result.text;
+  } catch (error) {
+    console.error('[Content Generator] Error generating social media text:', error);
+    throw new Error(`Failed to generate social media content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 
   return {
     type: 'social',
@@ -429,15 +474,24 @@ Write the complete technical guide now:`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {
-    throw new Error('No AI provider available for content generation');
+    const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
+    const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
+    throw new Error(`No AI provider available for content generation. OpenAI: ${openaiConfigured}, Anthropic: ${anthropicConfigured}`);
   }
 
-  const { text } = await generateText({
-    model,
-    prompt,
-    maxTokens: 3000,
-    temperature: 0.6,
-  });
+  let text: string;
+  try {
+    const result = await generateText({
+      model,
+      prompt,
+      maxTokens: 3000,
+      temperature: 0.6,
+    });
+    text = result.text;
+  } catch (error) {
+    console.error('[Content Generator] Error generating technical guide text:', error);
+    throw new Error(`Failed to generate technical guide: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 
   return {
     type: 'technical',

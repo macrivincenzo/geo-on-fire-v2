@@ -35,21 +35,24 @@ export async function executeBoostAction(
   const { action, brandName, brandData, competitors, responses, brandUrl } = context;
 
   try {
+    // Ensure brandUrl is properly scoped
+    const url = brandUrl;
+    
     switch (action.category) {
       case 'visibility':
-        return await executeVisibilityAction(action, brandName, brandData, competitors);
+        return await executeVisibilityAction(action, brandName, brandData, competitors, url);
       
       case 'content':
-        return await executeContentAction(action, brandName, brandData, competitors, responses);
+        return await executeContentAction(action, brandName, brandData, competitors, responses, url);
       
       case 'competitive':
-        return await executeCompetitiveAction(action, brandName, brandData, competitors);
+        return await executeCompetitiveAction(action, brandName, brandData, competitors, url);
       
       case 'sentiment':
-        return await executeSentimentAction(action, brandName, brandData, responses);
+        return await executeSentimentAction(action, brandName, brandData, responses, url);
       
       case 'technical':
-        return await executeTechnicalAction(action, brandName, brandUrl);
+        return await executeTechnicalAction(action, brandName, url);
       
       default:
         return {
@@ -60,6 +63,13 @@ export async function executeBoostAction(
     }
   } catch (error) {
     console.error(`[Action Executor] Error executing action ${action.id}:`, error);
+    console.error(`[Action Executor] Error details:`, {
+      actionId: action.id,
+      category: action.category,
+      brandName,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : undefined
+    });
     return {
       success: false,
       message: `Failed to execute action: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -75,7 +85,8 @@ async function executeVisibilityAction(
   action: ActionItem,
   brandName: string,
   brandData: CompetitorRanking,
-  competitors: CompetitorRanking[]
+  competitors: CompetitorRanking[],
+  brandUrl?: string
 ): Promise<ActionExecutionResult> {
   // Extract keywords from action description
   const keywords = extractKeywordsFromAction(action, brandName);
@@ -156,7 +167,8 @@ async function executeContentAction(
   brandName: string,
   brandData: CompetitorRanking,
   competitors: CompetitorRanking[],
-  responses: AIResponse[]
+  responses: AIResponse[],
+  brandUrl?: string
 ): Promise<ActionExecutionResult> {
   // Extract content topics from action
   const topics = extractContentTopics(action, brandName, responses);
@@ -220,7 +232,8 @@ async function executeCompetitiveAction(
   action: ActionItem,
   brandName: string,
   brandData: CompetitorRanking,
-  competitors: CompetitorRanking[]
+  competitors: CompetitorRanking[],
+  brandUrl?: string
 ): Promise<ActionExecutionResult> {
   // Identify target competitors from action
   const targetCompetitors = extractCompetitorNames(action, competitors);
@@ -288,7 +301,8 @@ async function executeSentimentAction(
   action: ActionItem,
   brandName: string,
   brandData: CompetitorRanking,
-  responses: AIResponse[]
+  responses: AIResponse[],
+  brandUrl?: string
 ): Promise<ActionExecutionResult> {
   // Analyze sentiment patterns
   const negativeResponses = responses.filter(r => 
