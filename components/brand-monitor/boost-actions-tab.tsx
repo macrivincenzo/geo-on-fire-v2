@@ -182,6 +182,11 @@ export function BoostActionsTab({
       const result = await response.json();
 
       if (result.success) {
+        console.log(`[Boost Actions] Execution successful for ${action.id}:`, {
+          hasGeneratedContent: !!result.generatedContent,
+          contentCount: result.generatedContent?.length || 0,
+          hasData: !!result.data
+        });
         setExecutionResults(prev => ({
           ...prev,
           [action.id]: result

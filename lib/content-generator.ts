@@ -100,7 +100,18 @@ export async function generateContentForAction(
     
   } catch (error) {
     console.error('[Content Generator] Error generating content:', error);
+    console.error('[Content Generator] Error details:', {
+      actionId: request.action.id,
+      category: request.action.category,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    });
     throw error;
+  }
+  
+  console.log(`[Content Generator] Successfully generated ${generatedContent.length} piece(s) of content for action ${request.action.id}`);
+  if (generatedContent.length > 0) {
+    console.log(`[Content Generator] Content types: ${generatedContent.map(c => c.type).join(', ')}`);
   }
   
   return generatedContent;

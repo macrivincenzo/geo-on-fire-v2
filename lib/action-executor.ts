@@ -191,6 +191,7 @@ async function executeContentAction(
   );
   
   // Generate actual content
+  console.log(`[Action Executor] Generating content for action ${action.id}, category: ${action.category}`);
   const generatedContent = await generateContentForAction({
     action,
     brandName,
@@ -211,6 +212,8 @@ async function executeContentAction(
     }
   });
   
+  console.log(`[Action Executor] Generated ${generatedContent.length} piece(s) of content for ${brandName}`);
+  
   return {
     success: true,
     message: `Content strategy and finished content generated for ${brandName}`,
@@ -220,7 +223,7 @@ async function executeContentAction(
       missedOpportunities: missedTopics,
       priorityContent: contentPlan.filter(c => c.priority === 'high')
     },
-    generatedContent,
+    generatedContent: generatedContent || [],
     creditsUsed: seoResults.length
   };
 }

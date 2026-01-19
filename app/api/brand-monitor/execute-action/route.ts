@@ -75,13 +75,19 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`[Execute Action] Successfully executed action ${action.id}`);
-    return Response.json({
+    console.log(`[Execute Action] Generated content count: ${result.generatedContent?.length || 0}`);
+    
+    const response = {
       success: true,
       message: result.message,
       data: result.data,
       generatedContent: result.generatedContent || [],
       creditsUsed: result.creditsUsed || 0
-    });
+    };
+    
+    console.log(`[Execute Action] Response includes ${response.generatedContent.length} piece(s) of content`);
+    
+    return Response.json(response);
 
   } catch (error) {
     console.error('[Execute Action] Unexpected error:', error);
