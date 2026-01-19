@@ -79,6 +79,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: result.message,
       data: result.data,
+      generatedContent: result.generatedContent || [],
       creditsUsed: result.creditsUsed || 0
     });
 
