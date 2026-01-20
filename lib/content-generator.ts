@@ -17,6 +17,16 @@ export interface GeneratedContent {
   wordCount: number;
   seoScore?: number;
   readyToPublish: boolean;
+  infographics?: Array<{
+    id: string;
+    title: string;
+    description: string;
+    imageUrl: string;
+    section?: string;
+    position?: number;
+    altText: string;
+    dataPoints: string[];
+  }>;
 }
 
 export interface ContentGenerationRequest {
@@ -126,45 +136,91 @@ async function generateBlogPost(
 ): Promise<GeneratedContent> {
   const { action, brandName, brandData, competitors, brandUrl, seoData, context } = request;
   
-  // Build prompt based on action and focus
-  let prompt = `Write a comprehensive, SEO-optimized blog post for ${brandName}.\n\n`;
+  // Build comprehensive SEO data context
+  const primaryKeyword = seoData?.keywords?.[0];
+  const keywordContext = seoData?.keywords?.slice(0, 10).map(k => {
+    const difficulty = k.difficulty >= 70 ? 'high' : k.difficulty >= 40 ? 'medium' : 'low';
+    return `- "${k.keyword}": ${k.searchVolume.toLocaleString()} monthly searches, ${difficulty} difficulty (${k.difficulty}%)`;
+  }).join('\n') || '';
+  
+  let prompt = `You are an expert content writer creating a comprehensive, research-backed blog post for ${brandName}.\n\n`;
+  
+  prompt += `**CRITICAL: Use real data, specific examples, and research-backed claims. Avoid generic statements.**\n\n`;
   
   prompt += `**Topic:** ${action.title}\n`;
   prompt += `**Description:** ${action.description}\n\n`;
   
-  if (seoData?.keywords && seoData.keywords.length > 0) {
-    prompt += `**Target Keywords:** ${seoData.keywords.slice(0, 5).map(k => k.keyword).join(', ')}\n`;
-    prompt += `**SEO Context:** Primary keyword has ${seoData.keywords[0]?.searchVolume || 0} monthly searches with ${seoData.keywords[0]?.difficulty || 0}% difficulty.\n\n`;
-  }
+  prompt += `**SEO Keyword Research (DataForSEO Real Data):**
+${keywordContext || 'No keyword data available'}
+
+**Primary Target Keyword:** ${primaryKeyword?.keyword || 'N/A'}
+- Search Volume: ${primaryKeyword?.searchVolume.toLocaleString() || 'N/A'} monthly searches
+- Keyword Difficulty: ${primaryKeyword?.difficulty || 'N/A'}% (${primaryKeyword?.difficulty && primaryKeyword.difficulty >= 70 ? 'High competition' : primaryKeyword?.difficulty && primaryKeyword.difficulty >= 40 ? 'Medium competition' : 'Low competition'})
+${primaryKeyword ? `- **Content Strategy:** Target this keyword naturally in H1, first paragraph, and 2-3 H2/H3 headings` : ''}\n\n`;
   
   if (context?.insights && context.insights.length > 0) {
-    prompt += `**Key Insights:**\n${context.insights.slice(0, 3).map(i => `- ${i}`).join('\n')}\n\n`;
+    prompt += `**Key Insights from Analysis:**
+${context.insights.slice(0, 5).map(i => `- ${i}`).join('\n')}\n\n`;
   }
   
   if (focus === 'sentiment-improvement') {
-    prompt += `**Focus:** Address negative perceptions and highlight positive aspects of ${brandName}. Use a helpful, solution-oriented tone.\n\n`;
+    prompt += `**Focus:** Address negative perceptions and highlight positive aspects of ${brandName}. Use a helpful, solution-oriented tone. Include specific examples of ${brandName}'s strengths.\n\n`;
   }
   
-  prompt += `**Requirements:**
-- Write 1500-2000 words
-- Use clear headings (H2, H3) with target keywords
-- Include an engaging introduction and strong conclusion
-- Add actionable insights and practical examples
-- Optimize for SEO while maintaining readability
-- Include a compelling meta description (150-160 characters)
-- Make it ready to publish - no placeholders or TODOs
-
-**Brand Context:**
+  prompt += `**Brand Performance Data (Real Metrics):**
 - Brand: ${brandName}
-- Current visibility: ${brandData.visibilityScore}%
-- Current sentiment: ${brandData.sentimentScore}/100
+- AI Visibility Score: ${brandData.visibilityScore}% (${brandData.visibilityScore >= 80 ? 'Excellent' : brandData.visibilityScore >= 60 ? 'Good' : brandData.visibilityScore >= 40 ? 'Fair' : 'Needs Improvement'})
+- Sentiment Score: ${brandData.sentimentScore}/100 (${brandData.sentimentScore >= 80 ? 'Very Positive' : brandData.sentimentScore >= 60 ? 'Positive' : brandData.sentimentScore >= 40 ? 'Neutral' : 'Negative'})
+- Average Position: ${brandData.averagePosition || 'N/A'}
+- Mentions: ${brandData.mentions || 'N/A'}
 ${brandUrl ? `- Website: ${brandUrl}` : ''}
 
-${competitors.length > 0 ? `**Competitors:** ${competitors.slice(0, 3).map(c => c.name).join(', ')}` : ''}
+${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).map(c => `${c.name} (${c.visibilityScore}% visibility, ${c.sentimentScore}/100 sentiment)`).join(', ')}` : ''}\n\n`;
 
-Write the complete blog post now:`;
+  prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
 
-  const model = getProviderModel('openai') || getProviderModel('anthropic');
+1. **Structure & Length:**
+   - Write 2000-2500 words (comprehensive, authoritative)
+   - Use clear H2/H3 headings with target keywords naturally integrated
+   - Include an engaging, hook-driven introduction (first 100 words)
+   - End with a strong, actionable conclusion
+
+2. **Specificity & Data (MOST IMPORTANT):**
+   - Use REAL, SPECIFIC data points throughout
+   - Include actual statistics, percentages, and numbers
+   - Reference specific features, benefits, and use cases
+   - Add concrete examples: "83.3% visibility score" not "high visibility"
+   - Include real-world scenarios and practical applications
+   - Cite specific metrics from the brand analysis
+
+3. **SEO Optimization:**
+   - Naturally integrate primary keyword "${primaryKeyword?.keyword || action.title}" in:
+     * H1 title
+     * First paragraph (within first 100 words)
+     * 2-3 H2/H3 headings
+     * Meta description
+   - Use related keywords naturally throughout (LSI terms)
+   - Include semantic variations of target keywords
+   - Optimize for featured snippets with clear, concise answers
+
+4. **Content Quality:**
+   - Write in an authoritative, helpful tone
+   - Include actionable insights and practical examples
+   - Add data-driven recommendations
+   - Use subheadings to break up content (every 300-400 words)
+   - Include bullet points and lists for scannability
+   - Add internal linking opportunities (mention related topics)
+
+5. **Additional Elements:**
+   - Compelling meta description (150-160 characters, includes primary keyword)
+   - Key takeaways box or summary section
+   - FAQ section (3-5 questions related to the topic)
+   - Call-to-action at the end
+
+**Write the complete, polished blog post now. Make it exceptional - the kind of content that makes readers say "wow, this is exactly what I needed!":`;
+
+  // Prefer Anthropic for high-quality content generation
+  const model = getProviderModel('anthropic') || getProviderModel('openai');
   if (!model) {
     const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
     const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
@@ -176,7 +232,7 @@ Write the complete blog post now:`;
     const result = await generateText({
       model,
       prompt,
-      maxTokens: 4000,
+      maxTokens: 8000, // Increased for comprehensive content
       temperature: 0.7,
     });
     text = result.text;
@@ -192,6 +248,53 @@ Write the complete blog post now:`;
   const metaDescription = extractMetaDescription(text) || 
     `Learn about ${action.title.toLowerCase()} for ${brandName}. ${action.description.substring(0, 100)}...`;
 
+  // Generate infographics automatically
+  let infographics: GeneratedContent['infographics'] = [];
+  try {
+    const { generateInfographicsFromTemplate } = await import('./infographic-renderer');
+    const { InfographicData } = await import('./figma-infographic-generator');
+    
+    // Extract statistics from blog content
+    const statPatterns = [
+      /(\d+%)/g,
+      /(\d+\.\d+%)/g,
+      /(top \d+)/gi,
+      /(#\d+)/g,
+      /(\d+\.\d+%?)/g,
+    ];
+
+    const stats: string[] = [];
+    for (const pattern of statPatterns) {
+      const matches = text.match(pattern);
+      if (matches) {
+        stats.push(...matches.slice(0, 5));
+      }
+    }
+
+    // Create infographic data from extracted stats
+    if (stats.length > 0) {
+      const infographicData = [{
+        title: title,
+        description: metaDescription || action.description,
+        dataPoints: stats.slice(0, 3),
+        metrics: {
+          primary: stats[0],
+          secondary: stats[1],
+          tertiary: stats[2],
+        },
+        section: 'start',
+        position: 0,
+      }];
+
+      // Generate infographics using HTML template renderer
+      infographics = await generateInfographicsFromTemplate(infographicData);
+      console.log(`✅ Generated ${infographics.length} infographic(s) for blog post`);
+    }
+  } catch (error) {
+    console.warn('[Content Generator] Failed to generate infographics:', error);
+    // Continue without infographics if generation fails
+  }
+
   return {
     type: 'blog',
     title,
@@ -200,6 +303,7 @@ Write the complete blog post now:`;
     keywords: seoData?.keywords?.slice(0, 5).map(k => k.keyword) || [],
     wordCount: text.split(/\s+/).length,
     readyToPublish: true,
+    infographics,
   };
 }
 
@@ -209,36 +313,101 @@ Write the complete blog post now:`;
 async function generateComparisonPage(
   request: ContentGenerationRequest
 ): Promise<GeneratedContent> {
-  const { action, brandName, brandData, competitors, seoData } = request;
+  const { action, brandName, brandData, competitors, seoData, brandUrl } = request;
   
   const topCompetitor = competitors.filter(c => !c.isOwn)[0];
   const competitorName = topCompetitor?.name || 'Competitors';
   
-  let prompt = `Write a comprehensive comparison page: "${brandName} vs ${competitorName}".\n\n`;
+  // Build comprehensive SEO data context
+  const primaryKeyword = seoData?.keywords?.[0];
+  const keywordContext = seoData?.keywords?.slice(0, 10).map(k => {
+    const difficulty = k.difficulty >= 70 ? 'high' : k.difficulty >= 40 ? 'medium' : 'low';
+    return `- "${k.keyword}": ${k.searchVolume.toLocaleString()} monthly searches, ${difficulty} difficulty (${k.difficulty}%)`;
+  }).join('\n') || '';
+  
+  let prompt = `You are an expert content writer creating a comprehensive, research-backed comparison page. Write a detailed comparison: "${brandName} vs ${competitorName}".\n\n`;
+
+  prompt += `**CRITICAL: Use real data, specific examples, and research-backed claims. Avoid generic statements.**\n\n`;
   
   prompt += `**Purpose:** ${action.description}\n\n`;
   
-  if (seoData?.keywords) {
-    prompt += `**Target Keywords:** ${seoData.keywords.slice(0, 3).map(k => k.keyword).join(', ')}\n\n`;
-  }
+  prompt += `**SEO Keyword Research (DataForSEO Real Data):**
+${keywordContext || 'No keyword data available'}
+
+**Primary Target Keyword:** ${primaryKeyword?.keyword || 'N/A'} 
+- Search Volume: ${primaryKeyword?.searchVolume.toLocaleString() || 'N/A'} monthly searches
+- Keyword Difficulty: ${primaryKeyword?.difficulty || 'N/A'}% (${primaryKeyword?.difficulty && primaryKeyword.difficulty >= 70 ? 'High competition' : primaryKeyword?.difficulty && primaryKeyword.difficulty >= 40 ? 'Medium competition' : 'Low competition'})
+${primaryKeyword ? `- **Content Strategy:** Target this keyword naturally in H1, first paragraph, and 2-3 H2/H3 headings` : ''}\n\n`;
   
-  prompt += `**Brand Context:**
-- ${brandName}: Visibility ${brandData.visibilityScore}%, Sentiment ${brandData.sentimentScore}/100
-${topCompetitor ? `- ${topCompetitor.name}: Visibility ${topCompetitor.visibilityScore}%, Sentiment ${topCompetitor.sentimentScore}/100` : ''}
+  prompt += `**Brand Performance Data (Real Metrics):**
+- ${brandName}: 
+  * AI Visibility Score: ${brandData.visibilityScore}% (${brandData.visibilityScore >= 80 ? 'Excellent' : brandData.visibilityScore >= 60 ? 'Good' : brandData.visibilityScore >= 40 ? 'Fair' : 'Needs Improvement'})
+  * Sentiment Score: ${brandData.sentimentScore}/100 (${brandData.sentimentScore >= 80 ? 'Very Positive' : brandData.sentimentScore >= 60 ? 'Positive' : brandData.sentimentScore >= 40 ? 'Neutral' : 'Negative'})
+  * Average Position: ${brandData.averagePosition || 'N/A'}
+  * Mentions: ${brandData.mentions || 'N/A'}
+${brandUrl ? `  * Website: ${brandUrl}` : ''}
 
-**Requirements:**
-- Write 2000-2500 words
-- Compare features, pricing, use cases, pros/cons
-- Use comparison tables where appropriate
-- Include "Which is better?" section with clear recommendation
-- Optimize for SEO with target keywords naturally integrated
-- Make it fair and balanced but highlight ${brandName}'s strengths
-- Include a compelling meta description
-- Ready to publish - complete and polished
+${topCompetitor ? `- ${topCompetitor.name}:
+  * AI Visibility Score: ${topCompetitor.visibilityScore}% (${topCompetitor.visibilityScore >= 80 ? 'Excellent' : topCompetitor.visibilityScore >= 60 ? 'Good' : topCompetitor.visibilityScore >= 40 ? 'Fair' : 'Needs Improvement'})
+  * Sentiment Score: ${topCompetitor.sentimentScore}/100
+  * Average Position: ${topCompetitor.averagePosition || 'N/A'}
+  * Mentions: ${topCompetitor.mentions || 'N/A'}` : ''}\n\n`;
 
-Write the complete comparison page now:`;
+  prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
 
-  const model = getProviderModel('openai') || getProviderModel('anthropic');
+1. **Structure & Length:**
+   - Write 2500-3000 words (comprehensive, not generic)
+   - Use clear H2/H3 headings with target keywords naturally integrated
+   - Include a detailed table of contents at the start
+
+2. **Specificity & Data (MOST IMPORTANT):**
+   - Use REAL, SPECIFIC data points (not "typically" or "usually")
+   - Include actual product model comparisons when possible
+   - Reference specific features, specs, and real-world use cases
+   - Cite specific pricing ranges with actual dollar amounts
+   - Include concrete examples: "YETI Tundra 45 holds ice for 7 days" not "coolers hold ice for several days"
+   - Add real user scenarios: "Best for 3-day camping trips" not "good for camping"
+
+3. **Comparison Tables:**
+   - Create detailed side-by-side comparison tables
+   - Include: Features, Pricing, Dimensions, Weight, Ice Retention, Warranty, Best Use Cases
+   - Use actual data, not generic statements
+
+4. **Decision Framework:**
+   - Create a "Best For" section with specific scenarios:
+     * "Choose ${brandName} if you need [specific feature/use case]"
+     * "Choose ${competitorName} if you prefer [specific alternative]"
+   - Include a clear "Which is Better?" verdict with specific reasoning
+   - Add a "Quick Decision Guide" with 3-5 key questions
+
+5. **SEO Optimization:**
+   - Naturally integrate primary keyword "${primaryKeyword?.keyword || `${brandName} vs ${competitorName}`}" in:
+     * H1 title
+     * First paragraph (within first 100 words)
+     * 2-3 H2/H3 headings
+     * Meta description
+   - Use related keywords naturally throughout
+   - Include semantic keywords and LSI terms
+
+6. **Content Quality:**
+   - Write in a helpful, authoritative tone
+   - Include actionable insights and specific recommendations
+   - Add real-world examples and use cases
+   - Make it fair and balanced but highlight ${brandName}'s unique strengths
+   - Include a compelling meta description (150-160 characters, includes primary keyword)
+
+7. **Additional Sections:**
+   - "Key Differences at a Glance" (bullet points)
+   - "Detailed Feature Comparison" (with specific examples)
+   - "Pricing Breakdown" (with actual price ranges)
+   - "Real User Scenarios" (specific use cases)
+   - "Final Verdict" (clear recommendation with reasoning)
+   - "FAQ Section" (5-7 common questions with specific answers)
+
+**Write the complete, polished comparison page now. Make it exceptional - the kind of content that makes readers say "wow, this is exactly what I needed!":`;
+
+  // Prefer Anthropic for high-quality content generation
+  const model = getProviderModel('anthropic') || getProviderModel('openai');
   if (!model) {
     const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
     const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
@@ -250,7 +419,7 @@ Write the complete comparison page now:`;
     const result = await generateText({
       model,
       prompt,
-      maxTokens: 5000,
+      maxTokens: 8000, // Increased for comprehensive content
       temperature: 0.7,
     });
     text = result.text;
@@ -301,7 +470,8 @@ async function generateFAQPage(
 
 Write the complete FAQ page now:`;
 
-  const model = getProviderModel('openai') || getProviderModel('anthropic');
+  // Prefer Anthropic for high-quality content generation
+  const model = getProviderModel('anthropic') || getProviderModel('openai');
   if (!model) {
     const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
     const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
@@ -313,7 +483,7 @@ Write the complete FAQ page now:`;
     const result = await generateText({
       model,
       prompt,
-      maxTokens: 3000,
+      maxTokens: 4000, // Increased for comprehensive content
       temperature: 0.7,
     });
     text = result.text;
@@ -412,23 +582,60 @@ Write the complete landing page now:`;
 async function generateSocialMediaContent(
   request: ContentGenerationRequest
 ): Promise<GeneratedContent> {
-  const { action, brandName } = request;
+  const { action, brandName, brandData, seoData } = request;
   
-  let prompt = `Create social media content for ${brandName} based on this action:\n\n`;
+  const primaryKeyword = seoData?.keywords?.[0];
+  const visibilityStat = `${brandData.visibilityScore}% AI visibility`;
+  const sentimentStat = `${brandData.sentimentScore}/100 sentiment score`;
+  
+  let prompt = `You are a social media expert creating engaging, data-driven social media content for ${brandName}.\n\n`;
+  
+  prompt += `**CRITICAL: Include specific stats, data points, and actionable CTAs. Make each post valuable and shareable.**\n\n`;
+  
   prompt += `**Action:** ${action.title}\n`;
   prompt += `**Description:** ${action.description}\n\n`;
   
-  prompt += `**Requirements:**
-- Create 5-7 social media posts (Twitter/X, LinkedIn, Facebook)
-- Each post should be platform-optimized (280 chars for Twitter, longer for LinkedIn)
-- Include relevant hashtags
-- Make them engaging and shareable
-- Include a mix of educational, promotional, and engaging content
-- Ready to post
+  prompt += `**Brand Performance Stats (Use These in Posts):**
+- AI Visibility: ${visibilityStat}
+- Sentiment Score: ${sentimentStat}
+- Primary Keyword: ${primaryKeyword?.keyword || 'N/A'} (${primaryKeyword?.searchVolume.toLocaleString() || 'N/A'} monthly searches)\n\n`;
+  
+  prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
 
-Write the social media content now:`;
+1. **Platform-Specific Format:**
+   - **Twitter/X:** 3-4 posts, max 280 characters each, include 2-3 relevant hashtags
+   - **LinkedIn:** 2-3 posts, 150-300 words each, professional tone, include 3-5 hashtags
+   - **Facebook:** 2-3 posts, 100-200 words each, engaging and conversational, include 2-4 hashtags
 
-  const model = getProviderModel('openai') || getProviderModel('anthropic');
+2. **Content Types (Mix These):**
+   - Data-driven posts: Include specific stats like "${visibilityStat}" or "${sentimentStat}"
+   - Educational posts: Share insights about ${action.title.toLowerCase()}
+   - Engagement posts: Ask questions, encourage comments
+   - Promotional posts: Highlight ${brandName}'s strengths (but make it valuable, not salesy)
+
+3. **Each Post Must Include:**
+   - Specific data point or statistic (use the brand performance stats above)
+   - Clear value proposition or insight
+   - Relevant hashtags (mix of branded, industry, and trending)
+   - Call-to-action (CTA) when appropriate: "Learn more: [link]", "Read the full comparison: [link]", "Share your thoughts below"
+   - Platform-appropriate emojis (sparingly, professionally)
+
+4. **Content Quality:**
+   - Make each post standalone valuable (not just promotional)
+   - Include actionable insights or tips
+   - Use numbers and specific data to build credibility
+   - Write in a conversational, engaging tone
+   - Avoid generic statements - be specific
+
+5. **Format:**
+   - Label each section clearly: "**Twitter/X:**", "**LinkedIn:**", "**Facebook:**"
+   - Number each post within each platform
+   - Include suggested image/video descriptions where relevant: "📸 Image suggestion: [description]"
+
+**Write the complete social media content now. Make it exceptional - the kind of content that gets shared and drives engagement:`;
+
+  // Prefer Anthropic for high-quality content generation
+  const model = getProviderModel('anthropic') || getProviderModel('openai');
   if (!model) {
     const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
     const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
@@ -440,7 +647,7 @@ Write the social media content now:`;
     const result = await generateText({
       model,
       prompt,
-      maxTokens: 1500,
+      maxTokens: 3000, // Increased for comprehensive social content
       temperature: 0.8,
     });
     text = result.text;

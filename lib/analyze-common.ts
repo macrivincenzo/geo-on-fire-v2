@@ -36,15 +36,15 @@ export async function performAnalysis({
   sendEvent
 }: AnalysisConfig): Promise<AnalysisResult> {
   try {
-    // Send start event
-    await sendEvent({
-      type: 'start',
-      stage: 'initializing',
-      data: { 
-        message: `Starting analysis for ${company.name}${useWebSearch ? ' with web search' : ''}` 
-      } as ProgressData,
-      timestamp: new Date()
-    });
+  // Send start event
+  await sendEvent({
+    type: 'start',
+    stage: 'initializing',
+    data: { 
+      message: `Starting analysis for ${company.name}${useWebSearch ? ' with web search' : ''}` 
+    } as ProgressData,
+    timestamp: new Date()
+  });
   } catch (error) {
     console.error('Error sending start event:', error);
     // Continue anyway - don't fail if event sending fails
