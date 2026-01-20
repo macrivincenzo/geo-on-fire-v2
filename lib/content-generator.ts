@@ -252,7 +252,6 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
   let infographics: GeneratedContent['infographics'] = [];
   try {
     const { generateInfographicsFromTemplate } = await import('./infographic-renderer');
-    const { InfographicData } = await import('./figma-infographic-generator');
     
     // Extract statistics from blog content
     const statPatterns = [
@@ -263,28 +262,54 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
       /(\d+\.\d+%?)/g,
     ];
 
-    const stats: string[] = [];
+    const statsRaw: string[] = [];
     for (const pattern of statPatterns) {
       const matches = text.match(pattern);
       if (matches) {
-        stats.push(...matches.slice(0, 5));
+        statsRaw.push(...matches);
       }
     }
 
     // Create infographic data from extracted stats
+    // Dedupe while preserving order
+    const stats = Array.from(new Set(statsRaw.map(s => s.trim()))).filter(Boolean);
+
     if (stats.length > 0) {
-      const infographicData = [{
-        title: title,
-        description: metaDescription || action.description,
-        dataPoints: stats.slice(0, 3),
-        metrics: {
-          primary: stats[0],
-          secondary: stats[1],
-          tertiary: stats[2],
-        },
-        section: 'start',
-        position: 0,
-      }];
+      // Build up to 3 infographics: start, middle, end
+      const groups: string[][] = [];
+      for (let i = 0; i < Math.min(stats.length, 9); i += 3) {
+        const group = stats.slice(i, i + 3);
+        if (group.length > 0) groups.push(group);
+      }
+
+      const infographicData = groups.slice(0, 3).map((group, idx) => {
+        const primary = group[0] || stats[0] || '40%';
+        const secondary = group[1] || stats[1] || 'Top 3';
+        const tertiary = group[2] || stats[2] || '#1';
+
+        const placement =
+          idx === 0 ? ({ section: 'start' as const, position: 0 } as const) :
+          idx === 1 ? ({ section: 'middle' as const, position: -1 } as const) :
+          ({ section: 'end' as const, position: 999 } as const);
+
+        const titleVariant =
+          idx === 0 ? title :
+          idx === 1 ? `${title} — Key Insight` :
+          `${title} — Summary`;
+
+        const descriptionVariant =
+          idx === 0 ? (metaDescription || action.description) :
+          idx === 1 ? `Key insight: ${primary} · ${secondary} · ${tertiary}` :
+          `Takeaway: ${primary} matters — act on it.`;
+
+        return {
+          title: titleVariant,
+          description: descriptionVariant,
+          dataPoints: group,
+          metrics: { primary, secondary, tertiary },
+          ...placement,
+        };
+      });
 
       // Generate infographics using HTML template renderer
       infographics = await generateInfographicsFromTemplate(infographicData);
@@ -588,9 +613,14 @@ async function generateSocialMediaContent(
   const visibilityStat = `${brandData.visibilityScore}% AI visibility`;
   const sentimentStat = `${brandData.sentimentScore}/100 sentiment score`;
   
-  let prompt = `You are a social media expert creating engaging, data-driven social media content for ${brandName}.\n\n`;
+  let prompt = `You are a social media expert creating clean, professional, data-driven social media content for ${brandName}.\n\n`;
   
-  prompt += `**CRITICAL: Include specific stats, data points, and actionable CTAs. Make each post valuable and shareable.**\n\n`;
+  prompt += `**CRITICAL REQUIREMENTS:**
+- Use ONLY standard ASCII characters and standard Unicode emojis (no special encoding)
+- Write clean, readable text without any garbled characters
+- Format posts clearly with proper line breaks
+- Include specific stats, data points, and actionable CTAs
+- Make each post valuable and shareable\n\n`;
   
   prompt += `**Action:** ${action.title}\n`;
   prompt += `**Description:** ${action.description}\n\n`;
@@ -603,36 +633,58 @@ async function generateSocialMediaContent(
   prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
 
 1. **Platform-Specific Format:**
-   - **Twitter/X:** 3-4 posts, max 280 characters each, include 2-3 relevant hashtags
-   - **LinkedIn:** 2-3 posts, 150-300 words each, professional tone, include 3-5 hashtags
-   - **Facebook:** 2-3 posts, 100-200 words each, engaging and conversational, include 2-4 hashtags
+   - **Twitter/X:** Create 3-4 posts, max 280 characters each (including hashtags)
+   - **LinkedIn:** Create 2-3 posts, 150-300 words each, professional tone
+   - **Facebook:** Create 2-3 posts, 100-200 words each, engaging and conversational
 
-2. **Content Types (Mix These):**
+2. **Content Structure (Use This Exact Format):**
+   For each platform, format like this:
+   
+   ## **Twitter/X:**
+   **Post 1:**
+   [Post content here - max 280 chars, include 2-3 hashtags at the end]
+   
+   **Post 2:**
+   [Post content here]
+   
+   ## **LinkedIn:**
+   **Post 1:**
+   [Post content here - 150-300 words, professional tone, include 3-5 hashtags]
+   
+   ## **Facebook:**
+   **Post 1:**
+   [Post content here - 100-200 words, conversational, include 2-4 hashtags]
+
+3. **Content Types (Mix These):**
    - Data-driven posts: Include specific stats like "${visibilityStat}" or "${sentimentStat}"
    - Educational posts: Share insights about ${action.title.toLowerCase()}
    - Engagement posts: Ask questions, encourage comments
    - Promotional posts: Highlight ${brandName}'s strengths (but make it valuable, not salesy)
 
-3. **Each Post Must Include:**
+4. **Each Post Must Include:**
    - Specific data point or statistic (use the brand performance stats above)
    - Clear value proposition or insight
-   - Relevant hashtags (mix of branded, industry, and trending)
+   - Relevant hashtags (mix of branded, industry, and trending) - place at the end
    - Call-to-action (CTA) when appropriate: "Learn more: [link]", "Read the full comparison: [link]", "Share your thoughts below"
-   - Platform-appropriate emojis (sparingly, professionally)
+   - Use standard emojis sparingly (1-2 per post max): ✅ 📊 💪 🎯 🔥 📈 (use standard Unicode only)
 
-4. **Content Quality:**
+5. **Content Quality:**
    - Make each post standalone valuable (not just promotional)
    - Include actionable insights or tips
    - Use numbers and specific data to build credibility
    - Write in a conversational, engaging tone
    - Avoid generic statements - be specific
+   - NO garbled characters, NO encoding issues, NO special symbols that might break
 
-5. **Format:**
-   - Label each section clearly: "**Twitter/X:**", "**LinkedIn:**", "**Facebook:**"
-   - Number each post within each platform
-   - Include suggested image/video descriptions where relevant: "📸 Image suggestion: [description]"
+6. **Formatting Rules:**
+   - Use clean markdown formatting
+   - Separate each post with clear line breaks
+   - Use **bold** for post numbers only
+   - Keep hashtags at the end of each post
+   - Use standard line breaks (\\n) between sections
+   - NO special characters that might cause encoding issues
 
-**Write the complete social media content now. Make it exceptional - the kind of content that gets shared and drives engagement:`;
+**Write the complete social media content now. Use clean, standard text formatting. Make it exceptional - the kind of content that gets shared and drives engagement:`;
 
   // Prefer Anthropic for high-quality content generation
   const model = getProviderModel('anthropic') || getProviderModel('openai');
@@ -648,9 +700,12 @@ async function generateSocialMediaContent(
       model,
       prompt,
       maxTokens: 3000, // Increased for comprehensive social content
-      temperature: 0.8,
+      temperature: 0.7, // Lower temperature for more consistent formatting
     });
     text = result.text;
+    
+    // Clean up any encoding issues or garbled characters
+    text = cleanSocialMediaContent(text);
   } catch (error) {
     console.error('[Content Generator] Error generating social media text:', error);
     throw new Error(`Failed to generate social media content: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -664,6 +719,53 @@ async function generateSocialMediaContent(
     wordCount: text.split(/\s+/).length,
     readyToPublish: true,
   };
+}
+
+/**
+ * Clean social media content to remove encoding issues and garbled characters
+ */
+function cleanSocialMediaContent(content: string): string {
+  // Remove specific garbled character patterns we've seen
+  let cleaned = content
+    // Remove garbled emoji patterns like "Ø=Ý%", "Ø=ÜÊ", "Ø<ß¯", "Ø=ÜG", "Ø=Þ—", etc.
+    .replace(/Ø=[^\s\n]+/g, '')
+    .replace(/Ø<[^\s\n]+/g, '')
+    // Remove standalone garbled sequences
+    .replace(/[ØÝÜÊßÞ][=<>][^\s\n]*/g, '')
+    // Clean up broken sentences that start with garbled characters
+    .replace(/^[ØÝÜÊßÞ][^\w]*/gm, '')
+    // Remove any remaining control characters that might cause issues
+    .replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, '')
+    // Clean up multiple spaces (but keep intentional spacing)
+    .replace(/[ \t]{3,}/g, ' ')
+    // Clean up excessive line breaks
+    .replace(/\n{4,}/g, '\n\n\n')
+    // Fix broken markdown formatting
+    .replace(/\*\*(\*+)\*\*/g, '**$1**')
+    // Ensure proper spacing around hashtags
+    .replace(/\s+#(\w+)/g, ' #$1');
+  
+  // Ensure proper section headers
+  cleaned = cleaned
+    .replace(/##\s*\*\*Twitter\/X:\*\*/gi, '## **Twitter/X:**')
+    .replace(/##\s*\*\*LinkedIn:\*\*/gi, '## **LinkedIn:**')
+    .replace(/##\s*\*\*Facebook:\*\*/gi, '## **Facebook:**')
+    // Fix post numbering
+    .replace(/\*\*Post\s+(\d+):\*\*/gi, '**Post $1:**');
+  
+  // Remove any lines that are just garbled characters
+  cleaned = cleaned
+    .split('\n')
+    .filter(line => {
+      // Keep lines that have actual content (letters, numbers, or common punctuation)
+      const hasContent = /[a-zA-Z0-9]/.test(line);
+      // Remove lines that are mostly special characters
+      const isGarbled = /^[ØÝÜÊßÞ<>=%]+$/.test(line.trim());
+      return hasContent && !isGarbled;
+    })
+    .join('\n');
+  
+  return cleaned.trim();
 }
 
 /**
