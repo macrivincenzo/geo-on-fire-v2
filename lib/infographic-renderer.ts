@@ -222,8 +222,14 @@ export async function renderInfographicToImage(
       // Server-side: Use Puppeteer
       const puppeteer = await import('puppeteer');
       const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        headless: 'new', // Use new headless mode
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--disable-gpu',
+        ],
       });
       
       const page = await browser.newPage();
@@ -243,6 +249,12 @@ export async function renderInfographicToImage(
     }
   } catch (error) {
     console.error('Error rendering infographic to image:', error);
+    
+    // If it's a Chrome not found error, provide helpful message
+    if (error instanceof Error && error.message.includes('Could not find Chrome')) {
+      console.error('⚠️  Puppeteer Chrome not installed. Run: npx puppeteer browsers install chrome');
+    }
+    
     // Fallback: return placeholder
     return `https://placehold.co/1200x800/2563eb/ffffff?text=Infographic+Error`;
   }
@@ -267,8 +279,19 @@ export async function generateInfographicsFromTemplate(
       // Render HTML from template
       const htmlContent = renderTemplate(template, data);
       
-      // Convert HTML to image
-      const imageUrl = await renderInfographicToImage(htmlContent);
+      // Convert HTML to image with timeout
+      const imageUrl = await Promise.race([
+        renderInfographicToImage(htmlContent),
+        new Promise<string>((_, reject) => 
+          setTimeout(() => reject(new Error('Image rendering timeout (30s)')), 30000)
+        )
+      ]) as string;
+      
+      if (imageUrl.includes('placehold.co') || imageUrl.includes('Error')) {
+        console.warn(`⚠️  Infographic ${i + 1} rendered with placeholder - image generation may have failed`);
+      } else {
+        console.log(`✅ Infographic ${i + 1} rendered successfully`);
+      }
       
       generatedInfographics.push({
         id: `infographic-${i + 1}-${Date.now()}`,
@@ -284,7 +307,30 @@ export async function generateInfographicsFromTemplate(
       console.log(`✅ Infographic rendered: ${data.title}`);
     } catch (error) {
       console.error(`❌ Error rendering infographic "${data.title}":`, error);
+      if (error instanceof Error) {
+        console.error(`   Error message: ${error.message}`);
+      }
+      // Add a placeholder infographic so the count is maintained
+      generatedInfographics.push({
+        id: `infographic-${i + 1}-error-${Date.now()}`,
+        title: data.title,
+        description: data.description,
+        imageUrl: `https://placehold.co/1200x800/2563eb/ffffff?text=Infographic+Error`,
+        altText: `Infographic: ${data.title}`,
+        section: data.section,
+        position: data.position,
+        dataPoints: data.dataPoints || [],
+      });
     }
+  }
+  
+  if (generatedInfographics.length === 0) {
+    console.warn('⚠️  No infographics were successfully generated');
+  } else {
+    const successCount = generatedInfographics.filter(inf => 
+      !inf.imageUrl.includes('placehold.co') && !inf.imageUrl.includes('Error')
+    ).length;
+    console.log(`✅ Successfully generated ${successCount}/${infographicData.length} infographic(s)`);
   }
 
   return generatedInfographics;

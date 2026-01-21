@@ -98,10 +98,14 @@ function injectInfographicsIntoContent(content: string, infographics: any[]): st
   const middleInfographics = infographics.filter(inf => 
     inf.section?.toLowerCase() === 'middle' || inf.position === -1
   );
+  const endInfographics = infographics.filter(inf =>
+    inf.section?.toLowerCase() === 'end' || inf.position === 999
+  );
   const sectionInfographics = infographics.filter(inf => 
     inf.section && 
     inf.section.toLowerCase() !== 'start' && 
     inf.section.toLowerCase() !== 'middle' &&
+    inf.section.toLowerCase() !== 'end' &&
     inf.position !== 0 && 
     inf.position !== -1
   );
@@ -114,6 +118,7 @@ function injectInfographicsIntoContent(content: string, infographics: any[]): st
       if (aIndex !== bIndex) return bIndex - aIndex; // Reverse for processing
       return (b.position || 0) - (a.position || 0);
     }),
+    ...endInfographics,
     ...middleInfographics,
     ...startInfographics,
   ];
@@ -137,6 +142,11 @@ function injectInfographicsIntoContent(content: string, infographics: any[]): st
       const middlePoint = Math.floor(modifiedContent.length * 0.5);
       const nextHeading = modifiedContent.indexOf('\n##', middlePoint);
       insertPosition = nextHeading !== -1 ? nextHeading : middlePoint;
+    } else if (section === 'end' || infographic.position === 999) {
+      // Place near end: before the final 10% of the content (or before last heading)
+      const endPoint = Math.floor(modifiedContent.length * 0.9);
+      const prevHeading = modifiedContent.lastIndexOf('\n##', endPoint);
+      insertPosition = prevHeading !== -1 ? prevHeading : endPoint;
     } else {
       // Place after specific section heading
       const headingPattern = new RegExp(`(#{1,2}\\s+${section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\n])`, 'i');
@@ -395,7 +405,7 @@ export default async function BlogPreviewPage() {
                       if (hasOnlyImage || hasOnlyImg) {
                         // Wrap image in a div with caption for proper styling
                         const imgElement = hasOnlyImg ? childrenArray[0] : children;
-                        const altText = React.isValidElement(imgElement) ? imgElement.props?.alt : '';
+                        const altText = React.isValidElement(imgElement) ? (imgElement.props as any)?.alt : '';
                         return (
                           <div className="my-8">
                             {imgElement}

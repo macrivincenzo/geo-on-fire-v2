@@ -39,7 +39,7 @@ export interface ActionItem {
 }
 
 export interface ContentSuggestion {
-  type: 'blog' | 'comparison' | 'testimonial' | 'landing-page' | 'social' | 'pr';
+  type: 'blog' | 'comparison' | 'testimonial' | 'landing-page' | 'pr';
   title: string;
   description: string;
   targetKeywords: string[];

@@ -10,6 +10,7 @@
     "setup": "node setup.js",
     "setup:autumn": "tsx scripts/setup-autumn.ts",
     "setup:stripe-portal": "tsx scripts/setup-stripe-portal.ts",
+    "test:infographics": "tsx scripts/test-infographic-generation.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
