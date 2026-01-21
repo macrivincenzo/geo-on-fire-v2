@@ -52,7 +52,7 @@ export async function executeBoostAction(
         return await executeSentimentAction(action, brandName, brandData, responses, url);
       
       case 'technical':
-        return await executeTechnicalAction(action, brandName, url);
+        return await executeTechnicalAction(action, brandName, brandData, url);
       
       default:
         return {
@@ -366,6 +366,7 @@ async function executeSentimentAction(
 async function executeTechnicalAction(
   action: ActionItem,
   brandName: string,
+  brandData: CompetitorRanking,
   brandUrl?: string
 ): Promise<ActionExecutionResult> {
   // Generate technical SEO checklist

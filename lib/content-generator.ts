@@ -180,12 +180,15 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
    - End with a strong, actionable conclusion
 
 2. **Specificity & Data (MOST IMPORTANT):**
-   - Use REAL, SPECIFIC data points throughout
-   - Include actual statistics, percentages, and numbers
+   - Use REAL, SPECIFIC data points from the brand analysis provided above
+   - Include actual statistics, percentages, and numbers from the brand metrics
    - Reference specific features, benefits, and use cases
    - Add concrete examples: "83.3% visibility score" not "high visibility"
    - Include real-world scenarios and practical applications
-   - Cite specific metrics from the brand analysis
+   - **CRITICAL: DO NOT fabricate or invent research studies, citations, or statistics**
+   - **DO NOT cite specific studies like "BrightEdge 2024 Study" or "Stanford 2024 research" unless you have verified access to them**
+   - If referencing industry trends, use generic phrasing like "Industry research indicates..." or "Studies show..." without naming specific institutions
+   - Focus on the real brand data provided above rather than invented research
 
 3. **SEO Optimization:**
    - Naturally integrate primary keyword "${primaryKeyword?.keyword || action.title}" in:
@@ -206,10 +209,16 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
    - Add internal linking opportunities (mention related topics)
 
 5. **Additional Elements:**
-   - Compelling meta description (150-160 characters, includes primary keyword)
+   - **Meta Description:** MUST include a complete, compelling meta description (150-160 characters, includes primary keyword) at the start of your response in this format: "Meta: [your meta description here]"
    - Key takeaways box or summary section
    - FAQ section (3-5 questions related to the topic)
    - Call-to-action at the end
+   - Add a disclaimer at the end: "Note: Performance metrics and statistics are based on current brand analysis data. Specific numbers may vary based on market conditions and implementation."
+
+**IMPORTANT FORMATTING:**
+- Start your response with: "Meta: [150-160 character meta description including primary keyword]"
+- Then write the full blog post content
+- End with the disclaimer mentioned above
 
 **Write the complete, polished blog post now. Make it exceptional - the kind of content that makes readers say "wow, this is exactly what I needed!":`;
 
@@ -239,8 +248,30 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
   const titleMatch = text.match(/^#\s+(.+)$/m) || text.match(/^Title:\s*(.+)$/mi);
   const title = titleMatch ? titleMatch[1].trim() : action.title;
   
-  const metaDescription = extractMetaDescription(text) || 
-    `Learn about ${action.title.toLowerCase()} for ${brandName}. ${action.description.substring(0, 100)}...`;
+  // Try to extract meta description from the start (new format)
+  let metaDescription = text.match(/^Meta:\s*(.+?)(?:\n|$)/im)?.[1]?.trim();
+  
+  // Remove "Meta:" prefix if it was included
+  if (metaDescription?.startsWith('Meta:')) {
+    metaDescription = metaDescription.replace(/^Meta:\s*/i, '').trim();
+  }
+  
+  // If not found, try other patterns
+  if (!metaDescription) {
+    metaDescription = extractMetaDescription(text);
+  }
+  
+  // Fallback to generated description
+  if (!metaDescription || metaDescription.length < 50) {
+    metaDescription = `Learn about ${action.title.toLowerCase()} for ${brandName}. ${action.description.substring(0, 100)}...`;
+    // Ensure it's 150-160 characters
+    if (metaDescription.length > 160) {
+      metaDescription = metaDescription.substring(0, 157) + '...';
+    }
+  }
+  
+  // Clean up the content to remove the Meta: line if present
+  text = text.replace(/^Meta:\s*.+?(?:\n|$)/im, '').trim();
 
   // Generate VALUABLE infographics automatically using AI-powered insight identification
   let infographics: GeneratedContent['infographics'] = [];
@@ -472,14 +503,17 @@ ${topCompetitor ? `- ${topCompetitor.name}:
    - Write 2500-3000 words (comprehensive, not generic)
    - Use clear H2/H3 headings with target keywords naturally integrated
    - Include a detailed table of contents at the start
+   - **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
 
 2. **Specificity & Data (MOST IMPORTANT):**
-   - Use REAL, SPECIFIC data points (not "typically" or "usually")
+   - Use REAL, SPECIFIC data points from the brand analysis provided above
    - Include actual product model comparisons when possible
    - Reference specific features, specs, and real-world use cases
-   - Cite specific pricing ranges with actual dollar amounts
-   - Include concrete examples: "YETI Tundra 45 holds ice for 7 days" not "coolers hold ice for several days"
-   - Add real user scenarios: "Best for 3-day camping trips" not "good for camping"
+   - **CRITICAL: DO NOT fabricate specific test results, studies, or research citations**
+   - **DO NOT cite specific publications like "Outdoor Life magazine" or specific test results unless you have verified access**
+   - If referencing performance data, use the brand metrics provided above or use generic phrasing like "Independent testing shows..." or "Performance data indicates..."
+   - Include concrete examples based on the real brand data provided
+   - Add real user scenarios based on typical use cases
 
 3. **Comparison Tables:**
    - Create detailed side-by-side comparison tables
@@ -512,10 +546,16 @@ ${topCompetitor ? `- ${topCompetitor.name}:
 7. **Additional Sections:**
    - "Key Differences at a Glance" (bullet points)
    - "Detailed Feature Comparison" (with specific examples)
-   - "Pricing Breakdown" (with actual price ranges)
+   - "Pricing Breakdown" (with estimated price ranges - note if data is estimated)
    - "Real User Scenarios" (specific use cases)
    - "Final Verdict" (clear recommendation with reasoning)
    - "FAQ Section" (5-7 common questions with specific answers)
+   - Add a disclaimer: "Note: Pricing, specifications, and performance data are based on available information and may vary. Always verify current details directly with manufacturers."
+
+**IMPORTANT FORMATTING:**
+- Start your response with: "Meta: [150-160 character meta description including primary keyword]"
+- Then write the full comparison content
+- End with the disclaimer mentioned above
 
 **Write the complete, polished comparison page now. Make it exceptional - the kind of content that makes readers say "wow, this is exactly what I needed!":`;
 
@@ -542,7 +582,26 @@ ${topCompetitor ? `- ${topCompetitor.name}:
   }
 
   const title = `${brandName} vs ${competitorName}: Complete Comparison`;
-  const metaDescription = `Compare ${brandName} and ${competitorName}. See features, pricing, pros, cons, and which is better for your needs.`;
+  
+  // Try to extract meta description from the start (new format)
+  let metaDescription = text.match(/^Meta:\s*(.+?)(?:\n|$)/im)?.[1]?.trim();
+  
+  // Remove "Meta:" prefix if it was included
+  if (metaDescription?.startsWith('Meta:')) {
+    metaDescription = metaDescription.replace(/^Meta:\s*/i, '').trim();
+  }
+  
+  // Fallback to generated description
+  if (!metaDescription || metaDescription.length < 50) {
+    metaDescription = `Compare ${brandName} and ${competitorName}. See features, pricing, pros, cons, and which is better for your needs.`;
+    // Ensure it's 150-160 characters
+    if (metaDescription.length > 160) {
+      metaDescription = metaDescription.substring(0, 157) + '...';
+    }
+  }
+  
+  // Clean up the content to remove the Meta: line if present
+  text = text.replace(/^Meta:\s*.+?(?:\n|$)/im, '').trim();
 
   return {
     type: 'comparison',
@@ -578,8 +637,13 @@ async function generateFAQPage(
 - Use Schema.org FAQPage structured data format in your response
 - Cover common questions, features, pricing, use cases, troubleshooting
 - Optimize for SEO with natural keyword integration
-- Include a compelling meta description
+- **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
+- **DO NOT fabricate specific research studies or citations**
 - Ready to publish
+
+**IMPORTANT FORMATTING:**
+- Start your response with: "Meta: [150-160 character meta description]"
+- Then write the full FAQ content
 
 Write the complete FAQ page now:`;
 
@@ -606,7 +670,26 @@ Write the complete FAQ page now:`;
   }
 
   const title = `${brandName} FAQ: ${action.title}`;
-  const metaDescription = `Frequently asked questions about ${brandName}. Get answers about features, pricing, and more.`;
+  
+  // Try to extract meta description from the start (new format)
+  let metaDescription = text.match(/^Meta:\s*(.+?)(?:\n|$)/im)?.[1]?.trim();
+  
+  // Remove "Meta:" prefix if it was included
+  if (metaDescription?.startsWith('Meta:')) {
+    metaDescription = metaDescription.replace(/^Meta:\s*/i, '').trim();
+  }
+  
+  // Fallback to generated description
+  if (!metaDescription || metaDescription.length < 50) {
+    metaDescription = `Frequently asked questions about ${brandName}. Get answers about features, pricing, and more.`;
+    // Ensure it's 150-160 characters
+    if (metaDescription.length > 160) {
+      metaDescription = metaDescription.substring(0, 157) + '...';
+    }
+  }
+  
+  // Clean up the content to remove the Meta: line if present
+  text = text.replace(/^Meta:\s*.+?(?:\n|$)/im, '').trim();
 
   return {
     type: 'faq',
@@ -649,8 +732,13 @@ ${brandUrl ? `- Website: ${brandUrl}` : ''}
 - Include call-to-action sections
 - Optimize for target keywords naturally
 - Use clear sections: Hero, Features, Benefits, Social Proof, CTA
-- Include a compelling meta description
+- **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
+- **DO NOT fabricate specific research studies or citations**
 - Ready to publish
+
+**IMPORTANT FORMATTING:**
+- Start your response with: "Meta: [150-160 character meta description]"
+- Then write the full landing page content
 
 Write the complete landing page now:`;
 
@@ -676,7 +764,25 @@ Write the complete landing page now:`;
   }
 
   const title = action.title;
-  const metaDescription = `${action.description.substring(0, 140)}...`;
+  
+  // Try to extract meta description from the start (new format)
+  let metaDescription = text.match(/^Meta:\s*(.+?)(?:\n|$)/im)?.[1]?.trim();
+  
+  // Remove "Meta:" prefix if it was included
+  if (metaDescription?.startsWith('Meta:')) {
+    metaDescription = metaDescription.replace(/^Meta:\s*/i, '').trim();
+  }
+  
+  // Fallback to generated description
+  if (!metaDescription || metaDescription.length < 50) {
+    metaDescription = action.description.substring(0, 140);
+    if (metaDescription.length > 160) {
+      metaDescription = metaDescription.substring(0, 157) + '...';
+    }
+  }
+  
+  // Clean up the content to remove the Meta: line if present
+  text = text.replace(/^Meta:\s*.+?(?:\n|$)/im, '').trim();
 
   return {
     type: 'landing-page',
@@ -708,8 +814,13 @@ async function generateTechnicalGuide(
 - Make it actionable and easy to follow
 - Include troubleshooting tips
 - Optimize for SEO
-- Include a compelling meta description
+- **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
+- **DO NOT fabricate specific research studies or citations**
 - Ready to publish
+
+**IMPORTANT FORMATTING:**
+- Start your response with: "Meta: [150-160 character meta description]"
+- Then write the full technical guide content
 
 Write the complete technical guide now:`;
 
@@ -734,11 +845,30 @@ Write the complete technical guide now:`;
     throw new Error(`Failed to generate technical guide: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 
+  // Try to extract meta description from the start (new format)
+  let metaDescription = text.match(/^Meta:\s*(.+?)(?:\n|$)/im)?.[1]?.trim();
+  
+  // Remove "Meta:" prefix if it was included
+  if (metaDescription?.startsWith('Meta:')) {
+    metaDescription = metaDescription.replace(/^Meta:\s*/i, '').trim();
+  }
+  
+  // Fallback to generated description
+  if (!metaDescription || metaDescription.length < 50) {
+    metaDescription = `Technical guide: ${action.description.substring(0, 140)}`;
+    if (metaDescription.length > 160) {
+      metaDescription = metaDescription.substring(0, 157) + '...';
+    }
+  }
+  
+  // Clean up the content to remove the Meta: line if present
+  text = text.replace(/^Meta:\s*.+?(?:\n|$)/im, '').trim();
+
   return {
     type: 'technical',
     title: action.title,
     content: text,
-    metaDescription: `Technical guide: ${action.description.substring(0, 140)}...`,
+    metaDescription,
     keywords: [brandName, 'technical guide', 'implementation'],
     wordCount: text.split(/\s+/).length,
     readyToPublish: true,
