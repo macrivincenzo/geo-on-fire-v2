@@ -801,28 +801,103 @@ Write the complete landing page now:`;
 async function generateTechnicalGuide(
   request: ContentGenerationRequest
 ): Promise<GeneratedContent> {
-  const { action, brandName, brandUrl } = request;
+  const { action, brandName, brandData, competitors, brandUrl, seoData, context } = request;
   
-  let prompt = `Create a technical implementation guide for ${brandName}.\n\n`;
+  // Build comprehensive SEO data context
+  const primaryKeyword = seoData?.keywords?.[0];
+  const keywordContext = seoData?.keywords?.slice(0, 10).map(k => {
+    const difficulty = k.difficulty >= 70 ? 'high' : k.difficulty >= 40 ? 'medium' : 'low';
+    return `- "${k.keyword}": ${k.searchVolume.toLocaleString()} monthly searches, ${difficulty} difficulty (${k.difficulty}%)`;
+  }).join('\n') || '';
+  
+  let prompt = `You are an expert technical SEO writer creating a comprehensive, data-driven technical implementation guide for ${brandName}.\n\n`;
+  
+  prompt += `**CRITICAL: Use real data, specific examples, and actionable implementation steps. Avoid generic statements.**\n\n`;
+  
   prompt += `**Topic:** ${action.title}\n`;
   prompt += `**Description:** ${action.description}\n\n`;
   
-  prompt += `**Requirements:**
-- Write a step-by-step technical guide
-- Include code examples or implementation details where relevant
-- Add clear sections and subsections
-- Make it actionable and easy to follow
-- Include troubleshooting tips
-- Optimize for SEO
-- **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
-- **DO NOT fabricate specific research studies or citations**
-- Ready to publish
+  prompt += `**SEO Keyword Research (DataForSEO Real Data):**
+${keywordContext || 'No keyword data available'}
+
+**Primary Target Keyword:** ${primaryKeyword?.keyword || 'N/A'}
+- Search Volume: ${primaryKeyword?.searchVolume.toLocaleString() || 'N/A'} monthly searches
+- Keyword Difficulty: ${primaryKeyword?.difficulty || 'N/A'}% (${primaryKeyword?.difficulty && primaryKeyword.difficulty >= 70 ? 'High competition' : primaryKeyword?.difficulty && primaryKeyword.difficulty >= 40 ? 'Medium competition' : 'Low competition'})
+${primaryKeyword ? `- **Content Strategy:** Target this keyword naturally in H1, first paragraph, and 2-3 H2/H3 headings` : ''}\n\n`;
+  
+  if (context?.insights && context.insights.length > 0) {
+    prompt += `**Key Insights from Analysis:**
+${context.insights.slice(0, 5).map(i => `- ${i}`).join('\n')}\n\n`;
+  }
+  
+  prompt += `**Brand Performance Data (Real Metrics - Use These Specific Numbers):**
+- Brand: ${brandName}
+- AI Visibility Score: ${brandData.visibilityScore}% (${brandData.visibilityScore >= 80 ? 'Excellent' : brandData.visibilityScore >= 60 ? 'Good' : brandData.visibilityScore >= 40 ? 'Fair' : 'Needs Improvement'})
+- Sentiment Score: ${brandData.sentimentScore}/100 (${brandData.sentimentScore >= 80 ? 'Very Positive' : brandData.sentimentScore >= 60 ? 'Positive' : brandData.sentimentScore >= 40 ? 'Neutral' : 'Negative'})
+- Average Position: ${brandData.averagePosition || 'N/A'}
+- Mentions: ${brandData.mentions || 'N/A'}
+${brandUrl ? `- Website: ${brandUrl}` : ''}
+
+${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).map(c => `${c.name} (${c.visibilityScore}% visibility, ${c.sentimentScore}/100 sentiment)`).join(', ')}` : ''}\n\n`;
+  
+  prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
+
+1. **Structure & Length:**
+   - Write 2000-2500 words (comprehensive, not generic)
+   - Use clear H2/H3 headings with target keywords naturally integrated
+   - Include a detailed table of contents at the start
+   - **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
+
+2. **Specificity & Data (MOST IMPORTANT):**
+   - Use REAL, SPECIFIC data points from the brand analysis provided above
+   - Reference the actual visibility score (${brandData.visibilityScore}%), sentiment score (${brandData.sentimentScore}/100), and other metrics
+   - Include specific implementation examples for ${brandName}'s website
+   - Provide code examples, schema markup, and technical implementation details
+   - **CRITICAL: DO NOT fabricate specific research studies, citations, or statistics**
+   - **DO NOT cite specific publications or test results unless you have verified access**
+   - Focus on actionable, implementable technical solutions based on the real brand data provided
+   - Address the specific technical SEO gaps indicated by the ${brandData.visibilityScore}% visibility score
+
+3. **Technical Implementation:**
+   - Include step-by-step implementation instructions
+   - Provide actual code examples (JSON-LD schema, HTML snippets, etc.)
+   - Include before/after examples where relevant
+   - Add troubleshooting sections for common issues
+   - Reference specific tools and validation methods
+
+4. **SEO Optimization:**
+   - Naturally integrate primary keyword "${primaryKeyword?.keyword || action.title}" in:
+     * H1 title
+     * First paragraph (within first 100 words)
+     * 2-3 H2/H3 headings
+     * Meta description
+   - Use related keywords naturally throughout
+   - Include semantic variations of target keywords
+   - Optimize for featured snippets with clear, concise answers
+
+5. **Content Quality:**
+   - Write in an authoritative, technical tone
+   - Include actionable insights and specific recommendations
+   - Add real-world examples and use cases for ${brandName}
+   - Make it practical and implementable
+   - Include checklists and validation steps
+
+6. **Additional Sections:**
+   - "Table of Contents" (with anchor links)
+   - "Current Status Analysis" (using the real metrics provided)
+   - "Step-by-Step Implementation" (with code examples)
+   - "Validation and Testing" (how to verify implementation)
+   - "Expected Results" (based on the ${brandData.visibilityScore}% current visibility)
+   - "Troubleshooting Common Issues"
+   - "FAQ Section" (5-7 technical questions)
+   - Add a disclaimer: "Note: Performance metrics and statistics are based on current brand analysis data. Specific numbers may vary based on market conditions and implementation."
 
 **IMPORTANT FORMATTING:**
-- Start your response with: "Meta: [150-160 character meta description]"
+- Start your response with: "Meta: [150-160 character meta description including primary keyword]"
 - Then write the full technical guide content
+- End with the disclaimer mentioned above
 
-Write the complete technical guide now:`;
+**Write the complete, polished technical guide now. Make it exceptional - the kind of content that makes developers say "wow, this is exactly what I needed to implement!":`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {

@@ -372,13 +372,45 @@ async function executeTechnicalAction(
   // Generate technical SEO checklist
   const technicalChecklist = generateTechnicalChecklist(action, brandName, brandUrl);
   
-  // Generate technical implementation guide
+  // Get SEO metrics for technical SEO keywords
+  const technicalKeywords = [
+    `${brandName} SEO`,
+    `${brandName} structured data`,
+    `${brandName} schema markup`,
+    `${brandName} meta description`,
+    `${brandName} technical SEO`,
+    `optimize ${brandName} for AI`,
+    `${brandName} semantic HTML`,
+    `${brandName} content hierarchy`
+  ];
+  
+  const seoResults = await getBatchDataForSEOMetrics(technicalKeywords);
+  
+  // Generate technical implementation guide with real SEO data
   const generatedContent = await generateContentForAction({
     action,
     brandName,
     brandData,
     competitors: [],
-    brandUrl
+    brandUrl,
+    seoData: {
+      keywords: seoResults
+        .filter(r => r.metrics)
+        .map(r => ({
+          keyword: r.keyword,
+          searchVolume: r.metrics!.searchVolume,
+          difficulty: r.metrics!.keywordDifficulty
+        }))
+    },
+    context: {
+      insights: [
+        `Current AI visibility: ${brandData.visibilityScore}%`,
+        `Current sentiment score: ${brandData.sentimentScore}/100`,
+        `Average position: ${brandData.averagePosition || 'N/A'}`,
+        `Total mentions: ${brandData.mentions || 'N/A'}`,
+        `Technical SEO improvements can increase AI comprehension by 25-30%`
+      ]
+    }
   });
   
   return {
@@ -387,10 +419,11 @@ async function executeTechnicalAction(
     data: {
       checklist: technicalChecklist,
       priority: technicalChecklist.filter(item => item.priority === 'high'),
-      estimatedImpact: '25-30% improvement in AI comprehension'
+      estimatedImpact: '25-30% improvement in AI comprehension',
+      seoMetrics: seoResults
     },
     generatedContent,
-    creditsUsed: 0
+    creditsUsed: seoResults.length
   };
 }
 
