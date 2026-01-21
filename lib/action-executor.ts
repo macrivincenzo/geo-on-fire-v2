@@ -328,15 +328,44 @@ async function executeSentimentAction(
     brandData.sentimentScore
   );
   
-  // Generate content to improve sentiment
+  // Get SEO metrics for sentiment-related keywords
+  const sentimentKeywords = [
+    `${brandName} reviews`,
+    `${brandName} sentiment`,
+    `${brandName} reputation`,
+    `${brandName} customer satisfaction`,
+    `improve ${brandName} sentiment`,
+    `${brandName} brand perception`,
+    `${brandName} positive reviews`,
+    `${brandName} customer feedback`
+  ];
+  
+  const seoResults = await getBatchDataForSEOMetrics(sentimentKeywords);
+  
+  // Generate content to improve sentiment with real SEO data
   const generatedContent = await generateContentForAction({
     action,
     brandName,
     brandData,
     competitors: [],
     brandUrl,
+    seoData: {
+      keywords: seoResults
+        .filter(r => r.metrics)
+        .map(r => ({
+          keyword: r.keyword,
+          searchVolume: r.metrics!.searchVolume,
+          difficulty: r.metrics!.keywordDifficulty
+        }))
+    },
     context: {
-      insights: negativeTopics,
+      insights: [
+        `Current sentiment score: ${brandData.sentimentScore}/100`,
+        `Target sentiment: ${Math.min(100, brandData.sentimentScore + 15)}/100`,
+        `Negative topics identified: ${negativeTopics.length}`,
+        `Positive examples available: ${positiveResponses.length}`,
+        ...negativeTopics.slice(0, 3)
+      ],
       recommendations: improvementPlan.map(p => p.action)
     }
   });
@@ -353,10 +382,11 @@ async function executeSentimentAction(
         provider: r.provider,
         quote: extractBrandQuote(r.response, brandName),
         sentiment: r.sentiment
-      }))
+      })),
+      seoMetrics: seoResults
     },
     generatedContent,
-    creditsUsed: 0 // No external API calls needed
+    creditsUsed: seoResults.length
   };
 }
 

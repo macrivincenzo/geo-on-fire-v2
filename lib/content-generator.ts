@@ -620,32 +620,103 @@ ${topCompetitor ? `- ${topCompetitor.name}:
 async function generateFAQPage(
   request: ContentGenerationRequest
 ): Promise<GeneratedContent> {
-  const { action, brandName, brandData, context } = request;
+  const { action, brandName, brandData, competitors, brandUrl, seoData, context } = request;
   
-  let prompt = `Create a comprehensive FAQ page for ${brandName}.\n\n`;
+  // Build comprehensive SEO data context
+  const primaryKeyword = seoData?.keywords?.[0];
+  const keywordContext = seoData?.keywords?.slice(0, 10).map(k => {
+    const difficulty = k.difficulty >= 70 ? 'high' : k.difficulty >= 40 ? 'medium' : 'low';
+    return `- "${k.keyword}": ${k.searchVolume.toLocaleString()} monthly searches, ${difficulty} difficulty (${k.difficulty}%)`;
+  }).join('\n') || '';
+  
+  let prompt = `You are an expert content writer creating a comprehensive, data-driven FAQ page for ${brandName}.\n\n`;
+  
+  prompt += `**CRITICAL: Use real data, specific examples, and research-backed claims. Avoid generic statements.**\n\n`;
   
   prompt += `**Topic:** ${action.title}\n`;
   prompt += `**Context:** ${action.description}\n\n`;
   
-  if (context?.missedTopics && context.missedTopics.length > 0) {
-    prompt += `**Common Questions to Address:**\n${context.missedTopics.slice(0, 10).map(t => `- ${t}`).join('\n')}\n\n`;
+  prompt += `**SEO Keyword Research (DataForSEO Real Data):**
+${keywordContext || 'No keyword data available'}
+
+**Primary Target Keyword:** ${primaryKeyword?.keyword || 'N/A'}
+- Search Volume: ${primaryKeyword?.searchVolume.toLocaleString() || 'N/A'} monthly searches
+- Keyword Difficulty: ${primaryKeyword?.difficulty || 'N/A'}% (${primaryKeyword?.difficulty && primaryKeyword.difficulty >= 70 ? 'High competition' : primaryKeyword?.difficulty && primaryKeyword.difficulty >= 40 ? 'Medium competition' : 'Low competition'})
+${primaryKeyword ? `- **Content Strategy:** Target this keyword naturally in H1, questions, and answers` : ''}\n\n`;
+  
+  if (context?.insights && context.insights.length > 0) {
+    prompt += `**Key Insights from Analysis:**
+${context.insights.slice(0, 5).map(i => `- ${i}`).join('\n')}\n\n`;
   }
   
-  prompt += `**Requirements:**
-- Write 10-15 comprehensive Q&A pairs
-- Each answer should be 100-200 words
-- Use Schema.org FAQPage structured data format in your response
-- Cover common questions, features, pricing, use cases, troubleshooting
-- Optimize for SEO with natural keyword integration
-- **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
-- **DO NOT fabricate specific research studies or citations**
-- Ready to publish
+  if (context?.missedTopics && context.missedTopics.length > 0) {
+    prompt += `**Common Questions to Address (Based on User Queries):**
+${context.missedTopics.slice(0, 10).map(t => `- ${t}`).join('\n')}\n\n`;
+  }
+  
+  prompt += `**Brand Performance Data (Real Metrics - Use These Specific Numbers):**
+- Brand: ${brandName}
+- AI Visibility Score: ${brandData.visibilityScore}% (${brandData.visibilityScore >= 80 ? 'Excellent' : brandData.visibilityScore >= 60 ? 'Good' : brandData.visibilityScore >= 40 ? 'Fair' : 'Needs Improvement'})
+- Sentiment Score: ${brandData.sentimentScore}/100 (${brandData.sentimentScore >= 80 ? 'Very Positive' : brandData.sentimentScore >= 60 ? 'Positive' : brandData.sentimentScore >= 40 ? 'Neutral' : 'Negative'})
+- Average Position: ${brandData.averagePosition || 'N/A'}
+- Mentions: ${brandData.mentions || 'N/A'}
+${brandUrl ? `- Website: ${brandUrl}` : ''}
+
+${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).map(c => `${c.name} (${c.visibilityScore}% visibility, ${c.sentimentScore}/100 sentiment)`).join(', ')}` : ''}\n\n`;
+  
+  prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
+
+1. **Structure & Length:**
+   - Write 10-15 comprehensive Q&A pairs
+   - Each answer should be 100-200 words (detailed, not generic)
+   - Use Schema.org FAQPage structured data format in your response
+   - **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
+
+2. **Specificity & Data (MOST IMPORTANT):**
+   - Use REAL, SPECIFIC data points from the brand analysis provided above
+   - Reference the actual visibility score (${brandData.visibilityScore}%), sentiment score (${brandData.sentimentScore}/100), and other metrics
+   - Include specific features, benefits, and use cases for ${brandName}
+   - Add concrete examples based on the real brand data provided
+   - **CRITICAL: DO NOT fabricate specific research studies, citations, or statistics**
+   - **DO NOT cite specific publications or test results unless you have verified access**
+   - Focus on real brand information and data provided above
+
+3. **Question Coverage:**
+   - Cover common questions about features, pricing, use cases, troubleshooting
+   - Address questions related to the ${brandData.visibilityScore}% visibility score and how to improve it
+   - Include questions about ${brandName}'s competitive position
+   - Answer questions about implementation, setup, and best practices
+   - Address common concerns and objections
+
+4. **SEO Optimization:**
+   - Naturally integrate primary keyword "${primaryKeyword?.keyword || `${brandName} FAQ`}" in:
+     * H1 title
+     * First question or introduction
+     * Multiple questions and answers
+     * Meta description
+   - Use related keywords naturally throughout
+   - Include semantic variations of target keywords
+   - Optimize for featured snippets with clear, concise answers
+
+5. **Content Quality:**
+   - Write in a helpful, authoritative tone
+   - Include actionable insights and specific recommendations
+   - Add real-world examples and use cases
+   - Make answers comprehensive and valuable
+   - Use the brand metrics to provide context in answers
+
+6. **Additional Elements:**
+   - Compelling meta description (150-160 characters, includes primary keyword)
+   - Schema.org FAQPage structured data format
+   - Clear, scannable question formatting
+   - Comprehensive, detailed answers
 
 **IMPORTANT FORMATTING:**
-- Start your response with: "Meta: [150-160 character meta description]"
-- Then write the full FAQ content
+- Start your response with: "Meta: [150-160 character meta description including primary keyword]"
+- Then write the full FAQ content with Schema.org FAQPage format
+- Use clear Q&A structure
 
-Write the complete FAQ page now:`;
+**Write the complete, polished FAQ page now. Make it exceptional - the kind of content that makes readers say "wow, this answered all my questions!":`;
 
   // Prefer Anthropic for high-quality content generation
   const model = getProviderModel('anthropic') || getProviderModel('openai');
@@ -696,7 +767,7 @@ Write the complete FAQ page now:`;
     title,
     content: text,
     metaDescription,
-    keywords: [`${brandName} FAQ`, `${brandName} questions`, `how to use ${brandName}`],
+    keywords: seoData?.keywords?.slice(0, 5).map(k => k.keyword) || [`${brandName} FAQ`, `${brandName} questions`, `how to use ${brandName}`],
     wordCount: text.split(/\s+/).length,
     readyToPublish: true,
   };
@@ -708,39 +779,101 @@ Write the complete FAQ page now:`;
 async function generateLandingPage(
   request: ContentGenerationRequest
 ): Promise<GeneratedContent> {
-  const { action, brandName, brandData, brandUrl, seoData } = request;
+  const { action, brandName, brandData, competitors, brandUrl, seoData, context } = request;
   
-  let prompt = `Create an SEO-optimized landing page for ${brandName}.\n\n`;
+  // Build comprehensive SEO data context
+  const primaryKeyword = seoData?.keywords?.[0];
+  const keywordContext = seoData?.keywords?.slice(0, 10).map(k => {
+    const difficulty = k.difficulty >= 70 ? 'high' : k.difficulty >= 40 ? 'medium' : 'low';
+    return `- "${k.keyword}": ${k.searchVolume.toLocaleString()} monthly searches, ${difficulty} difficulty (${k.difficulty}%)`;
+  }).join('\n') || '';
+  
+  let prompt = `You are an expert content writer creating a comprehensive, data-driven landing page for ${brandName}.\n\n`;
+  
+  prompt += `**CRITICAL: Use real data, specific examples, and research-backed claims. Avoid generic statements.**\n\n`;
   
   prompt += `**Goal:** ${action.title}\n`;
   prompt += `**Description:** ${action.description}\n\n`;
   
-  if (seoData?.keywords && seoData.keywords.length > 0) {
-    prompt += `**Primary Keyword:** ${seoData.keywords[0]?.keyword} (${seoData.keywords[0]?.searchVolume || 0} monthly searches)\n`;
-    prompt += `**Secondary Keywords:** ${seoData.keywords.slice(1, 4).map(k => k.keyword).join(', ')}\n\n`;
+  prompt += `**SEO Keyword Research (DataForSEO Real Data):**
+${keywordContext || 'No keyword data available'}
+
+**Primary Target Keyword:** ${primaryKeyword?.keyword || 'N/A'}
+- Search Volume: ${primaryKeyword?.searchVolume.toLocaleString() || 'N/A'} monthly searches
+- Keyword Difficulty: ${primaryKeyword?.difficulty || 'N/A'}% (${primaryKeyword?.difficulty && primaryKeyword.difficulty >= 70 ? 'High competition' : primaryKeyword?.difficulty && primaryKeyword.difficulty >= 40 ? 'Medium competition' : 'Low competition'})
+${primaryKeyword ? `- **Content Strategy:** Target this keyword naturally in H1, first paragraph, and 2-3 H2/H3 headings` : ''}\n\n`;
+  
+  if (context?.insights && context.insights.length > 0) {
+    prompt += `**Key Insights from Analysis:**
+${context.insights.slice(0, 5).map(i => `- ${i}`).join('\n')}\n\n`;
   }
   
-  prompt += `**Brand Context:**
-- Visibility: ${brandData.visibilityScore}%
-- Sentiment: ${brandData.sentimentScore}/100
+  prompt += `**Brand Performance Data (Real Metrics - Use These Specific Numbers):**
+- Brand: ${brandName}
+- AI Visibility Score: ${brandData.visibilityScore}% (${brandData.visibilityScore >= 80 ? 'Excellent' : brandData.visibilityScore >= 60 ? 'Good' : brandData.visibilityScore >= 40 ? 'Fair' : 'Needs Improvement'})
+- Sentiment Score: ${brandData.sentimentScore}/100 (${brandData.sentimentScore >= 80 ? 'Very Positive' : brandData.sentimentScore >= 60 ? 'Positive' : brandData.sentimentScore >= 40 ? 'Neutral' : 'Negative'})
+- Average Position: ${brandData.averagePosition || 'N/A'}
+- Mentions: ${brandData.mentions || 'N/A'}
 ${brandUrl ? `- Website: ${brandUrl}` : ''}
 
-**Requirements:**
-- Write 1200-1500 words
-- Include compelling headline and subheadline
-- Add clear value propositions and benefits
-- Include call-to-action sections
-- Optimize for target keywords naturally
-- Use clear sections: Hero, Features, Benefits, Social Proof, CTA
-- **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
-- **DO NOT fabricate specific research studies or citations**
-- Ready to publish
+${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).map(c => `${c.name} (${c.visibilityScore}% visibility, ${c.sentimentScore}/100 sentiment)`).join(', ')}` : ''}\n\n`;
+  
+  prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
+
+1. **Structure & Length:**
+   - Write 1500-2000 words (comprehensive, not generic)
+   - Use clear H2/H3 headings with target keywords naturally integrated
+   - Include compelling headline and subheadline
+   - **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
+
+2. **Specificity & Data (MOST IMPORTANT):**
+   - Use REAL, SPECIFIC data points from the brand analysis provided above
+   - Reference the actual visibility score (${brandData.visibilityScore}%), sentiment score (${brandData.sentimentScore}/100), and other metrics
+   - Include specific features, benefits, and use cases for ${brandName}
+   - Add concrete examples based on the real brand data provided
+   - **CRITICAL: DO NOT fabricate specific research studies, citations, or statistics**
+   - **DO NOT cite specific publications or test results unless you have verified access**
+   - Focus on real brand information and data provided above
+
+3. **Landing Page Sections:**
+   - **Hero Section:** Compelling headline with primary keyword, subheadline, clear value proposition
+   - **Features Section:** Specific features of ${brandName} with real benefits
+   - **Benefits Section:** How ${brandName} helps users achieve their goals
+   - **Social Proof:** Use the ${brandData.sentimentScore}/100 sentiment score and ${brandData.visibilityScore}% visibility as proof points
+   - **Use Cases:** Real-world scenarios based on brand data
+   - **Call-to-Action:** Clear, compelling CTAs throughout
+   - **Competitive Advantage:** Highlight ${brandName}'s position vs competitors (if applicable)
+
+4. **SEO Optimization:**
+   - Naturally integrate primary keyword "${primaryKeyword?.keyword || action.title}" in:
+     * H1 title
+     * First paragraph (within first 100 words)
+     * 2-3 H2/H3 headings
+     * Meta description
+   - Use related keywords naturally throughout
+   - Include semantic variations of target keywords
+   - Optimize for featured snippets with clear, concise answers
+
+5. **Content Quality:**
+   - Write in a compelling, conversion-focused tone
+   - Include actionable insights and specific recommendations
+   - Add real-world examples and use cases
+   - Make it persuasive but authentic
+   - Use the brand metrics to build credibility
+
+6. **Additional Elements:**
+   - Compelling meta description (150-160 characters, includes primary keyword)
+   - Clear value propositions
+   - Multiple call-to-action sections
+   - Trust signals and social proof
+   - Benefits-focused content
 
 **IMPORTANT FORMATTING:**
-- Start your response with: "Meta: [150-160 character meta description]"
+- Start your response with: "Meta: [150-160 character meta description including primary keyword]"
 - Then write the full landing page content
+- End with a strong call-to-action
 
-Write the complete landing page now:`;
+**Write the complete, polished landing page now. Make it exceptional - the kind of content that makes visitors say "wow, I need this!":`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {
