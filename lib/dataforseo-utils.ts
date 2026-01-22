@@ -21,6 +21,59 @@ export interface DataForSEOResult {
   error?: string;
 }
 
+interface CachedKeywordData {
+  result: DataForSEOResult;
+  cachedAt: number;
+}
+
+// In-memory cache for keyword metrics (24-hour TTL)
+const keywordCache = new Map<string, CachedKeywordData>();
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+/**
+ * Get cached keyword data if available and not expired
+ */
+function getCachedKeyword(keyword: string): DataForSEOResult | null {
+  const cached = keywordCache.get(keyword.toLowerCase());
+  if (!cached) return null;
+  
+  const age = Date.now() - cached.cachedAt;
+  if (age > CACHE_TTL_MS) {
+    keywordCache.delete(keyword.toLowerCase());
+    return null;
+  }
+  
+  console.log(`✅ Using cached data for keyword: "${keyword}" (saved ${Math.round(age / 1000 / 60)} minutes ago)`);
+  return cached.result;
+}
+
+/**
+ * Store keyword data in cache
+ */
+function setCachedKeyword(keyword: string, result: DataForSEOResult): void {
+  keywordCache.set(keyword.toLowerCase(), {
+    result,
+    cachedAt: Date.now(),
+  });
+}
+
+/**
+ * Clear expired cache entries (call periodically)
+ */
+function clearExpiredCache(): void {
+  const now = Date.now();
+  let cleared = 0;
+  for (const [keyword, cached] of keywordCache.entries()) {
+    if (now - cached.cachedAt > CACHE_TTL_MS) {
+      keywordCache.delete(keyword);
+      cleared++;
+    }
+  }
+  if (cleared > 0) {
+    console.log(`🧹 Cleared ${cleared} expired cache entries`);
+  }
+}
+
 /**
  * Get real SEO metrics for a keyword using DataForSEO API
  * DataForSEO uses login/password authentication (not API key)
@@ -28,6 +81,12 @@ export interface DataForSEOResult {
 export async function getDataForSEOMetrics(
   keyword: string
 ): Promise<DataForSEOResult> {
+  // Check cache first
+  const cached = getCachedKeyword(keyword);
+  if (cached) {
+    return cached;
+  }
+  
   const login = process.env.DATAFORSEO_LOGIN;
   const password = process.env.DATAFORSEO_PASSWORD;
   
@@ -75,7 +134,7 @@ export async function getDataForSEOMetrics(
       };
     }
     
-    return {
+    const result = {
       keyword,
       metrics: {
         searchVolume: taskData.search_volume || 0,
@@ -88,6 +147,11 @@ export async function getDataForSEOMetrics(
         } : undefined,
       },
     };
+    
+    // Cache the result
+    setCachedKeyword(keyword, result);
+    
+    return result;
   } catch (error) {
     console.warn(`DataForSEO API call failed for "${keyword}":`, error);
     return {
@@ -104,15 +168,45 @@ export async function getDataForSEOMetrics(
 export async function getBatchDataForSEOMetrics(
   keywords: string[]
 ): Promise<DataForSEOResult[]> {
+  // Clear expired cache entries periodically
+  if (Math.random() < 0.1) { // 10% chance to clean up
+    clearExpiredCache();
+  }
+  
+  const results: DataForSEOResult[] = [];
+  const keywordsToFetch: string[] = [];
+  
+  // Check cache for each keyword
+  for (const keyword of keywords) {
+    const cached = getCachedKeyword(keyword);
+    if (cached) {
+      results.push(cached);
+    } else {
+      keywordsToFetch.push(keyword);
+    }
+  }
+  
+  // If all keywords were cached, return early
+  if (keywordsToFetch.length === 0) {
+    console.log(`✅ All ${keywords.length} keywords served from cache`);
+    return results;
+  }
+  
+  console.log(`📡 Fetching ${keywordsToFetch.length} new keywords (${results.length} from cache)`);
+  
   const login = process.env.DATAFORSEO_LOGIN;
   const password = process.env.DATAFORSEO_PASSWORD;
   
   if (!login || !password) {
-    return keywords.map(keyword => ({
-      keyword,
-      metrics: null,
-      error: 'DATAFORSEO_LOGIN and DATAFORSEO_PASSWORD not configured',
-    }));
+    // Return cached results + errors for uncached
+    return [
+      ...results,
+      ...keywordsToFetch.map(keyword => ({
+        keyword,
+        metrics: null,
+        error: 'DATAFORSEO_LOGIN and DATAFORSEO_PASSWORD not configured',
+      }))
+    ];
   }
 
   try {
@@ -144,10 +238,11 @@ export async function getBatchDataForSEOMetrics(
     const data = await response.json();
     
     // DataForSEO returns all keywords in result array
-    const results = data.tasks?.[0]?.result || [];
+    const apiResults = data.tasks?.[0]?.result || [];
     
-    return keywords.map((keyword) => {
-      const taskData = results.find((r: any) => r.keyword === keyword);
+    // Process fetched results and cache them
+    const fetchedResults = keywordsToFetch.map((keyword) => {
+      const taskData = apiResults.find((r: any) => r.keyword === keyword);
       
       if (!taskData) {
         return {
@@ -157,7 +252,7 @@ export async function getBatchDataForSEOMetrics(
         };
       }
 
-      return {
+      const result = {
         keyword,
         metrics: {
           searchVolume: taskData.search_volume || 0,
@@ -170,14 +265,25 @@ export async function getBatchDataForSEOMetrics(
           } : undefined,
         },
       };
+      
+      // Cache the result
+      setCachedKeyword(keyword, result);
+      
+      return result;
     });
+    
+    return [...results, ...fetchedResults];
   } catch (error) {
     console.warn(`DataForSEO batch API call failed:`, error);
-    return keywords.map(keyword => ({
-      keyword,
-      metrics: null,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    }));
+    // Return cached results + errors for uncached
+    return [
+      ...results,
+      ...keywordsToFetch.map(keyword => ({
+        keyword,
+        metrics: null,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      }))
+    ];
   }
 }
 
