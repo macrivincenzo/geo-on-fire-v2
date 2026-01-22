@@ -820,11 +820,12 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
   
   prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
 
-1. **Structure & Length:**
-   - Write 1500-2000 words (comprehensive, not generic)
+1. **Structure & Length (CRITICAL - MUST FOLLOW):**
+   - **YOU MUST WRITE 1500-2000 WORDS** - This is not optional. Generate the complete, full-length landing page.
    - Use clear H2/H3 headings with target keywords naturally integrated
    - Include compelling headline and subheadline
    - **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
+   - **DO NOT stop early - you have sufficient token capacity to generate 1500-2000 words**
 
 2. **Specificity & Data (MOST IMPORTANT):**
    - Use REAL, SPECIFIC data points from the brand analysis provided above
@@ -873,7 +874,7 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
 - Then write the full landing page content
 - End with a strong call-to-action
 
-**Write the complete, polished landing page now. Make it exceptional - the kind of content that makes visitors say "wow, I need this!":`;
+**CRITICAL INSTRUCTION: Generate the COMPLETE 1500-2000 word landing page. Do not stop early. You have sufficient capacity. Write every section in full detail. Start now with the meta description, then write the complete landing page from start to finish.**`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {
@@ -887,7 +888,7 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
     const result = await generateText({
       model,
       prompt,
-      maxTokens: 3500,
+      maxTokens: 6000, // Increased for comprehensive landing pages (1500-2000 words)
       temperature: 0.7,
     });
     text = result.text;
@@ -975,11 +976,12 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
   
   prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
 
-1. **Structure & Length:**
-   - Write 2000-2500 words (comprehensive, not generic)
+1. **Structure & Length (CRITICAL - MUST FOLLOW):**
+   - **YOU MUST WRITE 2000-2500 WORDS** - This is not optional. Generate the complete, full-length guide.
    - Use clear H2/H3 headings with target keywords naturally integrated
    - Include a detailed table of contents at the start
    - **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
+   - **DO NOT say you cannot write long content - you have sufficient token capacity to generate 2000-2500 words**
 
 2. **Specificity & Data (MOST IMPORTANT):**
    - Use REAL, SPECIFIC data points from the brand analysis provided above
@@ -1030,7 +1032,7 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
 - Then write the full technical guide content
 - End with the disclaimer mentioned above
 
-**Write the complete, polished technical guide now. Make it exceptional - the kind of content that makes developers say "wow, this is exactly what I needed to implement!":`;
+**CRITICAL INSTRUCTION: Generate the COMPLETE 2000-2500 word technical guide. Do not stop early or say you cannot write long content. You have sufficient capacity. Write every section in full detail. Start now with the meta description, then write the complete guide from start to finish.**`;
 
   const model = getProviderModel('openai') || getProviderModel('anthropic');
   if (!model) {
@@ -1044,8 +1046,8 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
     const result = await generateText({
       model,
       prompt,
-      maxTokens: 3000,
-      temperature: 0.6,
+      maxTokens: 8000, // Increased for comprehensive technical guides (2000-2500 words)
+      temperature: 0.7,
     });
     text = result.text;
   } catch (error) {
