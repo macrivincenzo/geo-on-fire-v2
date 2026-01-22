@@ -818,65 +818,84 @@ ${brandUrl ? `- Website: ${brandUrl}` : ''}
 
 ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).map(c => `${c.name} (${c.visibilityScore}% visibility, ${c.sentimentScore}/100 sentiment)`).join(', ')}` : ''}\n\n`;
   
-  prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
+  prompt += `**Content Requirements - Write a comprehensive landing page:**
 
-1. **Structure & Length (CRITICAL - MUST FOLLOW):**
-   - **YOU MUST WRITE 1500-2000 WORDS** - This is not optional. Generate the complete, full-length landing page.
-   - Use clear H2/H3 headings with target keywords naturally integrated
-   - Include compelling headline and subheadline
-   - **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
-   - **DO NOT stop early - you have sufficient token capacity to generate 1500-2000 words**
+**Start with:** "Meta: [150-160 character meta description including primary keyword]"
 
-2. **Specificity & Data (MOST IMPORTANT):**
-   - Use REAL, SPECIFIC data points from the brand analysis provided above
-   - Reference the actual visibility score (${brandData.visibilityScore}%), sentiment score (${brandData.sentimentScore}/100), and other metrics
-   - Include specific features, benefits, and use cases for ${brandName}
-   - Add concrete examples based on the real brand data provided
-   - **CRITICAL: DO NOT fabricate specific research studies, citations, or statistics**
-   - **DO NOT cite specific publications or test results unless you have verified access**
-   - Focus on real brand information and data provided above
+**Then write the complete landing page with these sections (write each section in full detail):**
 
-3. **Landing Page Sections:**
-   - **Hero Section:** Compelling headline with primary keyword, subheadline, clear value proposition
-   - **Features Section:** Specific features of ${brandName} with real benefits
-   - **Benefits Section:** How ${brandName} helps users achieve their goals
-   - **Social Proof:** Use the ${brandData.sentimentScore}/100 sentiment score and ${brandData.visibilityScore}% visibility as proof points
-   - **Use Cases:** Real-world scenarios based on brand data
-   - **Call-to-Action:** Clear, compelling CTAs throughout
-   - **Competitive Advantage:** Highlight ${brandName}'s position vs competitors (if applicable)
+1. **Hero Section** (200-250 words)
+   - Compelling headline with primary keyword "${primaryKeyword?.keyword || action.title}"
+   - Powerful subheadline highlighting ${brandName}'s ${brandData.visibilityScore}% visibility and ${brandData.sentimentScore}/100 sentiment
+   - Clear value proposition
+   - Strong opening hook
 
-4. **SEO Optimization:**
-   - Naturally integrate primary keyword "${primaryKeyword?.keyword || action.title}" in:
-     * H1 title
-     * First paragraph (within first 100 words)
-     * 2-3 H2/H3 headings
-     * Meta description
-   - Use related keywords naturally throughout
-   - Include semantic variations of target keywords
-   - Optimize for featured snippets with clear, concise answers
+2. **Why Choose ${brandName}?** (300-400 words)
+   - Key differentiators
+   - Market leadership position (${brandData.visibilityScore}% visibility vs competitors)
+   - Customer satisfaction (${brandData.sentimentScore}/100 sentiment score)
+   - Unique value propositions
+   - Real benefits and outcomes
 
-5. **Content Quality:**
-   - Write in a compelling, conversion-focused tone
-   - Include actionable insights and specific recommendations
-   - Add real-world examples and use cases
-   - Make it persuasive but authentic
-   - Use the brand metrics to build credibility
+3. **Features & Capabilities** (350-450 words)
+   - Detailed feature descriptions
+   - How features solve customer problems
+   - Technical specifications where relevant
+   - Innovation highlights
+   - Quality indicators
 
-6. **Additional Elements:**
-   - Compelling meta description (150-160 characters, includes primary keyword)
-   - Clear value propositions
-   - Multiple call-to-action sections
-   - Trust signals and social proof
-   - Benefits-focused content
+4. **Benefits & Outcomes** (300-400 words)
+   - What customers achieve with ${brandName}
+   - Real-world results and success stories
+   - ROI and value proposition
+   - Long-term advantages
+   - Competitive benefits
 
-**IMPORTANT FORMATTING:**
-- Start your response with: "Meta: [150-160 character meta description including primary keyword]"
-- Then write the full landing page content
-- End with a strong call-to-action
+5. **Social Proof & Trust Signals** (200-250 words)
+   - ${brandData.sentimentScore}/100 sentiment score as proof of satisfaction
+   - ${brandData.visibilityScore}% AI visibility as proof of authority
+   - Market position and recognition
+   - Customer testimonials (if applicable)
+   - Industry recognition
 
-**CRITICAL INSTRUCTION: Generate the COMPLETE 1500-2000 word landing page. Do not stop early. You have sufficient capacity. Write every section in full detail. Start now with the meta description, then write the complete landing page from start to finish.**`;
+6. **Use Cases & Applications** (250-300 words)
+   - Specific scenarios where ${brandName} excels
+   - Target audience applications
+   - Real-world examples
+   - Industry-specific use cases
 
-  const model = getProviderModel('openai') || getProviderModel('anthropic');
+7. **Competitive Advantage** (200-250 words)
+   - How ${brandName} compares to competitors
+   - Unique positioning
+   - Why choose ${brandName} over alternatives
+   - Market differentiation
+
+8. **Call-to-Action Section** (150-200 words)
+   - Clear, compelling CTA
+   - Next steps for prospects
+   - How to get started
+   - Contact or conversion options
+
+9. **Conclusion** (100-150 words)
+   - Summary of key points
+   - Final value proposition
+   - Strong closing statement
+
+**End with:** A final compelling call-to-action
+
+**Writing Guidelines:**
+- Write each section in full detail with specific examples
+- Use the real data: ${brandData.visibilityScore}% visibility, ${brandData.sentimentScore}/100 sentiment, ${brandData.averagePosition || 'N/A'} average position
+- Reference ${brandName} specifically throughout
+- Write in a compelling, conversion-focused tone
+- Include the primary keyword "${primaryKeyword?.keyword || action.title}" naturally in H1, first paragraph, and 2-3 headings
+- Make it persuasive but authentic
+- Each section should be comprehensive and valuable
+
+**Write the complete landing page now, covering all sections in detail:**`;
+
+  // Prefer Anthropic for long-form landing pages (handles length better)
+  const model = getProviderModel('anthropic') || getProviderModel('openai');
   if (!model) {
     const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
     const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
@@ -888,7 +907,7 @@ ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).m
     const result = await generateText({
       model,
       prompt,
-      maxTokens: 6000, // Increased for comprehensive landing pages (1500-2000 words)
+      maxTokens: 8000, // Increased for comprehensive landing pages (1500-2000 words)
       temperature: 0.7,
     });
     text = result.text;
@@ -974,67 +993,91 @@ ${brandUrl ? `- Website: ${brandUrl}` : ''}
 
 ${competitors.length > 0 ? `**Competitive Context:** ${competitors.slice(0, 3).map(c => `${c.name} (${c.visibilityScore}% visibility, ${c.sentimentScore}/100 sentiment)`).join(', ')}` : ''}\n\n`;
   
-  prompt += `**Content Requirements (CRITICAL - Follow Exactly):**
+  prompt += `**Content Requirements - Write a comprehensive technical guide:**
 
-1. **Structure & Length (CRITICAL - MUST FOLLOW):**
-   - **YOU MUST WRITE 2000-2500 WORDS** - This is not optional. Generate the complete, full-length guide.
-   - Use clear H2/H3 headings with target keywords naturally integrated
-   - Include a detailed table of contents at the start
-   - **Meta Description:** MUST include a complete meta description (150-160 characters) at the start: "Meta: [your meta description here]"
-   - **DO NOT say you cannot write long content - you have sufficient token capacity to generate 2000-2500 words**
+**Start with:** "Meta: [150-160 character meta description including primary keyword]"
 
-2. **Specificity & Data (MOST IMPORTANT):**
-   - Use REAL, SPECIFIC data points from the brand analysis provided above
-   - Reference the actual visibility score (${brandData.visibilityScore}%), sentiment score (${brandData.sentimentScore}/100), and other metrics
-   - Include specific implementation examples for ${brandName}'s website
-   - Provide code examples, schema markup, and technical implementation details
-   - **CRITICAL: DO NOT fabricate specific research studies, citations, or statistics**
-   - **DO NOT cite specific publications or test results unless you have verified access**
-   - Focus on actionable, implementable technical solutions based on the real brand data provided
-   - Address the specific technical SEO gaps indicated by the ${brandData.visibilityScore}% visibility score
+**Then write the complete guide with these sections (write each section in full detail):**
 
-3. **Technical Implementation:**
-   - Include step-by-step implementation instructions
-   - Provide actual code examples (JSON-LD schema, HTML snippets, etc.)
-   - Include before/after examples where relevant
-   - Add troubleshooting sections for common issues
-   - Reference specific tools and validation methods
+1. **Table of Contents** - List all sections with anchor links
 
-4. **SEO Optimization:**
-   - Naturally integrate primary keyword "${primaryKeyword?.keyword || action.title}" in:
-     * H1 title
-     * First paragraph (within first 100 words)
-     * 2-3 H2/H3 headings
-     * Meta description
-   - Use related keywords naturally throughout
-   - Include semantic variations of target keywords
-   - Optimize for featured snippets with clear, concise answers
+2. **Current Status Analysis** (200-300 words)
+   - Analyze ${brandName}'s current ${brandData.visibilityScore}% visibility score
+   - Discuss the ${brandData.sentimentScore}/100 sentiment score
+   - Explain what these metrics mean for technical SEO
+   - Identify specific improvement opportunities
 
-5. **Content Quality:**
-   - Write in an authoritative, technical tone
-   - Include actionable insights and specific recommendations
-   - Add real-world examples and use cases for ${brandName}
-   - Make it practical and implementable
-   - Include checklists and validation steps
+3. **Step-by-Step Implementation: Structured Data** (400-500 words)
+   - Detailed explanation of Schema.org markup
+   - Multiple code examples (JSON-LD for Organization, Product, Article)
+   - Specific examples for ${brandName}'s website
+   - Implementation checklist
+   - Common mistakes to avoid
 
-6. **Additional Sections:**
-   - "Table of Contents" (with anchor links)
-   - "Current Status Analysis" (using the real metrics provided)
-   - "Step-by-Step Implementation" (with code examples)
-   - "Validation and Testing" (how to verify implementation)
-   - "Expected Results" (based on the ${brandData.visibilityScore}% current visibility)
-   - "Troubleshooting Common Issues"
-   - "FAQ Section" (5-7 technical questions)
-   - Add a disclaimer: "Note: Performance metrics and statistics are based on current brand analysis data. Specific numbers may vary based on market conditions and implementation."
+4. **Step-by-Step Implementation: Semantic HTML** (300-400 words)
+   - Explanation of semantic HTML5 elements
+   - Before/after code examples
+   - Best practices for ${brandName}
+   - Accessibility considerations
+   - Validation methods
 
-**IMPORTANT FORMATTING:**
-- Start your response with: "Meta: [150-160 character meta description including primary keyword]"
-- Then write the full technical guide content
-- End with the disclaimer mentioned above
+5. **Step-by-Step Implementation: Meta Descriptions** (250-350 words)
+   - How to write effective meta descriptions
+   - Examples for different page types
+   - Optimization tips
+   - Tools for bulk generation
 
-**CRITICAL INSTRUCTION: Generate the COMPLETE 2000-2500 word technical guide. Do not stop early or say you cannot write long content. You have sufficient capacity. Write every section in full detail. Start now with the meta description, then write the complete guide from start to finish.**`;
+6. **Step-by-Step Implementation: Content Hierarchy** (300-400 words)
+   - Proper heading structure (H1, H2, H3)
+   - Content organization best practices
+   - Examples of good vs. bad hierarchy
+   - Impact on AI comprehension
 
-  const model = getProviderModel('openai') || getProviderModel('anthropic');
+7. **Validation and Testing** (250-300 words)
+   - Tools for testing structured data
+   - HTML validation methods
+   - SEO audit checklists
+   - How to verify improvements
+
+8. **Expected Results** (200-250 words)
+   - What to expect after implementation
+   - Timeline for seeing improvements
+   - How the ${brandData.visibilityScore}% score can improve
+   - ROI considerations
+
+9. **Troubleshooting Common Issues** (300-400 words)
+   - Common structured data errors and fixes
+   - HTML validation problems
+   - Meta description issues
+   - Content hierarchy mistakes
+   - Solutions for each issue
+
+10. **FAQ Section** (250-300 words)
+    - 5-7 common technical questions
+    - Detailed answers with examples
+    - Links to resources
+
+11. **Conclusion and Next Steps** (150-200 words)
+    - Summary of key points
+    - Action items
+    - Resources for further learning
+
+**End with:** "Note: Performance metrics and statistics are based on current brand analysis data. Specific numbers may vary based on market conditions and implementation."
+
+**Writing Guidelines:**
+- Write each section in full detail with examples
+- Use code blocks for all technical examples
+- Include specific references to ${brandName} throughout
+- Write naturally and comprehensively - aim for thorough coverage
+- Each section should be detailed enough to be actionable
+- Use the primary keyword "${primaryKeyword?.keyword || action.title}" naturally throughout
+- Write in an authoritative, technical tone
+- Include real data: ${brandData.visibilityScore}% visibility, ${brandData.sentimentScore}/100 sentiment
+
+**Write the complete guide now, covering all sections in detail:**`;
+
+  // Prefer Anthropic for long-form technical content (handles length better)
+  const model = getProviderModel('anthropic') || getProviderModel('openai');
   if (!model) {
     const openaiConfigured = process.env.OPENAI_API_KEY ? 'configured' : 'not configured';
     const anthropicConfigured = process.env.ANTHROPIC_API_KEY ? 'configured' : 'not configured';
