@@ -58,7 +58,11 @@ async function createProduct(product: AutumnProduct) {
     // If no priced items, use the first item with a nominal price
     const itemsToSend = pricedItems.length > 0 ? pricedItems : [product.items[0]];
 
-    const autumnProduct = {
+    // Determine billing interval for subscription products
+    const billingInterval = product.properties?.interval === 'month' ? 'month' : 
+                           product.properties?.interval === 'year' ? 'year' : undefined;
+
+    const autumnProduct: Record<string, unknown> = {
       id: product.id,
       name: product.name,
       is_add_on: product.type === 'addon',
@@ -81,7 +85,7 @@ async function createProduct(product: AutumnProduct) {
         }
 
         // Build the Autumn item structure
-        const autumnItem = {
+        const autumnItem: Record<string, unknown> = {
           feature_id: item.id,
           feature_type: 'static' as const, // Use 'static' for flat pricing items
           price: price,
@@ -89,9 +93,19 @@ async function createProduct(product: AutumnProduct) {
           usage_model: 'prepaid' as const,
         };
 
+        // Add billing interval for subscription items
+        if (billingInterval) {
+          autumnItem.interval = billingInterval;
+        }
+
         return autumnItem;
       }),
     };
+
+    // Add billing_interval at product level for subscriptions
+    if (billingInterval) {
+      autumnProduct.billing_interval = billingInterval;
+    }
 
     // Special handling for enterprise pricing
     if (product.id.includes('enterprise') && autumnProduct.items.length > 0) {

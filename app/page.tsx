@@ -796,12 +796,12 @@ export default function Home() {
                     Basic tracking features
                   </li>
                 </ul>
-                <button
-                  disabled
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 cursor-not-allowed rounded-md"
+                <Link
+                  href="/plans"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
                 >
-                  Coming Soon
-                </button>
+                  Subscribe
+                </Link>
               </div>
 
               {/* Pro Plan */}
@@ -853,12 +853,12 @@ export default function Home() {
                     Priority support
                   </li>
                 </ul>
-                <button
-                  disabled
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 opacity-75 cursor-not-allowed rounded-md"
+                <Link
+                  href="/plans"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-md"
                 >
-                  Coming Soon
-                </button>
+                  Subscribe
+                </Link>
               </div>
 
               {/* Enterprise Plan */}
@@ -906,12 +906,12 @@ export default function Home() {
                     Dedicated support
                   </li>
                 </ul>
-                <button
-                  disabled
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 cursor-not-allowed rounded-md"
+                <Link
+                  href="mailto:support@aibrandtrack.com?subject=Enterprise%20Plan%20Inquiry"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
                 >
                   Contact Sales
-                </button>
+                </Link>
               </div>
             </div>
           </div>

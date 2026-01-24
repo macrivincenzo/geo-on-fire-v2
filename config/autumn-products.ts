@@ -141,6 +141,129 @@ export const AUTUMN_PRODUCTS: AutumnProduct[] = [
       },
     ],
   },
+  // Monthly Subscription Plans
+  {
+    id: 'starter-monthly',
+    name: 'Starter',
+    description: '50 credits per month for individuals',
+    type: 'service',
+    display: {
+      name: 'Starter',
+      description: 'Perfect for individuals',
+      button_text: 'Subscribe',
+      recommend_text: '',
+    },
+    properties: {
+      interval: 'month',
+      interval_group: 'month',
+    },
+    items: [
+      {
+        id: 'starter-monthly-price',
+        type: 'flat',
+        display: {
+          primary_text: '$39',
+          secondary_text: '/month',
+        },
+        flat: {
+          amount: 3900, // $39 in cents
+        },
+      },
+      {
+        id: 'messages', // Use 'messages' as feature_id for credits
+        type: 'unit',
+        display: {
+          primary_text: '50 credits',
+          secondary_text: 'per month',
+        },
+        unit: {
+          amount: 0,
+          quantity: 50,
+        },
+      },
+    ],
+  },
+  {
+    id: 'pro-monthly',
+    name: 'Pro',
+    description: '150 credits per month for growing businesses',
+    type: 'service',
+    display: {
+      name: 'Pro',
+      description: 'For growing businesses',
+      button_text: 'Subscribe',
+      recommend_text: 'Recommended',
+    },
+    properties: {
+      interval: 'month',
+      interval_group: 'month',
+    },
+    items: [
+      {
+        id: 'pro-monthly-price',
+        type: 'flat',
+        display: {
+          primary_text: '$69',
+          secondary_text: '/month',
+        },
+        flat: {
+          amount: 6900, // $69 in cents
+        },
+      },
+      {
+        id: 'messages', // Use 'messages' as feature_id for credits
+        type: 'unit',
+        display: {
+          primary_text: '150 credits',
+          secondary_text: 'per month',
+        },
+        unit: {
+          amount: 0,
+          quantity: 150,
+        },
+      },
+    ],
+  },
+  {
+    id: 'enterprise-monthly',
+    name: 'Enterprise',
+    description: 'Unlimited credits for large organizations',
+    type: 'service',
+    display: {
+      name: 'Enterprise',
+      description: 'For large organizations',
+      button_text: 'Contact Sales',
+    },
+    properties: {
+      interval: 'month',
+      interval_group: 'month',
+    },
+    items: [
+      {
+        id: 'enterprise-monthly-price',
+        type: 'flat',
+        display: {
+          primary_text: 'Custom',
+          secondary_text: '/month',
+        },
+        flat: {
+          amount: 99900, // $999 placeholder - actual pricing via sales
+        },
+      },
+      {
+        id: 'messages', // Use 'messages' as feature_id for credits
+        type: 'unit',
+        display: {
+          primary_text: 'Unlimited credits',
+          secondary_text: 'per month',
+        },
+        unit: {
+          amount: 0,
+          quantity: 10000, // Large number for "unlimited"
+        },
+      },
+    ],
+  },
 ];
 
 export const AUTUMN_ADDONS: AutumnProduct[] = [];
