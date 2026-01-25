@@ -54,19 +54,19 @@ export default function PricingPage() {
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  1 free brand analysis
+                  11 credits (1 full analysis)
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  10 credits on signup
+                  All 4 AI providers included
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  All AI providers
+                  Competitor discovery included
                 </li>
               </ul>
               <Link
@@ -92,19 +92,25 @@ export default function PricingPage() {
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  50 credits (5 analyses)
+                  53 credits (~4 full analyses)
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  No expiration
+                  Credits never expire
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Full AI coverage
+                  Free competitor scraping
+                </li>
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  All 4 AI providers
                 </li>
               </ul>
               {session?.user ? (
@@ -137,13 +143,19 @@ export default function PricingPage() {
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  200 credits (20 analyses)
+                  220 credits (20 full analyses)
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Save 25%
+                  Save 25% vs Single Analysis
+                </li>
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Credits never expire
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -197,7 +209,7 @@ export default function PricingPage() {
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  50 credits per month
+                  53 credits/month (~4 analyses)
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,7 +221,7 @@ export default function PricingPage() {
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Content generation (2 items)
+                  Free competitor scraping
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +264,7 @@ export default function PricingPage() {
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  150 credits per month
+                  154 credits/month (~14 analyses)
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -264,7 +276,7 @@ export default function PricingPage() {
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Unlimited content generation
+                  Free competitor scraping
                 </li>
                 <li className="flex items-center text-gray-700 dark:text-gray-300">
                   <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -361,11 +373,32 @@ export default function PricingPage() {
         {/* Info Section */}
         <div className="max-w-3xl mx-auto mt-16 text-center">
           <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">How Credits Work</h2>
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 mb-6">
+            <div className="grid md:grid-cols-3 gap-4 text-left">
+              <div className="text-center p-4">
+                <div className="text-2xl font-bold text-blue-600 mb-1">1 credit</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Website extraction</div>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-2xl font-bold text-green-600 mb-1">FREE</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Competitor scraping</div>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-2xl font-bold text-blue-600 mb-1">10 credits</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Full AI analysis</div>
+              </div>
+            </div>
+            <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
+              <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                Total: 11 credits per complete brand analysis
+              </div>
+            </div>
+          </div>
           <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Each brand analysis costs 10 credits. One analysis gives you comprehensive insights across all major AI platforms including ChatGPT, Claude, Perplexity, and Gemini.
+            Each analysis gives you comprehensive insights across all 4 major AI platforms: ChatGPT, Claude, Perplexity, and Gemini. Scrape unlimited competitors for free before running your analysis.
           </p>
           <p className="text-gray-600 dark:text-gray-300">
-            Credits never expire. Buy once, use anytime. No subscriptions, no recurring charges.
+            Pay-as-you-go credits never expire. Buy once, use anytime. No hidden fees.
           </p>
         </div>
       </div>

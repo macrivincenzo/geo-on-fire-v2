@@ -181,7 +181,7 @@ export default function Home() {
                 "name": "How does AI Brand Track work?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "AI Brand Track works in three steps: 1) You enter your website URL and we automatically extract your brand information, industry, and keywords. 2) Our system simultaneously queries ChatGPT, Claude, Perplexity, Google Gemini, and other major AI platforms with industry-relevant prompts to see how they rank your brand. 3) You receive a comprehensive report showing your brand visibility score (0-100), competitor rankings, which prompts trigger your brand mention, sentiment analysis, and specific recommendations to improve your AI presence. Each analysis takes approximately 60 seconds and uses 10 credits. The platform provides real-time monitoring with the ability to track changes over time and measure the impact of optimization efforts."
+                  "text": "AI Brand Track works in three steps: 1) You enter your website URL and we automatically extract your brand information, industry, and keywords (1 credit). 2) Discover and scrape competitor websites for FREE to include in your analysis. 3) Our system simultaneously queries ChatGPT, Claude, Perplexity, Google Gemini with industry-relevant prompts to see how they rank your brand (10 credits). You receive a comprehensive report showing your brand visibility score (0-100), competitor rankings, which prompts trigger your brand mention, sentiment analysis, and specific recommendations to improve your AI presence. Each complete analysis takes approximately 60 seconds and uses 11 credits total."
                 }
               },
               {
@@ -205,7 +205,7 @@ export default function Home() {
                 "name": "How much does AI Brand Track cost?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "AI Brand Track offers flexible pay-as-you-go pricing: Free Trial ($0) includes 1 free brand analysis and 10 credits on signup to test the platform. Single Analysis Pack ($49) provides 50 credits for 5 complete analyses with no expiration and full AI coverage across ChatGPT, Claude, Perplexity, and Gemini. Credit Pack ($149) includes 200 credits for 20 analyses, saving 25% compared to the single pack, plus priority support. Each complete brand analysis uses 10 credits (1 for URL extraction, 9 for multi-platform AI scanning). No monthly subscriptions or long-term commitments required. Credits never expire. Additional credit packs can be purchased anytime. For agencies managing multiple clients, custom plans with white-label reporting are available."
+                  "text": "AI Brand Track offers flexible pricing options. Free Trial ($0) includes 11 credits for 1 complete brand analysis. Single Analysis ($49) provides 53 credits for approximately 4 full analyses with no expiration. Credit Pack ($149) includes 220 credits for 20 analyses, saving 25% compared to the single pack. Monthly subscriptions: Starter ($39/month) gets 53 credits/month (~4 analyses), Pro ($69/month) gets 154 credits/month (~14 analyses). Each complete brand analysis uses 11 credits total: 1 credit for website extraction and 10 credits for multi-platform AI scanning across ChatGPT, Claude, Perplexity, and Gemini. Competitor scraping is included FREE with all plans. Pay-as-you-go credits never expire."
                 }
               },
               {
@@ -535,7 +535,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500 dark:text-gray-400">
               <span>✓ No credit card</span>
               <span>✓ 60 seconds</span>
-              <span>✓ 10 free credits</span>
+              <span>✓ 11 free credits (1 full analysis)</span>
             </div>
           </div>
 
@@ -652,19 +652,19 @@ export default function Home() {
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    1 free brand analysis
+                    11 credits (1 full analysis)
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    10 credits on signup
+                    All 4 AI providers included
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    All AI providers
+                    Competitor discovery included
                   </li>
                 </ul>
                 <Link
@@ -690,19 +690,19 @@ export default function Home() {
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    50 credits (5 analyses)
+                    53 credits (~4 full analyses)
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    No expiration
+                    Credits never expire
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Full AI coverage
+                    Free competitor scraping
                   </li>
                 </ul>
                 <Link
@@ -725,13 +725,13 @@ export default function Home() {
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    200 credits (20 analyses)
+                    220 credits (20 full analyses)
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Save 25%
+                    Save 25% vs Single Analysis
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -775,7 +775,7 @@ export default function Home() {
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    50 credits per month
+                    53 credits/month (~4 analyses)
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -787,7 +787,7 @@ export default function Home() {
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Content generation (2 items)
+                    Free competitor scraping
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -820,7 +820,7 @@ export default function Home() {
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    150 credits per month
+                    154 credits/month (~14 analyses)
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -832,7 +832,7 @@ export default function Home() {
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Unlimited content generation
+                    Free competitor scraping
                   </li>
                   <li className="flex items-center text-gray-700 dark:text-gray-300">
                     <svg className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -919,11 +919,29 @@ export default function Home() {
           {/* Info Section */}
           <div className="max-w-3xl mx-auto text-center">
             <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">How Credits Work</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Each brand analysis costs 10 credits. One analysis gives you comprehensive insights across all major AI platforms including ChatGPT, Claude, Perplexity, and Gemini.
-            </p>
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+              <div className="grid md:grid-cols-3 gap-4 text-left">
+                <div className="text-center p-4">
+                  <div className="text-2xl font-bold text-blue-600 mb-1">1 credit</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Website extraction</div>
+                </div>
+                <div className="text-center p-4">
+                  <div className="text-2xl font-bold text-green-600 mb-1">FREE</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Competitor scraping</div>
+                </div>
+                <div className="text-center p-4">
+                  <div className="text-2xl font-bold text-blue-600 mb-1">10 credits</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Full AI analysis</div>
+                </div>
+              </div>
+              <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
+                <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Total: 11 credits per complete brand analysis
+                </div>
+              </div>
+            </div>
             <p className="text-gray-600 dark:text-gray-300">
-              Credits never expire. Buy once, use anytime. No subscriptions, no recurring charges.
+              Pay-as-you-go credits never expire. Buy once, use anytime. No hidden fees.
             </p>
           </div>
         </div>
@@ -958,7 +976,7 @@ export default function Home() {
               },
               {
                 q: "How much does AI Brand Track cost?",
-                a: "AI Brand Track offers flexible pay-as-you-go pricing with no monthly subscriptions. The Free Trial ($0) includes 1 free brand analysis and 10 credits on signup. The Starter Pack ($49) provides 50 credits for 5 complete analyses at $9.80 per analysis. The Pro Pack ($149) includes 200 credits for 20 analyses at $7.45 each, saving 25% compared to the starter pack. Each complete brand analysis uses 10 credits (1 for URL extraction, 9 for multi-platform AI scanning). Credits never expire and can be purchased anytime."
+                a: "AI Brand Track offers flexible pricing. Free Trial ($0) includes 11 credits for 1 complete analysis. Single Analysis ($49) provides 53 credits for ~4 analyses. Credit Pack ($149) includes 220 credits for 20 analyses, saving 25%. Monthly subscriptions: Starter ($39/month) gets 53 credits/month (~4 analyses), Pro ($69/month) gets 154 credits/month (~14 analyses). Each analysis uses 11 credits (1 for extraction + 10 for AI analysis). Competitor scraping is FREE. Pay-as-you-go credits never expire."
               },
               {
                 q: "How often should I monitor my AI brand visibility?",
