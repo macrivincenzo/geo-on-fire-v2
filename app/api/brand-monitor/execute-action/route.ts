@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
       const trackResult = await autumn.track({
         customer_id: sessionResponse.user.id,
         feature_id: FEATURE_ID_MESSAGES,
-        count: CREDITS_PER_ACTION,
+        value: CREDITS_PER_ACTION, // FIXED: Use 'value' not 'count'!
       });
       console.log('[Execute Action] Usage tracked successfully:', JSON.stringify(trackResult, null, 2));
     } catch (err) {

@@ -66,14 +66,64 @@ export async function POST(request: NextRequest) {
     }
 
     // Track usage with Autumn (deduct credits) - ONLY ONCE
+    // IMPORTANT: Brand Monitor Analysis costs 10 credits, not 1!
     try {
-      console.log('[Brand Monitor] Tracking usage - Customer ID:', sessionResponse.user.id, 'Count:', CREDITS_PER_BRAND_ANALYSIS);
-      const trackResult = await autumn.track({
+      const creditsToDeduct = CREDITS_PER_BRAND_ANALYSIS; // Should be 10
+      
+      // Get balance BEFORE deduction
+      const balanceBefore = await autumn.check({
         customer_id: sessionResponse.user.id,
         feature_id: FEATURE_ID_MESSAGES,
-        count: CREDITS_PER_BRAND_ANALYSIS,
       });
-      console.log('[Brand Monitor] Usage tracked successfully:', JSON.stringify(trackResult, null, 2));
+      const creditsBefore = balanceBefore.data?.balance || 0;
+      
+      console.log('[Brand Monitor] ===== DEDUCTING CREDITS FOR ANALYSIS =====');
+      console.log('[Brand Monitor] Customer ID:', sessionResponse.user.id);
+      console.log('[Brand Monitor] CREDITS_PER_BRAND_ANALYSIS constant:', CREDITS_PER_BRAND_ANALYSIS);
+      console.log('[Brand Monitor] Credits to deduct:', creditsToDeduct);
+      console.log('[Brand Monitor] Credits BEFORE deduction:', creditsBefore);
+      console.log('[Brand Monitor] Feature ID:', FEATURE_ID_MESSAGES);
+      
+      if (creditsToDeduct !== 10) {
+        console.error('[Brand Monitor] ⚠️ CRITICAL ERROR: Expected 10 credits but constant is:', creditsToDeduct);
+      }
+      
+      const trackRequest = {
+        customer_id: sessionResponse.user.id,
+        feature_id: FEATURE_ID_MESSAGES,
+        value: creditsToDeduct, // MUST be 10 - FIXED: Use 'value' not 'count'!
+      };
+      
+      console.log('[Brand Monitor] Sending track request:', JSON.stringify(trackRequest, null, 2));
+      console.log('[Brand Monitor] Track request count value:', trackRequest.count);
+      console.log('[Brand Monitor] Track request count type:', typeof trackRequest.count);
+      
+      const trackResult = await autumn.track(trackRequest);
+      
+      console.log('[Brand Monitor] Track response:', JSON.stringify(trackResult, null, 2));
+      
+      // Get balance AFTER deduction to verify
+      const balanceAfter = await autumn.check({
+        customer_id: sessionResponse.user.id,
+        feature_id: FEATURE_ID_MESSAGES,
+      });
+      const creditsAfter = balanceAfter.data?.balance || 0;
+      const actualDeducted = creditsBefore - creditsAfter;
+      
+      console.log('[Brand Monitor] Credits AFTER deduction:', creditsAfter);
+      console.log('[Brand Monitor] Actual credits deducted:', actualDeducted);
+      console.log('[Brand Monitor] Expected to deduct:', creditsToDeduct);
+      
+      if (actualDeducted !== creditsToDeduct) {
+        console.error('[Brand Monitor] ⚠️⚠️⚠️ MISMATCH DETECTED ⚠️⚠️⚠️');
+        console.error('[Brand Monitor] Expected to deduct:', creditsToDeduct);
+        console.error('[Brand Monitor] Actually deducted:', actualDeducted);
+        console.error('[Brand Monitor] This indicates an Autumn configuration issue!');
+      } else {
+        console.log('[Brand Monitor] ✅ Credit deduction verified: Correct amount deducted');
+      }
+      
+      console.log('[Brand Monitor] ===== CREDITS DEDUCTED =====');
     } catch (err) {
       console.error('[Brand Monitor] Failed to track usage:', err);
       if (err instanceof Error) {
