@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useCustomer } from '@/hooks/useAutumnCustomer';
 import { ThemeToggle } from './theme-toggle';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, CreditCard } from 'lucide-react';
+import { BuyCreditsModal } from './modals/buy-credits-modal';
 
 // Separate component that only renders when Autumn is available
 function UserCredits() {
@@ -26,6 +27,7 @@ export function Navbar() {
   const { data: session, isPending } = useSession();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [buyCreditsOpen, setBuyCreditsOpen] = useState(false);
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -73,7 +75,16 @@ export function Navbar() {
               Pricing
             </Link>
             {session && (
-              <UserCredits />
+              <>
+                <UserCredits />
+                <button
+                  onClick={() => setBuyCreditsOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                >
+                  <CreditCard className="w-3.5 h-3.5" />
+                  Buy More Credits
+                </button>
+              </>
             )}
             <ThemeToggle />
             {isPending ? (
@@ -146,6 +157,16 @@ export function Navbar() {
                 <div className="px-4 py-2">
                   <UserCredits />
                 </div>
+                <button
+                  onClick={() => {
+                    setBuyCreditsOpen(true);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                >
+                  <CreditCard className="w-4 h-4" />
+                  Buy More Credits
+                </button>
               </>
             )}
             <Link
@@ -194,6 +215,14 @@ export function Navbar() {
             )}
           </div>
         </div>
+      )}
+
+      {/* Buy Credits Modal */}
+      {session && (
+        <BuyCreditsModal 
+          open={buyCreditsOpen} 
+          onClose={() => setBuyCreditsOpen(false)} 
+        />
       )}
     </nav>
   );

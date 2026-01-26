@@ -17,7 +17,9 @@ export const ROLE_SYSTEM = 'system';
 // Credit/Usage Constants
 // ============================================
 export const CREDITS_PER_MESSAGE = 1;
-export const CREDITS_PER_BRAND_ANALYSIS = 10;
+export const CREDITS_PER_WEBSITE_EXTRACTION = 1; // Credits for website scraping/extraction
+export const CREDITS_PER_BRAND_ANALYSIS = 10; // Credits for full AI analysis
+export const CREDITS_PER_ACTION = 5; // Credits required for each Boost Action execution
 export const FREE_TIER_MESSAGES = 100;
 export const STARTER_TIER_MESSAGES = 1000;
 export const PRO_TIER_MESSAGES = 10000;

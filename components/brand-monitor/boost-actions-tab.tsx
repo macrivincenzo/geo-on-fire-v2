@@ -23,6 +23,9 @@ import {
 } from 'lucide-react';
 import { AIResponse, CompetitorRanking } from '@/lib/types';
 import { ActionItem, generateStrategicInsights } from '@/lib/strategic-insights';
+import { useCustomer, useRefreshCustomer } from '@/hooks/useAutumnCustomer';
+import { CREDITS_PER_ACTION } from '@/config/constants';
+import { BuyCreditsModal } from '@/components/modals/buy-credits-modal';
 
 interface BoostActionsTabProps {
   brandData: CompetitorRanking;
@@ -73,6 +76,13 @@ export function BoostActionsTab({
   analysisId,
   brandUrl
 }: BoostActionsTabProps) {
+  // Get user's credit balance
+  const { customer, refetch } = useCustomer();
+  const refreshCustomer = useRefreshCustomer();
+  const messageUsage = customer?.features?.messages;
+  const remainingCredits = messageUsage ? (messageUsage.balance || 0) : 0;
+  const [buyCreditsOpen, setBuyCreditsOpen] = useState(false);
+  
   // Generate action items from insights
   const insights = useMemo(() => {
     if (!brandData || !brandName) {
@@ -191,10 +201,21 @@ export function BoostActionsTab({
           ...prev,
           [action.id]: result
         }));
+        
+        // Refresh customer data to update credit balance
+        if (result.remainingCredits !== undefined) {
+          await refreshCustomer();
+        }
+        
         // Don't auto-move - let user control workflow
         // User can manually move to "In Progress" when they're ready to work on it
       } else {
-        alert(`Action execution failed: ${result.error || result.message}`);
+        // Handle insufficient credits error
+        if (response.status === 402 && result.error === 'Insufficient credits') {
+          setBuyCreditsOpen(true);
+        } else {
+          alert(`Action execution failed: ${result.error || result.message}`);
+        }
       }
     } catch (error) {
       console.error('Error executing action:', error);
@@ -563,17 +584,29 @@ export function BoostActionsTab({
             </div>
           )}
           
+          {/* Credit Cost Display */}
+          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+              <span className="font-medium">Generate Content</span> • <span className="font-semibold text-purple-600 dark:text-purple-400">{CREDITS_PER_ACTION} credits</span> • You have <span className="font-semibold text-blue-600 dark:text-blue-400">{remainingCredits}</span>
+            </p>
+          </div>
+          
           <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
             {/* Execute Button */}
             <button
               onClick={() => handleExecuteAction(action)}
-              disabled={executingActions.has(action.id)}
+              disabled={executingActions.has(action.id) || remainingCredits < CREDITS_PER_ACTION}
               className="flex-1 text-xs px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded transition-all flex items-center justify-center gap-1 font-medium shadow-sm hover:shadow-md disabled:cursor-not-allowed"
             >
               {executingActions.has(action.id) ? (
                 <>
                   <Loader2 className="w-3 h-3 animate-spin" />
                   Executing...
+                </>
+              ) : remainingCredits < CREDITS_PER_ACTION ? (
+                <>
+                  <AlertTriangle className="w-3 h-3" />
+                  Insufficient Credits
                 </>
               ) : (
                 <>
@@ -1096,6 +1129,16 @@ export function BoostActionsTab({
           </div>
         </div>
       )}
+
+      {/* Buy Credits Modal */}
+      <BuyCreditsModal 
+        open={buyCreditsOpen} 
+        onClose={async () => {
+          setBuyCreditsOpen(false);
+          // Refresh credits after modal closes (in case user purchased)
+          await refreshCustomer();
+        }} 
+      />
     </div>
   );
 }

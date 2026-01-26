@@ -9,7 +9,7 @@ import {
   InsufficientCreditsError,
   ExternalServiceError 
 } from '@/lib/api-errors';
-import { FEATURE_ID_MESSAGES } from '@/config/constants';
+import { FEATURE_ID_MESSAGES, CREDITS_PER_WEBSITE_EXTRACTION } from '@/config/constants';
 
 const autumn = new Autumn({
   apiKey: process.env.AUTUMN_SECRET_KEY || 'placeholder-key-for-build',
@@ -33,10 +33,10 @@ export async function POST(request: NextRequest) {
         feature_id: FEATURE_ID_MESSAGES,
       });
       
-      if (!access.data?.allowed || (access.data?.balance && access.data.balance < 1)) {
+      if (!access.data?.allowed || (access.data?.balance && access.data.balance < CREDITS_PER_WEBSITE_EXTRACTION)) {
         throw new InsufficientCreditsError(
-          'Insufficient credits. You need at least 1 credit to analyze a URL.',
-          { required: 1, available: access.data?.balance || 0 }
+          `Insufficient credits. You need at least ${CREDITS_PER_WEBSITE_EXTRACTION} credit to analyze a URL.`,
+          { required: CREDITS_PER_WEBSITE_EXTRACTION, available: access.data?.balance || 0 }
         );
       }
     } catch (error) {
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       await autumn.track({
         customer_id: sessionResponse.user.id,
         feature_id: FEATURE_ID_MESSAGES,
-        count: 1,
+        count: CREDITS_PER_WEBSITE_EXTRACTION,
       });
     } catch (err) {
       console.error('[Brand Monitor Scrape] Error tracking usage:', err);
