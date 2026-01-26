@@ -159,11 +159,32 @@ function injectInfographicsIntoContent(content: string, infographics: any[]): st
     if (insertPosition !== null) {
       const imageUrl = infographic.imageUrl || infographic.url || 
         `https://placehold.co/1200x600/2563eb/ffffff?text=${encodeURIComponent(infographic.title || 'Infographic')}`;
-      // Inject image with proper spacing to ensure it's treated as a block element
-      // Use HTML comment as separator to ensure ReactMarkdown treats image as standalone block
-      const imageMarkdown = `\n\n<!-- image-block -->\n\n![${infographic.altText || infographic.title}](${imageUrl})\n\n<!-- /image-block -->\n\n*${infographic.description || infographic.title}*\n\n`;
       
-      console.log(`✅ Injecting infographic "${infographic.title}" at position ${insertPosition}`);
+      // Check if imageUrl is valid (not empty)
+      if (!imageUrl || imageUrl.trim() === '') {
+        console.warn(`⚠️  Empty imageUrl for infographic "${infographic.title}", skipping`);
+        return modifiedContent;
+      }
+      
+      // For base64 data URLs, use a special marker that we'll replace with React component
+      // ReactMarkdown can have issues with very long base64 URLs in markdown syntax
+      const isBase64 = imageUrl.startsWith('data:image');
+      
+      let imageMarkdown: string;
+      if (isBase64) {
+        // Use a special marker with pipe delimiters (won't appear in base64)
+        // Format: [INFOGraphic|base64|title|description]
+        const title = (infographic.title || 'Infographic').replace(/[\[\]|]/g, '');
+        const desc = (infographic.description || infographic.title || '').replace(/[\[\]|]/g, '');
+        // Encode the base64 URL to avoid issues with special characters
+        const encodedUrl = encodeURIComponent(imageUrl);
+        imageMarkdown = `\n\n[INFOGraphic|${encodedUrl}|${title}|${desc}]\n\n`;
+      } else {
+        // Use markdown syntax for regular URLs
+        imageMarkdown = `\n\n<!-- image-block -->\n\n![${infographic.altText || infographic.title}](${imageUrl})\n\n<!-- /image-block -->\n\n*${infographic.description || infographic.title}*\n\n`;
+      }
+      
+      console.log(`✅ Injecting infographic "${infographic.title}" at position ${insertPosition} (${isBase64 ? 'base64' : 'URL'})`);
       modifiedContent = 
         modifiedContent.slice(0, insertPosition) + 
         imageMarkdown + 
@@ -390,20 +411,46 @@ export default async function BlogPreviewPage() {
                       );
                     },
                     p: ({ node, children, ...props }: any) => {
-                      // Check if paragraph only contains an image
-                      // ReactMarkdown wraps images in <p>, but images should be block-level
+                      // Check if this paragraph contains our special infographic marker for base64 images
+                      const text = typeof children === 'string' ? children : 
+                        Array.isArray(children) ? children.map(c => typeof c === 'string' ? c : '').join('') : 
+                        String(children);
+                      
+                      if (text && text.includes('[INFOGraphic|')) {
+                        // Extract infographic data from marker (format: [INFOGraphic|url|title|description])
+                        const match = text.match(/\[INFOGraphic\|([^|]+)\|([^|]+)\|([^\]]+)\]/);
+                        if (match) {
+                          const [, encodedUrl, title, description] = match;
+                          const imageUrl = decodeURIComponent(encodedUrl);
+                          return (
+                            <div className="my-8">
+                              <img
+                                src={imageUrl}
+                                alt={title}
+                                className="w-full rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800 block"
+                                loading="lazy"
+                              />
+                              {description && (
+                                <p className="mt-3 text-center text-sm text-zinc-600 dark:text-zinc-400 italic">
+                                  {description}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        }
+                      }
+                      
+                      // Check if paragraph only contains an image (for regular markdown images)
                       const nodeChildren = node?.children || [];
                       const hasOnlyImage = nodeChildren.length === 1 && 
                         nodeChildren[0]?.type === 'image';
                       
-                      // Check if rendered children is just an img element
                       const childrenArray = React.Children.toArray(children);
                       const hasOnlyImg = childrenArray.length === 1 && 
                         React.isValidElement(childrenArray[0]) && 
                         childrenArray[0].type === 'img';
                       
                       if (hasOnlyImage || hasOnlyImg) {
-                        // Wrap image in a div with caption for proper styling
                         const imgElement = hasOnlyImg ? childrenArray[0] : children;
                         const altText = React.isValidElement(imgElement) ? (imgElement.props as any)?.alt : '';
                         return (
@@ -473,11 +520,17 @@ export default async function BlogPreviewPage() {
                       );
                     },
                     img: ({ node, src, alt, ...props }: any) => {
+                      // Handle empty src (base64 URLs might be truncated in markdown)
+                      if (!src || src.trim() === '') {
+                        console.warn('Empty image src detected, skipping render');
+                        return null;
+                      }
+                      
                       // Return just the img - we'll handle wrapping in the p component
                       return (
                         <img
                           src={src}
-                          alt={alt}
+                          alt={alt || 'Infographic'}
                           className="w-full rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800 my-8 block"
                           loading="lazy"
                           {...props}

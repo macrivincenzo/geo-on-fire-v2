@@ -178,6 +178,95 @@ export const brandAnalysisSnapshotsRelations = relations(brandAnalysisSnapshots,
   }),
 }));
 
+// Subscription Plans - Define available subscription tiers
+export const subscriptionPlans = pgTable('subscription_plans', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull().unique(), // 'starter', 'pro', 'enterprise'
+  displayName: text('display_name').notNull(),
+  priceMonthly: integer('price_monthly').notNull(), // Store as cents (3900 = $39.00)
+  creditsPerMonth: integer('credits_per_month').notNull(),
+  features: jsonb('features'),
+  stripePriceId: text('stripe_price_id'),
+  isActive: boolean('is_active').default(true),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()),
+});
+
+// User Subscriptions - Track active user subscriptions
+export const userSubscriptions = pgTable('user_subscriptions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: text('user_id').notNull(),
+  planId: uuid('plan_id').notNull().references(() => subscriptionPlans.id),
+  stripeSubscriptionId: text('stripe_subscription_id').unique(),
+  stripeCustomerId: text('stripe_customer_id'),
+  status: text('status').notNull(), // 'active', 'canceled', 'past_due', 'trialing', 'incomplete'
+  currentPeriodStart: timestamp('current_period_start'),
+  currentPeriodEnd: timestamp('current_period_end'),
+  cancelAtPeriodEnd: boolean('cancel_at_period_end').default(false),
+  creditsAllocatedThisMonth: integer('credits_allocated_this_month').default(0),
+  lastCreditAllocation: timestamp('last_credit_allocation'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()),
+});
+
+// Stripe Customers - Map users to Stripe customer IDs
+export const stripeCustomers = pgTable('stripe_customers', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: text('user_id').notNull().unique(),
+  stripeCustomerId: text('stripe_customer_id').notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+// Subscription History - Audit trail for subscription changes
+export const subscriptionHistory = pgTable('subscription_history', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: text('user_id').notNull(),
+  subscriptionId: uuid('subscription_id').references(() => userSubscriptions.id),
+  eventType: text('event_type').notNull(), // 'created', 'updated', 'canceled', 'renewed', 'credit_allocated'
+  oldPlanId: uuid('old_plan_id').references(() => subscriptionPlans.id),
+  newPlanId: uuid('new_plan_id').references(() => subscriptionPlans.id),
+  metadata: jsonb('metadata'),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+// Relations
+export const subscriptionPlansRelations = relations(subscriptionPlans, ({ many }) => ({
+  subscriptions: many(userSubscriptions),
+}));
+
+export const userSubscriptionsRelations = relations(userSubscriptions, ({ one }) => ({
+  plan: one(subscriptionPlans, {
+    fields: [userSubscriptions.planId],
+    references: [subscriptionPlans.id],
+  }),
+  userProfile: one(userProfile, {
+    fields: [userSubscriptions.userId],
+    references: [userProfile.userId],
+  }),
+}));
+
+export const stripeCustomersRelations = relations(stripeCustomers, ({ one }) => ({
+  userProfile: one(userProfile, {
+    fields: [stripeCustomers.userId],
+    references: [userProfile.userId],
+  }),
+}));
+
+export const subscriptionHistoryRelations = relations(subscriptionHistory, ({ one }) => ({
+  subscription: one(userSubscriptions, {
+    fields: [subscriptionHistory.subscriptionId],
+    references: [userSubscriptions.id],
+  }),
+  oldPlan: one(subscriptionPlans, {
+    fields: [subscriptionHistory.oldPlanId],
+    references: [subscriptionPlans.id],
+  }),
+  newPlan: one(subscriptionPlans, {
+    fields: [subscriptionHistory.newPlanId],
+    references: [subscriptionPlans.id],
+  }),
+}));
+
 // Type exports for use in application
 export type UserProfile = typeof userProfile.$inferSelect;
 export type NewUserProfile = typeof userProfile.$inferInsert;
@@ -197,3 +286,11 @@ export type SourcePage = typeof sourcePages.$inferSelect;
 export type NewSourcePage = typeof sourcePages.$inferInsert;
 export type BrandAnalysisSnapshot = typeof brandAnalysisSnapshots.$inferSelect;
 export type NewBrandAnalysisSnapshot = typeof brandAnalysisSnapshots.$inferInsert;
+export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
+export type NewSubscriptionPlan = typeof subscriptionPlans.$inferInsert;
+export type UserSubscription = typeof userSubscriptions.$inferSelect;
+export type NewUserSubscription = typeof userSubscriptions.$inferInsert;
+export type StripeCustomer = typeof stripeCustomers.$inferSelect;
+export type NewStripeCustomer = typeof stripeCustomers.$inferInsert;
+export type SubscriptionHistory = typeof subscriptionHistory.$inferSelect;
+export type NewSubscriptionHistory = typeof subscriptionHistory.$inferInsert;
