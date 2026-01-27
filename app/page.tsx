@@ -502,7 +502,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center">
             <div className="inline-block mb-6">
-              <span className="inline-flex items-center gap-2 px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-full">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-300 rounded-none border border-blue-200 dark:border-blue-800">
                 Track ChatGPT, Claude, Perplexity & Gemini
               </span>
             </div>
@@ -520,13 +520,13 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link
                 href="/brand-monitor"
-                className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-none border-2 border-blue-600 hover:border-blue-700 transition-colors"
               >
                 Start Free Analysis
               </Link>
               <Link
                 href="/plans"
-                className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg transition-colors"
+                className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-none transition-colors"
               >
                 View Pricing
               </Link>
@@ -575,7 +575,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div>
+              <div className="w-12 h-12 bg-blue-600 text-white rounded-none flex items-center justify-center text-xl font-bold mx-auto mb-4 border-2 border-blue-600">1</div>
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Enter Your URL</h3>
               <p className="text-gray-600 dark:text-gray-300">
                 We automatically extract your brand and industry keywords
@@ -583,7 +583,7 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div>
+              <div className="w-12 h-12 bg-blue-600 text-white rounded-none flex items-center justify-center text-xl font-bold mx-auto mb-4 border-2 border-blue-600">2</div>
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">AI Analysis</h3>
               <p className="text-gray-600 dark:text-gray-300">
                 We query ChatGPT, Claude, Perplexity, and Gemini simultaneously
@@ -591,7 +591,7 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div>
+              <div className="w-12 h-12 bg-blue-600 text-white rounded-none flex items-center justify-center text-xl font-bold mx-auto mb-4 border-2 border-blue-600">3</div>
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Get Insights</h3>
               <p className="text-gray-600 dark:text-gray-300">
                 Receive visibility scores, rankings, and strategic recommendations
@@ -641,7 +641,7 @@ export default function Home() {
 
             <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6">
               {/* Free Tier */}
-              <div className="bg-white dark:bg-gray-900 p-8 border border-gray-200 dark:border-gray-700 transition-colors hover:border-gray-300 dark:hover:border-gray-600 rounded-lg">
+              <div className="bg-white dark:bg-gray-900 p-8 border-2 border-gray-200 dark:border-gray-700 transition-colors hover:border-gray-300 dark:hover:border-gray-600 rounded-none">
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Free Trial</h4>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">Try it out</p>
                 <div className="mb-6">
@@ -669,15 +669,15 @@ export default function Home() {
                 </ul>
                 <Link
                   href="/register"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-none"
                 >
                   Start Free
                 </Link>
               </div>
 
               {/* Single Analysis */}
-              <div className="bg-white dark:bg-gray-900 p-8 border-2 border-blue-600 relative rounded-lg">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 text-sm font-semibold rounded-full">
+              <div className="bg-white dark:bg-gray-900 p-8 border-2 border-blue-600 relative rounded-none">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1.5 text-sm font-semibold rounded-none border-2 border-blue-600">
                   Most Popular
                 </div>
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Single Analysis</h4>
@@ -707,14 +707,14 @@ export default function Home() {
                 </ul>
                 <Link
                   href="/plans"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600 hover:border-blue-700"
                 >
                   Buy Now
                 </Link>
               </div>
 
               {/* Credit Pack */}
-              <div className="bg-white dark:bg-gray-900 p-8 border border-gray-200 dark:border-gray-700 transition-colors hover:border-gray-300 dark:hover:border-gray-600 rounded-lg">
+              <div className="bg-white dark:bg-gray-900 p-8 border-2 border-gray-200 dark:border-gray-700 transition-colors hover:border-gray-300 dark:hover:border-gray-600 rounded-none">
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Credit Pack</h4>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">Best value</p>
                 <div className="mb-6">
@@ -742,7 +742,7 @@ export default function Home() {
                 </ul>
                 <Link
                   href="/plans"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-none"
                 >
                   Buy Now
                 </Link>
@@ -763,7 +763,7 @@ export default function Home() {
 
             <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
               {/* Starter Plan */}
-              <div className="bg-white dark:bg-gray-900 p-8 border border-gray-200 dark:border-gray-700 transition-colors hover:border-gray-300 dark:hover:border-gray-600 rounded-lg">
+              <div className="bg-white dark:bg-gray-900 p-8 border-2 border-gray-200 dark:border-gray-700 transition-colors hover:border-gray-300 dark:hover:border-gray-600 rounded-none">
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Starter</h4>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">Perfect for individuals</p>
                 <div className="mb-6">
@@ -798,15 +798,15 @@ export default function Home() {
                 </ul>
                 <Link
                   href="/plans"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-none"
                 >
                   Subscribe
                 </Link>
               </div>
 
               {/* Pro Plan */}
-              <div className="bg-white dark:bg-gray-900 p-8 border-2 border-blue-600 relative rounded-lg">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 text-sm font-semibold rounded-full">
+              <div className="bg-white dark:bg-gray-900 p-8 border-2 border-blue-600 relative rounded-none">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1.5 text-sm font-semibold rounded-none border-2 border-blue-600">
                   Recommended
                 </div>
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Pro</h4>
@@ -855,14 +855,14 @@ export default function Home() {
                 </ul>
                 <Link
                   href="/plans"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600 hover:border-blue-700"
                 >
                   Subscribe
                 </Link>
               </div>
 
               {/* Enterprise Plan */}
-              <div className="bg-white dark:bg-gray-900 p-8 border border-gray-200 dark:border-gray-700 transition-colors hover:border-gray-300 dark:hover:border-gray-600 rounded-lg">
+              <div className="bg-white dark:bg-gray-900 p-8 border-2 border-gray-200 dark:border-gray-700 transition-colors hover:border-gray-300 dark:hover:border-gray-600 rounded-none">
                 <h4 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Enterprise</h4>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">For large organizations</p>
                 <div className="mb-6">
@@ -908,7 +908,7 @@ export default function Home() {
                 </ul>
                 <Link
                   href="mailto:support@aibrandtrack.com?subject=Enterprise%20Plan%20Inquiry"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-none"
                 >
                   Contact Sales
                 </Link>
@@ -919,7 +919,7 @@ export default function Home() {
           {/* Info Section */}
           <div className="max-w-3xl mx-auto text-center">
             <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">How Credits Work</h3>
-            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+            <div className="bg-white dark:bg-gray-900 rounded-none p-6 mb-6 border-2 border-gray-200 dark:border-gray-700">
               <div className="grid md:grid-cols-3 gap-4 text-left">
                 <div className="text-center p-4">
                   <div className="text-2xl font-bold text-blue-600 mb-1">1 credit</div>
@@ -956,7 +956,7 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {[
               {
                 q: "What is AI brand visibility monitoring?",
@@ -983,7 +983,7 @@ export default function Home() {
                 a: "The optimal monitoring frequency depends on your business goals. We recommend weekly monitoring for brands actively optimizing their AI presence, monthly monitoring for established brands tracking long-term trends, and immediate monitoring after major changes like product launches or competitor moves. AI models update their training data periodically, and your brand visibility can change based on new content indexed and competitor activity. Regular monitoring lets you track the impact of optimization efforts and identify new opportunities."
               }
             ].map((faq, index) => (
-              <div key={index} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+              <div key={index} className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-none overflow-hidden">
                 <button
                   onClick={() => toggleFaq(index)}
                   className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
