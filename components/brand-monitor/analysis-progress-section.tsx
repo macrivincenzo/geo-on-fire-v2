@@ -94,7 +94,7 @@ export function AnalysisProgressSection({
     <div className="flex items-center justify-center animate-panel-in">
       <div className="max-w-4xl w-full">
         <div className="transition-all duration-400 opacity-100 translate-y-0">
-          <Card className="p-2 bg-white dark:bg-gray-800/95 text-card-foreground gap-6 rounded-xl border py-6 shadow-sm dark:shadow-lg dark:shadow-black/20 border-gray-200 dark:border-gray-600/80 h-full flex flex-col font-sans tracking-tight">
+          <Card className="px-6 sm:px-8 py-6 sm:py-8 bg-white dark:bg-gray-800/95 text-card-foreground rounded-xl border shadow-sm dark:shadow-lg dark:shadow-black/20 border-gray-200 dark:border-gray-600/80 h-full flex flex-col font-sans tracking-tight">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
@@ -157,14 +157,14 @@ export function AnalysisProgressSection({
                 </div>
               )}
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-8 pt-2">
               {/* Prompts tiles */}
               <div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {displayPrompts.map((prompt, index) => {
                     const isCustom = customPrompts.includes(prompt);
                     return (
-                      <div key={`${prompt}-${index}`} className="group relative bg-white dark:bg-gray-700/90 rounded-lg border border-gray-200 dark:border-gray-600/80 p-5 hover:shadow-md dark:shadow-gray-900/20 transition-shadow">
+                      <div key={`${prompt}-${index}`} className="group relative bg-white dark:bg-gray-700/90 rounded-lg border border-gray-200 dark:border-gray-600/80 p-5 sm:p-6 hover:shadow-md dark:shadow-gray-900/20 transition-shadow">
                         <div className="flex items-start justify-between gap-4">
                           <p className="text-[1.0625rem] font-semibold text-gray-900 dark:text-white flex-1 font-sans tracking-tight leading-snug">
                             {prompt}
@@ -245,7 +245,7 @@ export function AnalysisProgressSection({
                 <button
                   onClick={onAddPromptClick}
                   disabled={analyzing}
-                  className="h-9 rounded-[10px] text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-800 dark:bg-gray-600 text-white hover:bg-gray-700 dark:hover:bg-gray-500 disabled:bg-gray-400 dark:disabled:bg-gray-600 border-2 border-gray-800 dark:border-gray-600 hover:border-gray-700 dark:hover:border-gray-500 px-4 py-1 gap-1 shadow-sm"
+                  className="h-9 rounded-lg text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-800 text-white hover:bg-gray-700 border border-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 px-4 gap-1.5"
                 >
                   <Plus className="h-4 w-4" />
                   Add Prompt
@@ -253,11 +253,11 @@ export function AnalysisProgressSection({
               </div>
 
               {/* Start Analysis Button */}
-              <div className="flex justify-center pt-4">
+              <div className="flex justify-center pt-2">
                 <button
                   onClick={onStartAnalysis}
                   disabled={analyzing}
-                  className="h-10 px-6 rounded-[10px] text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 dark:bg-blue-600 text-white hover:bg-blue-700 dark:hover:bg-blue-500 border-2 border-blue-600 dark:border-blue-500 shadow-md disabled:opacity-50 disabled:bg-blue-600 disabled:border-blue-600"
+                  className="h-11 px-8 rounded-lg text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 shadow-md"
                 >
                   {analyzing ? (
                     <>

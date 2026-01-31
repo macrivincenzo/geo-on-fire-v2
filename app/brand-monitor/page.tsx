@@ -66,7 +66,7 @@ function BrandMonitorContent({ session }: { session: any }) {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Hero Section - same design as front page */}
-      <section className="relative pt-24 sm:pt-32 pb-4 px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-24 sm:pt-32 pb-8 sm:pb-10 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center">
             <div className="inline-block mb-6">
@@ -77,9 +77,9 @@ function BrandMonitorContent({ session }: { session: any }) {
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
               AI Brand
               <br />
-              <span className="text-blue-600">Visibility Monitor</span>
+              <span className="text-blue-600 dark:text-blue-400">Visibility Monitor</span>
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-4">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
               Track how AI models rank your brand against competitors. Get actionable insights in 60 seconds.
             </p>
           </div>
