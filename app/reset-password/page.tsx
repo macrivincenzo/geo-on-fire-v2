@@ -16,6 +16,14 @@ function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
 
+  // Sign out any existing session as soon as user lands here from the email link,
+  // so they don't see another account's Dashboard/Logout in the navbar
+  useEffect(() => {
+    if (token) {
+      signOut();
+    }
+  }, [token]);
+
   useEffect(() => {
     if (!token) {
       setError('Invalid or missing reset token');

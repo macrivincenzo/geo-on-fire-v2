@@ -30,6 +30,10 @@ export const auth = betterAuth({
                 Reset Password
               </a>
             </div>
+            <p style="color: #666; font-size: 14px; margin-top: 24px;">
+              Can't see the button? Click this link to reset your password:<br/>
+              <a href="${url}" style="color: #2563eb; text-decoration: underline; word-break: break-all;">${url}</a>
+            </p>
             <p style="color: #999; font-size: 14px;">
               If you didn't request this, you can safely ignore this email.
             </p>
