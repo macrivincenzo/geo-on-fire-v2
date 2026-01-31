@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useSession } from "@/lib/auth-client";
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const { data: session } = useSession();
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -519,7 +521,7 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link
-                href="/brand-monitor"
+                href={session ? "/brand-monitor" : "/login?from=/brand-monitor"}
                 className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-none border-2 border-blue-600 hover:border-blue-700 transition-colors"
               >
                 Start Free Analysis

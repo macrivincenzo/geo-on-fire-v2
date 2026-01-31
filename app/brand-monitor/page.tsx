@@ -35,7 +35,7 @@ function BrandMonitorContent({ session }: { session: any }) {
   useEffect(() => {
     // If there's an auth error, redirect to login
     if (error?.code === 'UNAUTHORIZED' || error?.code === 'AUTH_ERROR') {
-      router.push('/login?redirect=/brand-monitor');
+      router.push('/login?from=/brand-monitor');
     }
   }, [error, router]);
 
@@ -196,7 +196,7 @@ export default function BrandMonitorPage() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!isPending && !session) {
-      router.push('/login?redirect=/brand-monitor');
+      router.push('/login?from=/brand-monitor');
     }
   }, [session, isPending, router]);
 

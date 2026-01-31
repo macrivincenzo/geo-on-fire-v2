@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from '@/lib/auth-client';
+import { ArrowLeft } from 'lucide-react';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -72,7 +73,7 @@ function LoginForm() {
       }
       
       // Use window.location.href for hard navigation to ensure cookies are sent
-      const returnUrl = searchParams.get('from') || '/dashboard';
+      const returnUrl = searchParams.get('from') || searchParams.get('redirect') || '/dashboard';
       window.location.href = returnUrl;
     } catch (err: any) {
       console.error('Login error:', err);
@@ -109,6 +110,13 @@ function LoginForm() {
       <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-md w-full space-y-8">
           <div>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-6"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to home
+            </Link>
             <div className="lg:hidden mb-8 flex justify-center">
               <h2 className="text-2xl font-bold text-zinc-900">
                 AI Brand Track
