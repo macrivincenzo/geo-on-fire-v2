@@ -16,6 +16,10 @@ export const sendEmail = async ({
 }) => {
   // In development without API key, just log to console
   if (!process.env.RESEND_API_KEY || !resend) {
+    if (process.env.NODE_ENV === 'production') {
+      console.error('RESEND_API_KEY is not set. Add it in Vercel (or your host) Environment Variables.');
+      throw new Error('Email is not configured. Please add RESEND_API_KEY in project settings.');
+    }
     console.log('📧 Email would be sent:');
     console.log('To:', to);
     console.log('Subject:', subject);
@@ -26,7 +30,7 @@ export const sendEmail = async ({
 
   try {
     const data = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'SaaS Starter <onboarding@resend.dev>',
+      from: process.env.EMAIL_FROM || 'AI Brand Track <onboarding@resend.dev>',
       to,
       subject,
       text,
