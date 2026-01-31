@@ -64,32 +64,34 @@ function BrandMonitorContent({ session }: { session: any }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900">
-      {/* Hero Header - Clean Minimal */}
-      <div className="relative bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-        <div className="px-4 sm:px-6 lg:px-8 py-12">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-2">
-                <span className="block text-gray-900 dark:text-white">AI Brand Track</span>
-                <span className="block text-blue-600">
-                  Monitor Your AI Brand Visibility
-                </span>
-              </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Track how AI models rank your brand against competitors
-              </p>
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Hero Section - same design as front page */}
+      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-gray-800">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center">
+            <div className="inline-block mb-6">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-300 rounded-none border border-blue-200 dark:border-blue-800">
+                Track ChatGPT, Claude, Perplexity & Gemini
+              </span>
             </div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
+              AI Brand
+              <br />
+              <span className="text-blue-600">Visibility Monitor</span>
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-10">
+              Track how AI models rank your brand against competitors. Get actionable insights in 60 seconds.
+            </p>
           </div>
         </div>
-      </div>
+      </section>
 
       <div className="flex relative min-h-screen">
         {/* Sidebar Toggle Button - Clean Minimal */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className={`fixed top-[13rem] z-20 p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all ${
-            sidebarOpen ? 'left-[324px]' : 'left-4'
+          className={`fixed top-72 sm:top-80 z-20 p-2.5 sm:p-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all rounded-none ${
+            sidebarOpen ? 'left-80 sm:left-[21rem]' : 'left-4'
           }`}
           aria-label="Toggle sidebar"
         >
@@ -101,11 +103,11 @@ function BrandMonitorContent({ session }: { session: any }) {
         </button>
 
         {/* Sidebar - Clean Minimal */}
-        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col transition-all duration-200 fixed left-0 top-0 h-screen z-10`}>
+        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-white dark:bg-gray-800 border-r-2 border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col transition-all duration-200 fixed left-0 top-0 h-screen z-10`}>
           <div className="p-4 border-b border-gray-200 dark:border-gray-700 mt-16">
             <Button
               onClick={handleNewAnalysis}
-              className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+              className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600"
             >
               <Plus className="w-4 h-4 mr-2" />
               New Analysis

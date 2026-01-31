@@ -21,15 +21,15 @@ export function UrlInputSection({
   const isProcessing = loading || analyzing;
 
   return (
-    <div className="flex flex-col items-center justify-center animate-panel-in pb-12">
-      <div className="w-full max-w-5xl px-6">
+    <div className="flex flex-col items-center justify-center animate-panel-in pb-12 px-4 sm:px-6">
+      <div className="w-full max-w-4xl">
         <div className="relative">
           <Globe className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors ${
             isProcessing ? 'text-gray-400' : 'text-gray-600 dark:text-gray-400'
           }`} />
           <input
             type="text"
-            className={`w-full pl-12 pr-16 h-14 text-base border-2 focus:outline-none focus:ring-2 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 ${
+            className={`w-full pl-12 pr-16 h-12 sm:h-14 text-base rounded-none border-2 focus:outline-none focus:ring-2 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 ${
               urlValid === false
                 ? 'border-red-300 dark:border-red-700 focus:ring-red-500 focus:border-transparent'
                 : urlValid === true
@@ -59,7 +59,7 @@ export function UrlInputSection({
           <button
             onClick={onSubmit}
             disabled={isProcessing || !url || urlValid === false}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-10 w-10 flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:hover:bg-gray-300"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:hover:bg-gray-300 rounded-none border-2 border-blue-600"
             aria-label="Analyze website"
           >
             {loading ? (
