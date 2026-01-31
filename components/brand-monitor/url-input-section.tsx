@@ -29,7 +29,7 @@ export function UrlInputSection({
           }`} />
           <input
             type="text"
-            className={`w-full pl-12 pr-16 h-12 sm:h-14 text-base rounded-none border-2 focus:outline-none focus:ring-2 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 ${
+            className={`w-full pl-12 pr-[7.5rem] sm:pr-32 h-12 sm:h-14 text-base rounded-none border-2 focus:outline-none focus:ring-2 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 ${
               urlValid === false
                 ? 'border-red-300 dark:border-red-700 focus:ring-red-500 focus:border-transparent'
                 : urlValid === true
@@ -55,19 +55,22 @@ export function UrlInputSection({
             disabled={isProcessing}
           />
 
-          {/* Arrow button inside input */}
+          {/* Submit button - label + arrow, clearly visible in light and dark mode */}
           <button
             onClick={onSubmit}
             disabled={isProcessing || !url || urlValid === false}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:hover:bg-gray-300 rounded-none border-2 border-blue-600"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-9 sm:h-10 px-3 sm:px-4 flex items-center gap-1.5 sm:gap-2 transition-all duration-200 rounded-none border-2 shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 active:bg-blue-800 border-blue-600 hover:border-blue-700 disabled:opacity-50 disabled:bg-blue-600 disabled:border-blue-600 disabled:hover:bg-blue-600 text-white font-semibold text-sm sm:text-base whitespace-nowrap"
             aria-label="Analyze website"
           >
             {loading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-white" />
+              <Loader2 className="h-5 w-5 animate-spin flex-shrink-0" />
             ) : (
-              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
+              <>
+                <span>Analyze</span>
+                <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </>
             )}
           </button>
         </div>
