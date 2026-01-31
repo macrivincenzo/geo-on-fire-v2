@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { authClient } from '@/lib/auth-client';
+import { authClient, signOut } from '@/lib/auth-client';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 
 function ResetPasswordForm() {
@@ -43,6 +43,9 @@ function ResetPasswordForm() {
         newPassword: password,
         token: token!,
       });
+
+      // Sign out any existing session so user doesn't land in another account
+      await signOut();
       
       // Redirect to login with success message
       router.push('/login?reset=success');

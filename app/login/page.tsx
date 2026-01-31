@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { signIn } from '@/lib/auth-client';
+import { signIn, signOut } from '@/lib/auth-client';
 import { ArrowLeft } from 'lucide-react';
 
 function LoginForm() {
@@ -17,6 +17,8 @@ function LoginForm() {
   useEffect(() => {
     if (searchParams.get('reset') === 'success') {
       setSuccess('Password reset successfully. You can now login with your new password.');
+      // Clear any existing session so user must log in with the account they just reset
+      signOut();
     }
     
     // Pre-fill email if passed from registration page

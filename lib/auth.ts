@@ -12,6 +12,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false, // Set to true to require email verification
+    revokeSessionsOnPasswordReset: true, // Sign out all sessions for this user after reset
     sendResetPassword: async ({ user, url }, request) => {
       console.log('[Auth] sendResetPassword called for:', user.email, '| URL:', url);
       try {
