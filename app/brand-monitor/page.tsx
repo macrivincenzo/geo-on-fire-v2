@@ -66,7 +66,7 @@ function BrandMonitorContent({ session }: { session: any }) {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Hero Section - same design as front page */}
-      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-gray-800">
+      <section className="relative pt-24 sm:pt-32 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-4xl mx-auto">
           <div className="text-center">
             <div className="inline-block mb-6">
@@ -79,7 +79,7 @@ function BrandMonitorContent({ session }: { session: any }) {
               <br />
               <span className="text-blue-600">Visibility Monitor</span>
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-10">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
               Track how AI models rank your brand against competitors. Get actionable insights in 60 seconds.
             </p>
           </div>
@@ -161,7 +161,7 @@ function BrandMonitorContent({ session }: { session: any }) {
 
         {/* Main Content */}
         <div className={`flex-1 transition-all duration-200 ${sidebarOpen ? 'ml-80' : 'ml-0'}`}>
-          <div className="px-6 sm:px-8 lg:px-12 py-8 pb-24">
+          <div className="px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-24">
             <BrandMonitor
               creditsAvailable={credits}
               onCreditsUpdate={handleCreditsUpdate}
