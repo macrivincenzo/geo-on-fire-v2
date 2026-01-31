@@ -13,12 +13,12 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: false, // Set to true to require email verification
     sendResetPassword: async ({ user, url }, request) => {
-      console.log('Password reset link:', url);
-      
-      await sendEmail({
-        to: user.email,
-        subject: 'Reset your password - AI Brand Track',
-        html: `
+      console.log('[Auth] sendResetPassword called for:', user.email, '| URL:', url);
+      try {
+        await sendEmail({
+          to: user.email,
+          subject: 'Reset your password - AI Brand Track',
+          html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #333;">Reset Your Password</h2>
             <p style="color: #666; line-height: 1.6;">
@@ -37,7 +37,12 @@ export const auth = betterAuth({
             </p>
           </div>
         `
-      });
+        });
+        console.log('[Auth] Password reset email sent to:', user.email);
+      } catch (err) {
+        console.error('[Auth] sendResetPassword failed:', err);
+        throw err;
+      }
     },
   },
   trustedOrigins: [process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'],
