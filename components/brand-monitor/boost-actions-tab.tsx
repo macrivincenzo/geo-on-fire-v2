@@ -698,7 +698,7 @@ export function BoostActionsTab({
             ))
           ) : (
             <Card className="border-dashed border-2 border-gray-300 dark:border-gray-700">
-              <CardContent className="pt-6 text-center text-gray-400 dark:text-gray-600">
+              <CardContent className="pt-6 text-center text-gray-400 dark:text-gray-500">
                 <Icon className="w-12 h-12 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">
                   {status === 'todo' ? 'No actions to do' : 
@@ -722,7 +722,7 @@ export function BoostActionsTab({
   // Safety check: if no brand data, show message
   if (!brandData || !brandName) {
     return (
-      <div className="p-6 text-center text-gray-500">
+      <div className="p-6 text-center text-gray-500 dark:text-gray-400">
         <p>No brand data available. Please run an analysis first.</p>
       </div>
     );
@@ -1074,7 +1074,7 @@ export function BoostActionsTab({
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <FileText className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     No Content Generated Yet
                   </h3>

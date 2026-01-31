@@ -197,9 +197,9 @@ export function DomainComparisonsTab({
           </CardHeader>
           <CardContent>
             <div className="text-center py-10 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-dashed border-gray-300">
-              <Globe className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <p className="text-base font-semibold text-gray-700 mb-1">No brand domain citations found</p>
-              <p className="text-sm text-gray-600">
+              <Globe className="w-12 h-12 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
+              <p className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-1">No brand domain citations found</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Domain comparisons will appear here when AI responses cite domains belonging to {brandName} or its competitors.
               </p>
             </div>
@@ -236,8 +236,8 @@ export function DomainComparisonsTab({
           <CardContent className="pt-6">
             <div className="text-center">
               <p className="text-3xl font-bold text-orange-600">{competitorDomains.length}</p>
-              <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Competitor Domains</p>
-              <p className="text-xs text-gray-400 mt-1">{totalCompetitorCitations} citations</p>
+              <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mt-2 font-semibold">Competitor Domains</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{totalCompetitorCitations} citations</p>
             </div>
           </CardContent>
         </Card>
@@ -247,8 +247,8 @@ export function DomainComparisonsTab({
               <p className="text-3xl font-bold text-green-600">
                 {totalTrackedCitations > 0 ? Math.round((totalBrandCitations / totalTrackedCitations) * 100) : 0}%
               </p>
-              <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Your Share</p>
-              <p className="text-xs text-gray-400 mt-1">of brand domain citations</p>
+              <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mt-2 font-semibold">Your Share</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">of brand domain citations</p>
             </div>
           </CardContent>
         </Card>
@@ -307,7 +307,7 @@ export function DomainComparisonsTab({
                       <td className="py-3 px-4 text-sm text-gray-600">{index + 1}</td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
-                          <Globe className="w-4 h-4 text-gray-400" />
+                          <Globe className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                           <span className="text-sm font-medium text-gray-900">{domain.domain}</span>
                         </div>
                       </td>

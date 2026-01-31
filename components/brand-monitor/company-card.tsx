@@ -75,7 +75,7 @@ export function CompanyCard({
           ) : validFaviconUrl && !faviconError ? (
             // Show favicon prominently when no logo is available
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative h-36 w-36 rounded-2xl bg-white shadow-xl border-2 border-gray-300 flex items-center justify-center p-6 transition-transform hover:scale-105">
+              <div className="relative h-36 w-36 rounded-2xl bg-white dark:bg-gray-800 shadow-xl border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center p-6 transition-transform hover:scale-105">
                 <Image
                   src={validFaviconUrl}
                   alt={`${company.name} logo`}
@@ -89,8 +89,8 @@ export function CompanyCard({
           ) : (
             // Fallback icon with better styling
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative h-36 w-36 rounded-2xl bg-white/90 shadow-lg border-2 border-gray-300 flex items-center justify-center p-6">
-                <Building2 className="h-20 w-20 text-gray-400" />
+              <div className="relative h-36 w-36 rounded-2xl bg-white/90 dark:bg-gray-700/90 shadow-lg border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center p-6">
+                <Building2 className="h-20 w-20 text-gray-400 dark:text-gray-500" />
               </div>
             </div>
           )}
@@ -100,9 +100,9 @@ export function CompanyCard({
             href={company.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute top-4 right-4 p-2 rounded-lg bg-white/90 backdrop-blur-sm hover:bg-white transition-all shadow-md group"
+            className="absolute top-4 right-4 p-2 rounded-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-700 transition-all shadow-md group"
           >
-            <ExternalLink className="h-4 w-4 text-gray-600 group-hover:text-gray-900" />
+            <ExternalLink className="h-4 w-4 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
           </a>
         </div>
 
@@ -117,7 +117,7 @@ export function CompanyCard({
                     {company.industry}
                   </Badge>
                 )}
-                <span className="text-sm text-gray-500 flex items-center gap-1">
+                <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                   <Globe className="h-3 w-3" />
                   {new URL(company.url).hostname}
                 </span>
@@ -152,7 +152,7 @@ export function CompanyCard({
               ).map((keyword, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                 >
                   {keyword}
                 </span>
@@ -160,7 +160,7 @@ export function CompanyCard({
               {company.scrapedData.keywords.length > 6 && (
                 <button
                   onClick={() => setKeywordsExpanded(!keywordsExpanded)}
-                  className="text-xs text-gray-500 hover:text-gray-700 hover:underline cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 rounded px-1"
+                  className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:underline cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 focus:ring-offset-1 rounded px-1"
                   type="button"
                   aria-label={keywordsExpanded ? 'Show fewer keywords' : 'Show more keywords'}
                 >
@@ -208,14 +208,14 @@ export function CompanyCard({
                             onError={(e) => {
                               e.currentTarget.style.display = 'none';
                               const placeholder = document.createElement('div');
-                              placeholder.className = 'w-10 h-10 bg-gray-100 rounded flex items-center justify-center';
-                              placeholder.innerHTML = '<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>';
+                              placeholder.className = 'w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center';
+                              placeholder.innerHTML = '<svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>';
                               e.currentTarget.parentElement!.appendChild(placeholder);
                             }}
                           />
                         ) : (
-                          <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center">
-                            <Building2 className="w-5 h-5 text-gray-400" />
+                          <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                            <Building2 className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                           </div>
                         )}
                       </div>
@@ -223,20 +223,20 @@ export function CompanyCard({
                       {/* Name and URL */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1">
-                          <span className="font-medium text-gray-900 text-sm">{competitor.name}</span>
+                          <span className="font-medium text-gray-900 dark:text-white text-sm">{competitor.name}</span>
                           {competitor.url && (
                             <a 
                               href={competitor.url.startsWith('http') ? competitor.url : `https://${competitor.url}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-gray-400 hover:text-gray-600 transition-colors"
+                              className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                             >
                               <ExternalLink className="w-3 h-3" />
                             </a>
                           )}
                         </div>
                         {competitor.url && (
-                          <p className="text-xs text-gray-500 truncate mt-0.5">{competitor.url}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">{competitor.url}</p>
                         )}
                       </div>
                     </div>
@@ -245,9 +245,9 @@ export function CompanyCard({
                     {onRemoveCompetitor && (
                       <button
                         onClick={() => onRemoveCompetitor(idx)}
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-red-50"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30"
                       >
-                        <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                        <Trash2 className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
                       </button>
                     )}
                   </div>

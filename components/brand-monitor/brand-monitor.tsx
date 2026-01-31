@@ -754,7 +754,7 @@ export function BrandMonitor({
                           competitors={identifiedCompetitors}
                         />
                       ) : (
-                        <div className="text-center py-8 text-gray-500">
+                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                           <p>No comparison data available</p>
                           <p className="text-sm mt-2">Please ensure AI providers are configured and the analysis has completed.</p>
                         </div>

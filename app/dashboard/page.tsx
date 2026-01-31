@@ -260,7 +260,7 @@ function DashboardContent({ session }: { session: any }) {
                     <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
                     {activeProduct.name || activeProduct.id}
                     {scheduledProduct && (
-                      <span className="ml-2 text-sm text-gray-500">
+                      <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
                         (Changing to {scheduledProduct.name || scheduledProduct.id} on {new Date(scheduledProduct.started_at || scheduledProduct.current_period_end).toLocaleDateString()})
                       </span>
                     )}

@@ -159,7 +159,7 @@ export function Footer() {
                 <p className="mb-2">
                   © {currentYear} AI Brand Track. All rights reserved.
                 </p>
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   AI Brand Visibility Monitoring • ChatGPT Tracking • Claude Monitoring • Perplexity Analysis • Google Gemini Monitoring • AI Search Optimization
                 </p>
               </div>

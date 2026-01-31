@@ -140,7 +140,7 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
 
   const TrendIndicator = ({ trend, change, isRank = false }: { trend: 'up' | 'down' | 'stable'; change: number | null; isRank?: boolean }) => {
     if (change === null || change === 0) {
-      return <Minus className="w-4 h-4 text-gray-400" />;
+      return <Minus className="w-4 h-4 text-gray-400 dark:text-gray-500" />;
     }
 
     // For rank, lower is better (inverse logic)
@@ -163,7 +163,7 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading historical data...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading historical data...</p>
         </div>
       </div>
     );
@@ -178,7 +178,7 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
         </CardHeader>
         <CardContent className="py-12 text-center">
           <p className="text-red-600 mb-2">Error: {error}</p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Please check the console for more details or try refreshing the page.
           </p>
         </CardContent>
@@ -190,7 +190,7 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
     return (
       <Card>
         <CardContent className="py-12 text-center">
-          <p className="text-gray-600">No analysis selected. Run an analysis to see historical tracking.</p>
+          <p className="text-gray-600 dark:text-gray-400">No analysis selected. Run an analysis to see historical tracking.</p>
         </CardContent>
       </Card>
     );
@@ -204,9 +204,9 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
           <CardDescription>Track your brand metrics over time</CardDescription>
         </CardHeader>
         <CardContent className="py-12 text-center">
-          <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600 mb-2">No historical data yet</p>
-          <p className="text-sm text-gray-500">
+          <Activity className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-400 mb-2">No historical data yet</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Run more analyses to start tracking trends. Each analysis creates a snapshot of your metrics.
           </p>
         </CardContent>
@@ -267,9 +267,9 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Visibility Score</p>
-                  <p className="text-2xl font-bold">{trends.visibilityScore.current}%</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Visibility Score</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{trends.visibilityScore.current}%</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Previous: {trends.visibilityScore.previous}%
                   </p>
                 </div>
@@ -285,9 +285,9 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Sentiment Score</p>
-                  <p className="text-2xl font-bold">{trends.sentimentScore.current}%</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Sentiment Score</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{trends.sentimentScore.current}%</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Previous: {trends.sentimentScore.previous}%
                   </p>
                 </div>
@@ -303,9 +303,9 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Share of Voice</p>
-                  <p className="text-2xl font-bold">{trends.shareOfVoice.current}%</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Share of Voice</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{trends.shareOfVoice.current}%</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Previous: {trends.shareOfVoice.previous}%
                   </p>
                 </div>
@@ -321,11 +321,11 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Rank</p>
-                  <p className="text-2xl font-bold">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Rank</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {trends.rank.current ? `#${trends.rank.current}` : 'N/A'}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     {trends.rank.previous ? `Previous: #${trends.rank.previous}` : 'No previous data'}
                   </p>
                 </div>

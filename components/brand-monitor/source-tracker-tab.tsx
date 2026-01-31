@@ -142,7 +142,7 @@ export function SourceTrackerTab({
           </CardHeader>
           <CardContent>
             <div className="text-center py-10 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-dashed border-gray-300">
-              <Globe className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+              <Globe className="w-12 h-12 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
               <p className="text-base font-semibold text-gray-700 mb-1">No sources found</p>
               <p className="text-sm text-gray-600">Sources will appear here when AI responses include citations or URLs.</p>
             </div>
@@ -163,7 +163,7 @@ export function SourceTrackerTab({
                 <LinkIcon className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-1">Total Citations</p>
+                <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold mb-1">Total Citations</p>
                 <p className="text-2xl font-bold text-gray-900">{totalCitations}</p>
               </div>
             </div>
@@ -177,7 +177,7 @@ export function SourceTrackerTab({
                 <Globe className="w-5 h-5 text-green-600" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-1">Unique Domains</p>
+                <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold mb-1">Unique Domains</p>
                 <p className="text-2xl font-bold text-gray-900">{uniqueDomains}</p>
               </div>
             </div>
@@ -191,7 +191,7 @@ export function SourceTrackerTab({
                 <FileText className="w-5 h-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-1">Unique Pages</p>
+                <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold mb-1">Unique Pages</p>
                 <p className="text-2xl font-bold text-gray-900">{uniquePages}</p>
               </div>
             </div>
@@ -242,16 +242,16 @@ export function SourceTrackerTab({
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                           {domain.domainName || domain.domain}
                         </p>
-                        <p className="text-xs text-gray-500 truncate">{domain.domain}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{domain.domain}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 flex-shrink-0">
                       <div className="text-right">
-                        <p className="text-sm font-bold text-gray-900">{domain.timesCited}</p>
-                        <p className="text-xs text-gray-500">{domain.shareOfCitations}%</p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white">{domain.timesCited}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{domain.shareOfCitations}%</p>
                       </div>
                       <Badge 
                         variant="outline" 
@@ -316,7 +316,7 @@ export function SourceTrackerTab({
                     </div>
                     <div className="text-right flex-shrink-0">
                       <p className="text-sm font-bold text-gray-900">{page.timesCited}</p>
-                      <p className="text-xs text-gray-500">{page.shareOfCitations}%</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{page.shareOfCitations}%</p>
                     </div>
                   </div>
                 );
@@ -356,7 +356,7 @@ export function SourceTrackerTab({
                       <div className="w-20 text-right text-sm font-semibold text-gray-900">
                         {category.percentage}%
                       </div>
-                      <div className="w-16 text-right text-xs text-gray-500">
+                      <div className="w-16 text-right text-xs text-gray-500 dark:text-gray-400">
                         ({category.count})
                       </div>
                     </div>
