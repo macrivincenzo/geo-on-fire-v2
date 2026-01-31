@@ -579,8 +579,8 @@ export function BrandMonitor({
 
       {/* URL Input Section */}
       {showInput && (
-        <div className="flex items-center justify-center min-h-[50vh]">
-          <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-center">
+          <div className="max-w-4xl mx-auto w-full">
             <UrlInputSection
             url={url}
             urlValid={urlValid}

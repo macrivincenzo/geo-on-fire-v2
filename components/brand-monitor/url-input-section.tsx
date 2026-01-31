@@ -21,8 +21,8 @@ export function UrlInputSection({
   const isProcessing = loading || analyzing;
 
   return (
-    <div className="flex flex-col items-center justify-center animate-panel-in pb-12 px-4 sm:px-6">
-      <div className="w-full max-w-4xl">
+    <div className="flex flex-col items-center animate-panel-in pb-12">
+      <div className="w-full">
         <div className="relative">
           <Globe className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors ${
             isProcessing ? 'text-gray-400' : 'text-gray-600 dark:text-gray-400'
