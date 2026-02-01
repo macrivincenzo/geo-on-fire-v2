@@ -1,6 +1,6 @@
 'use client';
 
-import { BrandMonitor } from '@/components/brand-monitor/brand-monitor';
+import { BrandMonitor, clearBrandMonitorDraft, BRAND_MONITOR_DRAFT_KEY } from '@/components/brand-monitor/brand-monitor';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Menu, X, Plus, Trash2, Loader2 } from 'lucide-react';
@@ -23,7 +23,17 @@ function BrandMonitorContent({ session }: { session: any }) {
   const [selectedAnalysisId, setSelectedAnalysisId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [analysisToDelete, setAnalysisToDelete] = useState<string | null>(null);
-  
+  // Read draft synchronously on first client render so refresh keeps user on company/competitors step (no flash of empty form)
+  const [initialDraft, setInitialDraft] = useState<{ url: string; company: any; identifiedCompetitors: any[] } | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const raw = sessionStorage.getItem(BRAND_MONITOR_DRAFT_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
+
   // Queries and mutations
   const { data: analyses, isLoading: analysesLoading } = useBrandAnalyses();
   const { data: currentAnalysis } = useBrandAnalysis(selectedAnalysisId);
@@ -33,6 +43,21 @@ function BrandMonitorContent({ session }: { session: any }) {
     const id = searchParams.get('analysis');
     setSelectedAnalysisId(id || null);
   }, [searchParams]);
+
+  // When an analysis is selected, clear draft. When none selected, (re)read draft so we can restore after refresh.
+  useEffect(() => {
+    if (selectedAnalysisId !== null) {
+      setInitialDraft(null);
+      return;
+    }
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = sessionStorage.getItem(BRAND_MONITOR_DRAFT_KEY);
+      setInitialDraft(raw ? JSON.parse(raw) : null);
+    } catch {
+      setInitialDraft(null);
+    }
+  }, [selectedAnalysisId]);
 
   const setSelectedAndUpdateUrl = (id: string | null) => {
     setSelectedAnalysisId(id);
@@ -73,6 +98,8 @@ function BrandMonitorContent({ session }: { session: any }) {
   };
   
   const handleNewAnalysis = () => {
+    clearBrandMonitorDraft();
+    setInitialDraft(null); // so BrandMonitor resets instead of restoring
     setSelectedAndUpdateUrl(null);
   };
 
@@ -179,8 +206,9 @@ function BrandMonitorContent({ session }: { session: any }) {
               creditsAvailable={credits}
               onCreditsUpdate={handleCreditsUpdate}
               selectedAnalysis={selectedAnalysisId ? currentAnalysis : null}
+              initialDraft={initialDraft}
               onSaveAnalysis={(analysis) => {
-                // After analysis completes, put it in the URL so refresh keeps you here (like big apps)
+                clearBrandMonitorDraft();
                 if (analysis?.id) setSelectedAndUpdateUrl(analysis.id);
               }}
             />

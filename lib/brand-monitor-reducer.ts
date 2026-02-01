@@ -36,8 +36,16 @@ export type BrandMonitorAction =
   | { type: 'SET_NEW_PROMPT_TEXT'; payload: string }
   | { type: 'SET_NEW_COMPETITOR'; payload: { name?: string; url?: string } }
   | { type: 'RESET_STATE' }
+  | { type: 'RESTORE_DRAFT'; payload: BrandMonitorDraft }
   | { type: 'SCRAPE_SUCCESS'; payload: Company }
   | { type: 'ANALYSIS_COMPLETE'; payload: Analysis };
+
+/** Draft state persisted to sessionStorage so refresh keeps user on company/competitors step */
+export interface BrandMonitorDraft {
+  url: string;
+  company: Company | null;
+  identifiedCompetitors: IdentifiedCompetitor[];
+}
 
 // State Interfaces
 export interface IdentifiedCompetitor {
@@ -170,6 +178,7 @@ export const initialBrandMonitorState: BrandMonitorState = {
   scrapingCompetitors: false,
   company: null,
   analysis: null,
+  analysisId: null,
   showInput: true,
   showCompanyCard: false,
   showPromptsList: false,
@@ -348,6 +357,20 @@ export function brandMonitorReducer(
       
     case 'RESET_STATE':
       return initialBrandMonitorState;
+
+    case 'RESTORE_DRAFT': {
+      const { url, company, identifiedCompetitors } = action.payload;
+      return {
+        ...initialBrandMonitorState,
+        url,
+        urlValid: url.length > 0,
+        company,
+        identifiedCompetitors,
+        showInput: false,
+        showCompanyCard: !!company,
+        showCompetitors: !!company
+      };
+    }
       
     case 'SCRAPE_SUCCESS':
       return {

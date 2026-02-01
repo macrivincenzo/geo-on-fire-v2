@@ -10,6 +10,7 @@ import {
   brandMonitorReducer, 
   initialBrandMonitorState,
   BrandMonitorAction,
+  BrandMonitorDraft,
   IdentifiedCompetitor
 } from '@/lib/brand-monitor-reducer';
 import {
@@ -47,24 +48,36 @@ import { DataExportButton } from './data-export-button';
 // Hooks
 import { useSSEHandler } from './hooks/use-sse-handler';
 
+export const BRAND_MONITOR_DRAFT_KEY = 'brand-monitor-draft';
+
+export function clearBrandMonitorDraft() {
+  if (typeof window !== 'undefined') {
+    sessionStorage.removeItem(BRAND_MONITOR_DRAFT_KEY);
+  }
+}
+
 interface BrandMonitorProps {
   creditsAvailable?: number;
   onCreditsUpdate?: () => void;
   selectedAnalysis?: any;
   onSaveAnalysis?: (analysis: any) => void;
+  /** Restore from sessionStorage draft so refresh keeps user on company/competitors step */
+  initialDraft?: BrandMonitorDraft | null;
 }
 
 export function BrandMonitor({ 
   creditsAvailable = 0, 
   onCreditsUpdate,
   selectedAnalysis,
-  onSaveAnalysis 
+  onSaveAnalysis,
+  initialDraft = null
 }: BrandMonitorProps) {
   const [state, dispatch] = useReducer(brandMonitorReducer, initialBrandMonitorState);
   const [demoUrl] = useState('example.com');
   const saveAnalysis = useSaveBrandAnalysis();
   const [isLoadingExistingAnalysis, setIsLoadingExistingAnalysis] = useState(false);
   const hasSavedRef = useRef(false);
+  const hasRestoredDraftRef = useRef(false);
   
   const { startSSEConnection } = useSSEHandler({ 
     state, 
@@ -158,12 +171,41 @@ export function BrandMonitor({
       // Reset the flag after a short delay to ensure the save effect doesn't trigger
       setTimeout(() => setIsLoadingExistingAnalysis(false), 100);
     } else if (selectedAnalysis === null) {
-      // Reset state when explicitly set to null (New Analysis clicked)
-      dispatch({ type: 'RESET_STATE' });
-      hasSavedRef.current = false;
-      setIsLoadingExistingAnalysis(false);
+      // Reset only when we're not about to restore from draft (avoids flash of empty form on refresh)
+      if (!initialDraft?.company) {
+        dispatch({ type: 'RESET_STATE' });
+        hasSavedRef.current = false;
+        setIsLoadingExistingAnalysis(false);
+      }
+      hasRestoredDraftRef.current = false;
     }
-  }, [selectedAnalysis]);
+  }, [selectedAnalysis, initialDraft?.company]);
+
+  // Restore draft from sessionStorage so refresh keeps user on company/competitors step
+  useEffect(() => {
+    if (initialDraft?.company && !hasRestoredDraftRef.current) {
+      dispatch({ type: 'RESTORE_DRAFT', payload: initialDraft });
+      hasRestoredDraftRef.current = true;
+    }
+    if (!initialDraft?.company) {
+      hasRestoredDraftRef.current = false;
+    }
+  }, [initialDraft]);
+
+  // Persist draft to sessionStorage when in company/competitors phase (no selected analysis)
+  useEffect(() => {
+    if (typeof window === 'undefined' || selectedAnalysis) return;
+    if (state.company && (state.showCompanyCard || state.showCompetitors)) {
+      const draft: BrandMonitorDraft = {
+        url: state.url || state.company.url,
+        company: state.company,
+        identifiedCompetitors: state.identifiedCompetitors
+      };
+      sessionStorage.setItem(BRAND_MONITOR_DRAFT_KEY, JSON.stringify(draft));
+    } else {
+      sessionStorage.removeItem(BRAND_MONITOR_DRAFT_KEY);
+    }
+  }, [selectedAnalysis, state.company, state.showCompanyCard, state.showCompetitors, state.url, state.identifiedCompetitors]);
   
   // Handlers
   const handleUrlChange = useCallback((newUrl: string) => {
