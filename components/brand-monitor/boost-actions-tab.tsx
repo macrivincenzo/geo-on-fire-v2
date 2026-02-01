@@ -25,7 +25,7 @@ import { AIResponse, CompetitorRanking } from '@/lib/types';
 import { ActionItem, generateStrategicInsights } from '@/lib/strategic-insights';
 import { useCustomer, useRefreshCustomer } from '@/hooks/useAutumnCustomer';
 import { CREDITS_PER_ACTION } from '@/config/constants';
-import { BuyCreditsModal } from '@/components/modals/buy-credits-modal';
+import { useBuyCredits } from '@/hooks/useBuyCredits';
 
 interface BoostActionsTabProps {
   brandData: CompetitorRanking;
@@ -79,9 +79,9 @@ export function BoostActionsTab({
   // Get user's credit balance
   const { customer, refetch } = useCustomer();
   const refreshCustomer = useRefreshCustomer();
+  const { openBuyCredits } = useBuyCredits();
   const messageUsage = customer?.features?.messages;
   const remainingCredits = messageUsage ? (messageUsage.balance || 0) : 0;
-  const [buyCreditsOpen, setBuyCreditsOpen] = useState(false);
   
   // Generate action items from insights
   const insights = useMemo(() => {
@@ -212,7 +212,7 @@ export function BoostActionsTab({
       } else {
         // Handle insufficient credits error
         if (response.status === 402 && result.error === 'Insufficient credits') {
-          setBuyCreditsOpen(true);
+          openBuyCredits();
         } else {
           alert(`Action execution failed: ${result.error || result.message}`);
         }
@@ -1130,15 +1130,6 @@ export function BoostActionsTab({
         </div>
       )}
 
-      {/* Buy Credits Modal */}
-      <BuyCreditsModal 
-        open={buyCreditsOpen} 
-        onClose={async () => {
-          setBuyCreditsOpen(false);
-          // Refresh credits after modal closes (in case user purchased)
-          await refreshCustomer();
-        }} 
-      />
     </div>
   );
 }

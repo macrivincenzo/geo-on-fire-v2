@@ -3,6 +3,7 @@
 import { AutumnProvider } from 'autumn-js/react';
 import { QueryProvider } from '@/lib/providers/query-provider';
 import { AutumnCustomerProvider } from '@/hooks/useAutumnCustomer';
+import { BuyCreditsProvider } from '@/hooks/useBuyCredits';
 import { useSession } from '@/lib/auth-client';
 import { ThemeProvider } from 'next-themes';
 
@@ -23,7 +24,9 @@ function AuthAwareAutumnProvider({ children }: { children: React.ReactNode }) {
       includeCredentials={true}
     >
       <AutumnCustomerProvider>
-        {children}
+        <BuyCreditsProvider>
+          {children}
+        </BuyCreditsProvider>
       </AutumnCustomerProvider>
     </AutumnProvider>
   );

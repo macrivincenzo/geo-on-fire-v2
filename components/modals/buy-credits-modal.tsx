@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X, CreditCard, Sparkles } from 'lucide-react';
+import { X } from 'lucide-react';
 import { usePricingTable } from 'autumn-js/react';
 import { useCustomer } from '@/hooks/useAutumnCustomer';
 
@@ -10,186 +10,113 @@ interface BuyCreditsModalProps {
   onClose: () => void;
 }
 
-// Top-up plans configuration
+// Top-up plans — matches Autumn dashboard (top-up-10: $12, top-up-25: $25, top-up-50: $45)
 const TOP_UP_PLANS = [
-  { id: 'top-up-10', name: 'Top-Up 10', price: 12, credits: 10, description: 'Quick top-up' },
-  { id: 'top-up-25', name: 'Top-Up 25', price: 25, credits: 25, description: 'Popular choice' },
-  { id: 'top-up-50', name: 'Top-Up 50', price: 45, credits: 50, description: 'Best value' },
-];
+  { id: 'top-up-10', name: '10 Credits', price: 12, credits: 10, tagline: 'Quick top-up' },
+  { id: 'top-up-25', name: '25 Credits', price: 25, credits: 25, tagline: 'Popular choice' },
+  { id: 'top-up-50', name: '50 Credits', price: 45, credits: 50, tagline: 'Best value' },
+] as const;
 
 export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
   const { customer } = useCustomer();
-  const { products, attach, isLoading } = usePricingTable();
+  const { attach, isLoading } = usePricingTable();
   const messageUsage = customer?.features?.messages;
   const remainingCredits = messageUsage ? (messageUsage.balance || 0) : 0;
-
-  // Filter for one-time top-up products
-  const topUpProducts = products?.filter(
-    (product: any) => 
-      product.id?.startsWith('top-up-') || 
-      TOP_UP_PLANS.some(plan => plan.id === product.id)
-  ) || [];
-
-  // Merge with our known top-up plans if they're not in the products list
-  const availablePlans = React.useMemo(() => {
-    const planMap = new Map();
-    
-    // Add products from Autumn
-    topUpProducts.forEach((product: any) => {
-      planMap.set(product.id, product);
-    });
-    
-    // Add our known plans if not already present
-    TOP_UP_PLANS.forEach(plan => {
-      if (!planMap.has(plan.id)) {
-        planMap.set(plan.id, {
-          id: plan.id,
-          name: plan.name,
-          display: { name: plan.name },
-          items: [
-            {
-              id: `${plan.id}-price`,
-              type: 'flat',
-              flat: { amount: plan.price * 100 }, // Convert to cents
-              display: { primary_text: `$${plan.price}` }
-            },
-            {
-              id: 'messages',
-              type: 'unit',
-              unit: { quantity: plan.credits },
-              display: { primary_text: `${plan.credits} credits` }
-            }
-          ],
-          properties: { interval: 'one_time' }
-        });
-      }
-    });
-    
-    return Array.from(planMap.values());
-  }, [topUpProducts]);
 
   const handlePurchase = async (productId: string) => {
     try {
       await attach(productId);
-      // Close modal after successful purchase
-      setTimeout(() => {
-        onClose();
-      }, 500);
+      setTimeout(() => onClose(), 500);
     } catch (error) {
       console.error('Failed to purchase credits:', error);
-      // Error handling is done by Autumn's attach function
     }
   };
 
   if (!open) return null;
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-      onClick={onClose}
-    >
-      <div 
-        className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-gray-200 dark:border-gray-800"
+    <>
+      {/* Light backdrop — click to close, doesn't block the whole page */}
+      <div
+        className="fixed inset-0 z-40 bg-black/20 dark:bg-black/40 backdrop-blur-[2px]"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      {/* Panel: right-below corner, same design as rest of site */}
+      <div
+        className="fixed bottom-4 right-4 left-4 sm:left-auto z-50 w-full sm:max-w-md rounded-xl border border-gray-200 dark:border-gray-600/80 bg-white dark:bg-gray-800 shadow-lg dark:shadow-black/20 font-sans tracking-tight overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-200"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-labelledby="buy-credits-title"
       >
-        {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 p-6 text-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/20 rounded-lg">
-                <CreditCard className="w-6 h-6" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold mb-1">
-                  Buy More Credits
-                </h2>
-                <p className="text-sm text-white/90">
-                  You currently have <span className="font-semibold">{remainingCredits} credits</span>
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-            >
-              <X className="w-6 h-6 text-white" />
-            </button>
+        {/* Header — clean, no gradient */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-600/80">
+          <div>
+            <h2 id="buy-credits-title" className="text-xl font-bold text-gray-900 dark:text-white">
+              Buy More Credits
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              You have <span className="font-semibold text-gray-700 dark:text-gray-300">{remainingCredits} credits</span>
+            </p>
           </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50 dark:bg-gray-950">
-          <div className="mb-4">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Choose a top-up plan to add credits to your account. Credits never expire and can be used for any action.
-            </p>
-          </div>
+        <div className="p-5 space-y-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Add credits to your account. Credits never expire.
+          </p>
 
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-            </div>
-          ) : availablePlans.length > 0 ? (
-            <div className="grid gap-4 md:grid-cols-3">
-              {availablePlans.map((product: any) => {
-                const priceItem = product.items?.find((item: any) => item.type === 'flat');
-                const creditItem = product.items?.find((item: any) => item.id === 'messages');
-                const price = priceItem?.flat?.amount ? priceItem.flat.amount / 100 : 0;
-                const credits = creditItem?.unit?.quantity || 0;
-                const pricePerCredit = credits > 0 ? (price / credits).toFixed(2) : '0';
-
-                return (
-                  <div
-                    key={product.id}
-                    className="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-500 transition-all shadow-md hover:shadow-lg"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                        {product.display?.name || product.name}
-                      </h3>
+          <div className="space-y-3">
+            {TOP_UP_PLANS.map((plan) => {
+              const pricePerCredit = plan.credits > 0 ? (plan.price / plan.credits).toFixed(2) : '0';
+              return (
+                <div
+                  key={plan.id}
+                  className="rounded-lg border border-gray-200 dark:border-gray-600/80 bg-gray-50/50 dark:bg-gray-700/50 p-4 hover:border-gray-300 dark:hover:border-gray-500 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                        {plan.name}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        {plan.tagline}
+                      </p>
+                      <p className="mt-2 text-lg font-bold text-gray-900 dark:text-white">
+                        ${plan.price}
+                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-1">
+                          one-off · ${pricePerCredit}/credit
+                        </span>
+                      </p>
                     </div>
-                    
-                    <div className="mb-4">
-                      <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                        ${price}
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {credits} credits
-                      </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                        ${pricePerCredit} per credit
-                      </div>
-                    </div>
-
                     <button
-                      onClick={() => handlePurchase(product.id)}
+                      onClick={() => handlePurchase(plan.id)}
                       disabled={isLoading}
-                      className="w-full px-4 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="shrink-0 h-9 px-4 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
-                      {isLoading ? 'Processing...' : 'Purchase'}
+                      {isLoading ? '…' : 'Purchase'}
                     </button>
                   </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400">
-                No top-up plans available at the moment. Please check back later.
-              </p>
-            </div>
-          )}
+                </div>
+              );
+            })}
+          </div>
 
-          {/* Additional Info */}
-          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-            <p className="text-sm text-blue-900 dark:text-blue-300">
-              <strong>Note:</strong> Credits are added instantly after purchase and never expire. 
-              Each Boost Action uses 5 credits.
+          <div className="pt-2 pb-1 px-3 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200/60 dark:border-blue-800/60">
+            <p className="text-xs text-blue-800 dark:text-blue-300">
+              <strong>Note:</strong> Credits are added instantly and never expire. Each Boost Action uses 5 credits.
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
