@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useCustomer } from '@/hooks/useAutumnCustomer';
 
@@ -21,6 +21,26 @@ export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
   const messageUsage = customer?.features?.messages;
   const remainingCredits = messageUsage ? (messageUsage.balance || 0) : 0;
+
+  // When user returns from Stripe (back button or bfcache restore), clear loading so buttons work again
+  useEffect(() => {
+    const clearLoading = () => setLoadingPlanId(null);
+    const onVisible = () => clearLoading();
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) clearLoading(); // bfcache restore
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('pageshow', onPageShow);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('pageshow', onPageShow);
+    };
+  }, []);
+
+  // Reset loading when panel is opened so no stuck state
+  useEffect(() => {
+    if (open) setLoadingPlanId(null);
+  }, [open]);
 
   const handlePurchase = async (productId: string) => {
     setLoadingPlanId(productId);
@@ -61,9 +81,9 @@ export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
   return (
     <>
       {/* No backdrop — page stays clear and clickable; close via X only */}
-      {/* Panel: smaller, right-below corner */}
+      {/* Panel: smaller on desktop, full-width with margins on mobile; safe-area for notches */}
       <div
-        className="fixed bottom-4 right-4 left-4 sm:left-auto sm:w-[320px] z-50 rounded-xl border border-gray-200 dark:border-gray-600/80 bg-white dark:bg-gray-800 shadow-lg dark:shadow-black/20 font-sans tracking-tight overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-200"
+        className="fixed bottom-4 right-4 left-4 sm:left-auto sm:w-[320px] z-50 rounded-xl border border-gray-200 dark:border-gray-600/80 bg-white dark:bg-gray-800 shadow-lg dark:shadow-black/20 font-sans tracking-tight overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-200 pb-[env(safe-area-inset-bottom)] max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-labelledby="buy-credits-title"
@@ -114,7 +134,7 @@ export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
                     <button
                       onClick={() => handlePurchase(plan.id)}
                       disabled={!!loadingPlanId}
-                      className="shrink-0 h-8 px-3 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+                      className="shrink-0 min-h-[44px] h-9 sm:h-8 px-4 sm:px-3 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1 touch-manipulation"
                     >
                       {loading ? (
                         <>
