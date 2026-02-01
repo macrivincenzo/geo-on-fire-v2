@@ -294,7 +294,7 @@ export function BoostActionsTab({
       >
         <CardHeader className="pb-3">
           <div className="flex items-start gap-2">
-            <CategoryIcon className="w-5 h-5 mt-0.5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
+            <CategoryIcon className="w-5 h-5 mt-0.5 text-gray-600 dark:text-gray-100 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <CardTitle className="text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
                 {action.title}
@@ -303,7 +303,7 @@ export function BoostActionsTab({
           </div>
         </CardHeader>
         <CardContent className="pt-0 space-y-3">
-          <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-3">
+          <p className="text-xs text-gray-600 dark:text-gray-100 line-clamp-3">
             {action.description}
           </p>
           
@@ -321,8 +321,8 @@ export function BoostActionsTab({
           
           {action.impact && (
             <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-              <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">💡 Impact:</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">{action.impact}</p>
+              <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">💡 Impact:</p>
+              <p className="text-xs text-gray-600 dark:text-gray-100">{action.impact}</p>
             </div>
           )}
 
@@ -347,22 +347,22 @@ export function BoostActionsTab({
                   View Results
                 </button>
               </div>
-              <p className="text-xs text-gray-700 dark:text-gray-300 mb-2">{executionResults[action.id].message}</p>
+              <p className="text-xs text-gray-700 dark:text-gray-200 mb-2">{executionResults[action.id].message}</p>
               
               {/* Quick preview of generated content count */}
               {executionResults[action.id].generatedContent && 
                executionResults[action.id].generatedContent.length > 0 && (
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  ✨ {executionResults[action.id].generatedContent.length} piece(s) of content ready to use
-                </p>
+<p className="text-xs text-gray-600 dark:text-gray-100">
+                ✨ {executionResults[action.id].generatedContent.length} piece(s) of content ready to use
+              </p>
               )}
               {executionResults[action.id].data && (
                 <div className="space-y-2">
                   {/* Display insights/recommendations if available */}
                   {executionResults[action.id].data.insights && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Key Insights:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Key Insights:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.insights.slice(0, 3).map((insight: string, idx: number) => (
                           <li key={idx}>{insight}</li>
                         ))}
@@ -371,8 +371,8 @@ export function BoostActionsTab({
                   )}
                   {executionResults[action.id].data.recommendations && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Recommendations:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Recommendations:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.recommendations.slice(0, 3).map((rec: string, idx: number) => (
                           <li key={idx}>{rec}</li>
                         ))}
@@ -381,8 +381,8 @@ export function BoostActionsTab({
                   )}
                   {executionResults[action.id].data.contentPlan && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Content Plan:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Content Plan:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.contentPlan.slice(0, 3).map((item: any, idx: number) => (
                           <li key={idx}>{item.title} ({item.priority})</li>
                         ))}
@@ -391,8 +391,8 @@ export function BoostActionsTab({
                   )}
                   {executionResults[action.id].data.improvementPlan && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Improvement Plan:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Improvement Plan:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.improvementPlan.slice(0, 3).map((item: any, idx: number) => (
                           <li key={idx}>{item.action} - {item.impact}</li>
                         ))}
@@ -401,8 +401,8 @@ export function BoostActionsTab({
                   )}
                   {executionResults[action.id].data.checklist && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Technical Checklist:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Technical Checklist:</p>
+                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.checklist.slice(0, 3).map((item: any, idx: number) => (
                           <li key={idx}>{item.item} ({item.priority})</li>
                         ))}
@@ -453,7 +453,7 @@ export function BoostActionsTab({
                                         });
                                       }, 2000);
                                     }}
-                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-none transition-colors"
+                                    className="p-1.5 text-gray-600 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-none transition-colors"
                                     title="Copy content"
                                   >
                                     {isCopied ? (
@@ -474,7 +474,7 @@ export function BoostActionsTab({
                                       document.body.removeChild(a);
                                       URL.revokeObjectURL(url);
                                     }}
-                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-none transition-colors"
+                                    className="p-1.5 text-gray-600 dark:text-gray-100 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-none transition-colors"
                                     title="Download as TXT"
                                   >
                                     <Download className="w-4 h-4" />
@@ -541,7 +541,7 @@ export function BoostActionsTab({
                                         alert('Failed to generate PDF. Please try downloading as TXT instead.');
                                       }
                                     }}
-                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-none transition-colors"
+                                    className="p-1.5 text-gray-600 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-none transition-colors"
                                     title="Download as PDF"
                                   >
                                     <FileText className="w-4 h-4" />
@@ -549,7 +549,7 @@ export function BoostActionsTab({
                                 </div>
                               </div>
                               {content.metaDescription && (
-                                <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 italic">
+                                <p className="text-xs text-gray-600 dark:text-gray-100 mb-2 italic">
                                   {content.metaDescription}
                                 </p>
                               )}
@@ -558,7 +558,7 @@ export function BoostActionsTab({
                                   View Content ({content.wordCount} words)
                                 </summary>
                                 <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
-                                  <pre className="text-xs whitespace-pre-wrap font-sans text-gray-700 dark:text-gray-300 max-h-60 overflow-auto">
+                                  <pre className="text-xs whitespace-pre-wrap font-sans text-gray-700 dark:text-gray-200 max-h-60 overflow-auto">
                                     {content.content}
                                   </pre>
                                 </div>
@@ -586,7 +586,7 @@ export function BoostActionsTab({
           
           {/* Credit Cost Display */}
           <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+            <p className="text-xs text-gray-600 dark:text-gray-100 mb-1">
               <span className="font-medium">Generate Content</span> • <span className="font-semibold text-purple-600 dark:text-purple-400">{CREDITS_PER_ACTION} credits</span> • You have <span className="font-semibold text-blue-600 dark:text-blue-300">{remainingCredits}</span>
             </p>
           </div>
@@ -673,7 +673,7 @@ export function BoostActionsTab({
           <div className="flex items-center gap-2">
             <Icon className={`w-5 h-5 ${
               status === 'todo' 
-                ? 'text-gray-600 dark:text-gray-400'
+                ? 'text-gray-600 dark:text-gray-100'
                 : status === 'in-progress'
                 ? 'text-blue-600 dark:text-blue-300'
                 : 'text-green-600 dark:text-green-400'
@@ -737,10 +737,10 @@ export function BoostActionsTab({
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2">
               Improve, fix, and act on your AI visibility
             </h2>
-            <p className="text-gray-700 dark:text-gray-300 text-sm md:text-base mb-2">
+            <p className="text-gray-700 dark:text-gray-200 text-sm md:text-base mb-2">
               Click &quot;Execute&quot; on any action below and we&apos;ll generate <strong className="text-gray-900 dark:text-white">finished, ready-to-publish content</strong> for you.
             </p>
-            <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">
+            <p className="text-gray-600 dark:text-gray-100 text-xs md:text-sm">
               Blog posts, comparison pages, FAQs, landing pages, and more — optimized for SEO. No placeholders — just finished content you can copy, download, and publish.
             </p>
           </div>
@@ -753,7 +753,7 @@ export function BoostActionsTab({
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Actions</p>
+                <p className="text-sm text-gray-600 dark:text-gray-100">Total Actions</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{totalCount}</p>
               </div>
               <Target className="w-8 h-8 text-blue-600 dark:text-blue-300" />
@@ -765,10 +765,10 @@ export function BoostActionsTab({
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">To Do</p>
+                <p className="text-sm text-gray-600 dark:text-gray-100">To Do</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{todoCount}</p>
               </div>
-              <Circle className="w-8 h-8 text-gray-600 dark:text-gray-400" />
+              <Circle className="w-8 h-8 text-gray-600 dark:text-gray-100" />
             </div>
           </CardContent>
         </Card>
@@ -777,7 +777,7 @@ export function BoostActionsTab({
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">In Progress</p>
+                <p className="text-sm text-gray-600 dark:text-gray-100">In Progress</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{inProgressCount}</p>
               </div>
               <Clock className="w-8 h-8 text-blue-600 dark:text-blue-300" />
@@ -789,7 +789,7 @@ export function BoostActionsTab({
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Completed</p>
+                <p className="text-sm text-gray-600 dark:text-gray-100">Completed</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{doneCount}</p>
               </div>
               <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" />
@@ -802,7 +802,7 @@ export function BoostActionsTab({
       <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold">Overall Progress</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Overall Progress</CardTitle>
             <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">{completionRate}%</span>
           </div>
         </CardHeader>
@@ -890,7 +890,7 @@ export function BoostActionsTab({
                       </div>
                       Your Generated Content
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-gray-600 dark:text-gray-100">
                       {executionResults[viewingResults].generatedContent.length} piece{executionResults[viewingResults].generatedContent.length !== 1 ? 's' : ''} of finished, ready-to-publish content
                     </p>
                   </div>
@@ -913,7 +913,7 @@ export function BoostActionsTab({
                                   <Badge className="bg-blue-600 text-white px-3 py-1 text-sm font-medium">
                                     {content.type}
                                   </Badge>
-                                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                  <span className="text-sm font-medium text-gray-600 dark:text-gray-100">
                                     📝 {content.wordCount.toLocaleString()} words
                                   </span>
                                   {content.readyToPublish && (
@@ -1049,7 +1049,7 @@ export function BoostActionsTab({
                             
                             {content.metaDescription && (
                               <div className="mt-4 p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg border-l-4 border-blue-600">
-                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
                                   <span className="font-bold">Meta Description:</span> {content.metaDescription}
                                 </p>
                               </div>
@@ -1077,7 +1077,7 @@ export function BoostActionsTab({
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     No Content Generated Yet
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-600 dark:text-gray-100">
                     Content generation may still be in progress or encountered an issue.
                   </p>
                 </div>
@@ -1094,7 +1094,7 @@ export function BoostActionsTab({
                           <TrendingUp className="w-5 h-5 text-blue-600" />
                           Key Insights
                         </h4>
-                        <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+                        <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-200">
                           {executionResults[viewingResults].data.insights.map((insight: string, idx: number) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-blue-600 mt-1">•</span>
@@ -1111,7 +1111,7 @@ export function BoostActionsTab({
                           <Target className="w-5 h-5 text-green-500" />
                           Recommendations
                         </h4>
-                        <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+                        <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-200">
                           {executionResults[viewingResults].data.recommendations.map((rec: string, idx: number) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-green-500 mt-1">•</span>

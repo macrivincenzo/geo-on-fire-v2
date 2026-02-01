@@ -16,7 +16,7 @@ function UserCredits() {
   const remainingMessages = messageUsage ? (messageUsage.balance || 0) : 0;
   
   return (
-    <div className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
+    <div className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-100">
       <span>{remainingMessages}</span>
       <span className="ml-1">credits</span>
     </div>
@@ -63,14 +63,14 @@ export function Navbar() {
             {session && (
               <Link
                 href="/brand-monitor"
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 Brand Monitor
               </Link>
             )}
             <Link
               href="/plans"
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               Pricing
             </Link>
@@ -79,7 +79,7 @@ export function Navbar() {
                 <UserCredits />
                 <button
                   onClick={() => openBuyCredits()}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors border border-transparent dark:border-gray-600"
                 >
                   <CreditCard className="w-3.5 h-3.5" />
                   Buy More Credits
@@ -100,7 +100,7 @@ export function Navbar() {
                 <button
                   onClick={handleLogout}
                   disabled={isLoggingOut}
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 rounded"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 rounded"
                 >
                   {isLoggingOut ? 'Logging out...' : 'Logout'}
                 </button>
@@ -150,7 +150,7 @@ export function Navbar() {
                 <Link
                   href="/brand-monitor"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+                  className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
                 >
                   Brand Monitor
                 </Link>
@@ -162,7 +162,7 @@ export function Navbar() {
                     openBuyCredits();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
                 >
                   <CreditCard className="w-4 h-4" />
                   Buy More Credits
@@ -172,7 +172,7 @@ export function Navbar() {
             <Link
               href="/plans"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+              className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
             >
               Pricing
             </Link>

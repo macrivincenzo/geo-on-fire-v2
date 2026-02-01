@@ -181,11 +181,11 @@ export function HighlightedResponse({
             ul: ({children}) => <ul className="list-disc pl-5 mb-3 space-y-1">{children}</ul>,
             ol: ({children}) => <ol className="list-decimal pl-5 mb-3 space-y-1">{children}</ol>,
             li: ({children}) => <li className="text-sm">{children}</li>,
-            strong: ({children}) => <strong className="font-semibold text-gray-900">{children}</strong>,
+            strong: ({children}) => <strong className="font-semibold text-gray-900 dark:text-gray-100">{children}</strong>,
             em: ({children}) => <em className="italic">{children}</em>,
-            h1: ({children}) => <h1 className="text-lg font-bold mb-3 text-gray-900">{children}</h1>,
-            h2: ({children}) => <h2 className="text-base font-semibold mb-2 text-gray-900">{children}</h2>,
-            h3: ({children}) => <h3 className="text-sm font-semibold mb-2 text-gray-900">{children}</h3>,
+            h1: ({children}) => <h1 className="text-lg font-bold mb-3 text-gray-900 dark:text-white">{children}</h1>,
+            h2: ({children}) => <h2 className="text-base font-semibold mb-2 text-gray-900 dark:text-gray-100">{children}</h2>,
+            h3: ({children}) => <h3 className="text-sm font-semibold mb-2 text-gray-900 dark:text-gray-100">{children}</h3>,
             // Proper table rendering
             table: ({children}) => (
               <div className="overflow-x-auto my-4">

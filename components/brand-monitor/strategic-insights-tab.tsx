@@ -84,11 +84,11 @@ function AIBrandStrengthCard({
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <Trophy className="w-6 h-6" />
               AI Brand Strength
             </CardTitle>
-            <CardDescription className="text-sm text-gray-600 mt-1">
+            <CardDescription className="text-sm text-gray-600 dark:text-gray-200 mt-1">
               Composite score based on visibility, sentiment, share of voice, and ranking
             </CardDescription>
           </div>
@@ -100,8 +100,8 @@ function AIBrandStrengthCard({
           <div className={`text-6xl font-bold ${getScoreColor(brandStrength.score)} mb-2`}>
             {brandStrength.score}
           </div>
-          <div className="text-2xl font-semibold text-gray-500">/ 100</div>
-          <p className="text-sm text-gray-600 mt-2">
+          <div className="text-2xl font-semibold text-gray-500 dark:text-gray-300">/ 100</div>
+          <p className="text-sm text-gray-600 dark:text-gray-200 mt-2">
             {brandName}'s overall AI brand strength
           </p>
         </div>
@@ -109,31 +109,31 @@ function AIBrandStrengthCard({
         {/* Breakdown */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-white/60 dark:bg-white/10 rounded-none border border-gray-200/50 dark:border-gray-600/50 p-3">
-            <div className="text-xs text-gray-600 mb-1">Visibility</div>
-            <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.visibility}%</div>
+            <div className="text-xs text-gray-600 dark:text-gray-200 mb-1">Visibility</div>
+            <div className="text-lg font-semibold text-gray-900 dark:text-white">{brandStrength.breakdown.visibility}%</div>
           </div>
           <div className="bg-white/60 dark:bg-white/10 rounded-none border border-gray-200/50 dark:border-gray-600/50 p-3">
-            <div className="text-xs text-gray-600 mb-1">Sentiment</div>
-            <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.sentiment}%</div>
+            <div className="text-xs text-gray-600 dark:text-gray-200 mb-1">Sentiment</div>
+            <div className="text-lg font-semibold text-gray-900 dark:text-white">{brandStrength.breakdown.sentiment}%</div>
           </div>
           <div className="bg-white/60 dark:bg-white/10 rounded-none border border-gray-200/50 dark:border-gray-600/50 p-3">
-            <div className="text-xs text-gray-600 mb-1">Share of Voice</div>
-            <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.shareOfVoice}%</div>
+            <div className="text-xs text-gray-600 dark:text-gray-200 mb-1">Share of Voice</div>
+            <div className="text-lg font-semibold text-gray-900 dark:text-white">{brandStrength.breakdown.shareOfVoice}%</div>
           </div>
           <div className="bg-white/60 dark:bg-white/10 rounded-none border border-gray-200/50 dark:border-gray-600/50 p-3">
-            <div className="text-xs text-gray-600 mb-1">Ranking</div>
-            <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.ranking}%</div>
+            <div className="text-xs text-gray-600 dark:text-gray-200 mb-1">Ranking</div>
+            <div className="text-lg font-semibold text-gray-900 dark:text-white">{brandStrength.breakdown.ranking}%</div>
           </div>
         </div>
 
         {/* Competitor Comparison Bars */}
         {competitorStrengths.length > 0 && (
           <div className="mt-6 pt-6 border-t border-gray-300">
-            <p className="text-sm font-semibold text-gray-700 mb-3">Top Competitors</p>
+            <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Top Competitors</p>
             <div className="space-y-3">
               {competitorStrengths.map(({ name, strength }) => (
                 <div key={name} className="flex items-center gap-3">
-                  <div className="w-24 text-xs text-gray-600 truncate">{name}</div>
+                  <div className="w-24 text-xs text-gray-600 dark:text-gray-300 truncate">{name}</div>
                   <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-none h-4 relative overflow-hidden">
                     <div
                       className={`h-full rounded-none transition-all ${
@@ -144,14 +144,14 @@ function AIBrandStrengthCard({
                       style={{ width: `${strength.score}%` }}
                     />
                   </div>
-                  <div className="w-12 text-right text-sm font-semibold text-gray-700">
+                  <div className="w-12 text-right text-sm font-semibold text-gray-700 dark:text-gray-200">
                     {strength.score}
                   </div>
                 </div>
               ))}
               {/* Your brand bar */}
               <div className="flex items-center gap-3 pt-2 border-t border-gray-300">
-                <div className="w-24 text-xs font-semibold text-gray-900 truncate">{brandName}</div>
+                <div className="w-24 text-xs font-semibold text-gray-900 dark:text-white truncate">{brandName}</div>
                 <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-none h-5 relative overflow-hidden">
                   <div
                     className={`h-full rounded-none transition-all ${
@@ -210,13 +210,13 @@ function HealthScoreCard({ insights }: { insights: StrategicInsights }) {
             <div className="flex items-center gap-3 mb-3">
               {healthIcons[insights.overallHealth]}
               <div>
-                <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-1">AI Visibility Health</p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-300 font-semibold mb-1">AI Visibility Health</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
                   {healthLabels[insights.overallHealth]}
                 </p>
               </div>
             </div>
-            <p className="text-base text-gray-700 leading-relaxed">
+            <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed">
               {insights.summary}
             </p>
           </div>
@@ -243,10 +243,10 @@ function HealthScoreCard({ insights }: { insights: StrategicInsights }) {
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xl font-bold text-gray-900">{insights.healthScore}</span>
+                <span className="text-xl font-bold text-gray-900 dark:text-white">{insights.healthScore}</span>
               </div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">Health Score</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Health Score</p>
           </div>
         </div>
       </CardContent>
@@ -278,10 +278,10 @@ function ActionItemsCard({ actions, title, icon }: {
   
   return (
     <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
-      <CardHeader className="pb-4 bg-gradient-to-r from-gray-50 to-white">
+      <CardHeader className="pb-4 bg-gradient-to-r from-gray-50 to-white dark:from-gray-700 dark:to-gray-800">
         <div className="flex items-center gap-2">
           {icon}
-          <CardTitle className="text-xl font-bold text-gray-900">{title}</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">{title}</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -293,11 +293,11 @@ function ActionItemsCard({ actions, title, icon }: {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <h4 className="font-semibold text-sm">{action.title}</h4>
+                  <h4 className="font-semibold text-sm text-gray-900 dark:text-white">{action.title}</h4>
                   {effortBadges[action.effort]}
                 </div>
-                <p className="text-sm opacity-90 mb-2">{action.description}</p>
-                <p className="text-xs font-medium flex items-center gap-1">
+                <p className="text-sm opacity-90 mb-2 text-gray-800 dark:text-gray-200">{action.description}</p>
+                <p className="text-xs font-medium flex items-center gap-1 text-gray-700 dark:text-gray-300">
                   <Sparkles className="w-3 h-3" />
                   Impact: {action.impact}
                 </p>
@@ -319,18 +319,18 @@ function CompetitiveGapsCard({ gaps }: { gaps: CompetitiveGap[] }) {
   
   return (
     <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
-      <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-white border-b">
+      <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-white dark:from-gray-700 dark:to-gray-800 border-b">
         <div className="flex items-center gap-2">
           <BarChart3 className="w-5 h-5 text-purple-600" />
-          <CardTitle className="text-xl font-bold text-gray-900">Competitive Gap Analysis</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">Competitive Gap Analysis</CardTitle>
         </div>
-        <CardDescription className="text-sm text-gray-600 mt-1.5">How you compare to each competitor</CardDescription>
+        <CardDescription className="text-sm text-gray-600 dark:text-gray-300 mt-1.5">How you compare to each competitor</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {gaps.slice(0, 5).map((gap, idx) => (
           <div key={idx} className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="font-medium text-sm">{gap.competitor}</span>
+              <span className="font-medium text-sm text-gray-900 dark:text-white">{gap.competitor}</span>
               <div className="flex items-center gap-2">
                 {gap.gapType === 'winning' ? (
                   <Badge className="bg-green-100 text-green-700 border-green-200">
@@ -352,27 +352,27 @@ function CompetitiveGapsCard({ gaps }: { gaps: CompetitiveGap[] }) {
             
             {/* Visual bar comparison */}
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500 w-12">You</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 w-12">You</span>
               <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-none overflow-hidden">
                 <div 
                   className="h-full bg-orange-500 rounded-none transition-all"
                   style={{ width: `${Math.min(100, gap.yourScore)}%` }}
                 />
               </div>
-              <span className="text-xs font-medium w-10">{gap.yourScore.toFixed(0)}%</span>
+              <span className="text-xs font-medium w-10 text-gray-900 dark:text-white">{gap.yourScore.toFixed(0)}%</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500 w-12">Them</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 w-12">Them</span>
               <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-none overflow-hidden">
                 <div 
                   className="h-full bg-blue-600 rounded-none transition-all"
                   style={{ width: `${Math.min(100, gap.competitorScore)}%` }}
                 />
               </div>
-              <span className="text-xs font-medium w-10">{gap.competitorScore.toFixed(0)}%</span>
+              <span className="text-xs font-medium w-10 text-gray-900 dark:text-white">{gap.competitorScore.toFixed(0)}%</span>
             </div>
             
-            <p className="text-xs text-gray-600 mt-1">{gap.insight}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">{gap.insight}</p>
           </div>
         ))}
       </CardContent>
@@ -390,14 +390,14 @@ function BrandQuotesCard({ quotes, brandName }: { quotes: BrandQuote[]; brandNam
         <CardHeader className="pb-4">
           <div className="flex items-center gap-2">
             <MessageSquareQuote className="w-5 h-5 text-teal-600" />
-            <CardTitle className="text-xl font-bold text-gray-900">What AI Says About You</CardTitle>
+            <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">What AI Says About You</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
           <div className="text-center py-10 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-dashed border-gray-300 dark:border-gray-600">
             <Quote className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-            <p className="text-base font-semibold text-gray-700 mb-1">No direct quotes found mentioning {brandName}</p>
-            <p className="text-sm text-gray-600">This is an opportunity to create more content!</p>
+            <p className="text-base font-semibold text-gray-700 dark:text-gray-200 mb-1">No direct quotes found mentioning {brandName}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">This is an opportunity to create more content!</p>
           </div>
         </CardContent>
       </Card>
@@ -418,23 +418,23 @@ function BrandQuotesCard({ quotes, brandName }: { quotes: BrandQuote[]; brandNam
   
   return (
     <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
-      <CardHeader className="pb-4 bg-gradient-to-r from-teal-50 to-white border-b">
+      <CardHeader className="pb-4 bg-gradient-to-r from-teal-50 to-white dark:from-gray-700 dark:to-gray-800 border-b">
         <div className="flex items-center gap-2">
           <MessageSquareQuote className="w-5 h-5 text-teal-600" />
-          <CardTitle className="text-xl font-bold text-gray-900">What AI Says About You</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">What AI Says About You</CardTitle>
         </div>
-        <CardDescription className="text-sm text-gray-600 mt-1.5">Direct quotes from AI responses mentioning your brand</CardDescription>
+        <CardDescription className="text-sm text-gray-600 dark:text-gray-300 mt-1.5">Direct quotes from AI responses mentioning your brand</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {quotes.slice(0, 5).map((quote, idx) => (
           <div 
             key={idx} 
-            className={`p-3 rounded-none border-l-4 ${sentimentColors[quote.sentiment]}`}
+            className={`p-3 rounded-none border-l-4 ${sentimentColors[quote.sentiment]} dark:bg-gray-700/50`}
           >
             <div className="flex items-start gap-2">
               {sentimentIcons[quote.sentiment]}
               <div className="flex-1">
-                <p className="text-sm italic">"{quote.quote}"</p>
+                <p className="text-sm italic text-gray-900 dark:text-gray-100">"{quote.quote}"</p>
                 <div className="flex items-center gap-2 mt-2">
                   <Badge variant="outline" className="text-xs">{quote.provider}</Badge>
                   <Badge variant="outline" className="text-xs capitalize">{quote.context}</Badge>

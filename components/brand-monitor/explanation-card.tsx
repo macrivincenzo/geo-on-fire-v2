@@ -29,7 +29,7 @@ export function ExplanationCard({
       iconBg: 'bg-blue-100 dark:bg-blue-900/50',
       iconColor: 'text-blue-600 dark:text-blue-300',
       titleColor: 'text-blue-900 dark:text-blue-100',
-      textColor: 'text-blue-800 dark:text-blue-200'
+      textColor: 'text-blue-800 dark:text-gray-100'
     },
     success: {
       bg: 'bg-green-50 dark:bg-green-950/40',
@@ -45,7 +45,7 @@ export function ExplanationCard({
       iconBg: 'bg-amber-100 dark:bg-amber-900/50',
       iconColor: 'text-amber-600 dark:text-amber-400',
       titleColor: 'text-amber-900 dark:text-amber-100',
-      textColor: 'text-amber-800 dark:text-amber-200'
+      textColor: 'text-amber-800 dark:text-gray-100'
     }
   };
 

@@ -195,13 +195,13 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
   
   return (
     <div className="overflow-x-auto rounded-none border-2 border-gray-200 dark:border-gray-700 shadow-sm">
-      <table className="w-full border-collapse bg-white">
+      <table className="w-full border-collapse bg-white dark:bg-gray-800">
         <thead>
           <tr>
-            <th className="bg-gray-50 border-b border-r border-gray-200 w-[180px]">
+            <th className="bg-gray-50 dark:bg-gray-700 border-b border-r border-gray-200 dark:border-gray-600 w-[180px]">
               <button 
                 onClick={() => handleSort('competitor')} 
-                className="w-full p-3 font-medium text-gray-900 flex items-center justify-between hover:bg-gray-100 transition-colors text-left"
+                className="w-full p-3 font-medium text-gray-900 dark:text-gray-100 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-left"
               >
                 Competitors
                 {getSortIcon('competitor')}
@@ -210,13 +210,13 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
             {providers.map((provider, index) => (
               <th 
                 key={provider}
-                className={`bg-gray-50 border-b ${
+                className={`bg-gray-50 dark:bg-gray-700 border-b ${
                   index < providers.length - 1 ? 'border-r' : ''
-                } border-gray-200`}
+                } border-gray-200 dark:border-gray-600`}
               >
                 <button
                   onClick={() => handleSort(provider)}
-                  className="w-full p-3 font-medium text-gray-900 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                  className="w-full p-3 font-medium text-gray-900 dark:text-gray-100 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                 >
                   <div className="flex items-center justify-center gap-2">
                     {getProviderIcon(provider)}
@@ -256,12 +256,12 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
                     <td
                       key={provider}
                       className={`text-center p-4 transition-colors ${
-                        index < providers.length - 1 ? 'border-r border-gray-200' : ''
-                      }`}
+                        index < providers.length - 1 ? 'border-r border-gray-200 dark:border-gray-600' : ''
+                      } bg-white dark:bg-gray-800`}
                       style={styleProps}
                     >
                       <div className="flex flex-col items-center gap-1">
-                        <span className="text-sm" style={{ color: styleProps.color, fontWeight: styleProps.fontWeight }}>
+                        <span className="text-sm dark:!text-white" style={{ color: styleProps.color, fontWeight: styleProps.fontWeight }}>
                           {score}%
                         </span>
                         {score > 0 && (

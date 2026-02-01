@@ -39,7 +39,7 @@ export function VisibilityScoreTab({
             {/* Visibility Score in top right */}
             <div className="text-right">
               <p className="text-4xl font-bold text-orange-600">{brandData.visibilityScore}%</p>
-              <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Overall Score</p>
+              <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-300 mt-2 font-semibold">Overall Score</p>
             </div>
           </div>
         </CardHeader>
@@ -111,8 +111,8 @@ export function VisibilityScoreTab({
                 
                 {/* Center text showing relative performance */}
                 <div className="absolute top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                  <p className="text-4xl font-bold text-gray-900">#{brandRank}</p>
-                  <p className="text-xs uppercase tracking-wider text-gray-500 mt-1 font-semibold">Rank</p>
+                  <p className="text-4xl font-bold text-gray-900 dark:text-white">#{brandRank}</p>
+                  <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-300 mt-1 font-semibold">Rank</p>
                   {difference !== 0 && (
                     <p className={`text-xs mt-2 font-semibold ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {difference > 0 ? '+' : ''}{Math.abs(difference).toFixed(1)}% vs #1
@@ -163,11 +163,11 @@ export function VisibilityScoreTab({
                         </div>
                       </div>
                       <span className={`text-sm truncate ${
-                        competitor.isOwn ? 'font-bold text-orange-600' : 'font-medium text-gray-700'
+                        competitor.isOwn ? 'font-bold text-orange-600 dark:text-orange-300' : 'font-medium text-gray-700 dark:text-gray-200'
                       }`}>
                         {competitor.name}
                       </span>
-                      <span className="text-sm font-bold text-gray-900 ml-auto">
+                      <span className="text-sm font-bold text-gray-900 dark:text-white ml-auto">
                         {competitor.visibilityScore}%
                       </span>
                     </div>

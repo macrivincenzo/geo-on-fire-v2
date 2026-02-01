@@ -25,7 +25,7 @@ export const CompetitorCell: React.FC<CompetitorCellProps> = ({
   const faviconUrl = favicon || (url ? `https://www.google.com/s2/favicons?domain=${url}&sz=64` : null);
   
   return (
-    <div className="flex items-center gap-2 p-3 hover:bg-gray-50">
+    <div className="flex items-center gap-2 p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50">
       <div className="w-6 h-6 flex items-center justify-center rounded overflow-hidden flex-shrink-0">
         {faviconUrl && !faviconError ? (
           <Image
@@ -37,8 +37,8 @@ export const CompetitorCell: React.FC<CompetitorCellProps> = ({
             onError={() => setFaviconError(true)}
           />
         ) : (
-          <div className="w-6 h-6 bg-gray-200 rounded flex items-center justify-center">
-            <span className="text-gray-600 font-semibold text-xs">
+          <div className="w-6 h-6 bg-gray-200 dark:bg-gray-600 rounded flex items-center justify-center">
+            <span className="text-gray-600 dark:text-gray-200 font-semibold text-xs">
               {name.charAt(0).toUpperCase()}
             </span>
           </div>
@@ -51,7 +51,7 @@ export const CompetitorCell: React.FC<CompetitorCellProps> = ({
               href={url.startsWith('http') ? url : `https://${url}`}
               target="_blank"
               rel="noopener noreferrer"
-              className={`text-sm font-medium hover:underline ${isOwn ? 'text-orange-600' : 'text-gray-900 hover:text-blue-600'} flex items-center gap-1`}
+              className={`text-sm font-medium hover:underline ${isOwn ? 'text-orange-600 dark:text-orange-300' : 'text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-300'} flex items-center gap-1`}
               onClick={(e) => e.stopPropagation()}
             >
               {name}
@@ -64,7 +64,7 @@ export const CompetitorCell: React.FC<CompetitorCellProps> = ({
           )}
         </div>
         {description && (
-          <p className="text-sm text-gray-500">{description}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-300">{description}</p>
         )}
       </div>
     </div>

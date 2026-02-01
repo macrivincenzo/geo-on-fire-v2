@@ -135,16 +135,16 @@ export function SourceTrackerTab({
       <div className="flex flex-col h-full">
         <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-gray-800 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-gray-900">Source Tracker</CardTitle>
-            <CardDescription className="text-base text-gray-600 mt-2">
+            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">Source Tracker</CardTitle>
+            <CardDescription className="text-base text-gray-600 dark:text-gray-200 mt-2">
               Track which domains and pages cite your brand in AI responses
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-center py-10 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-dashed border-gray-300 dark:border-gray-600">
               <Globe className="w-12 h-12 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
-              <p className="text-base font-semibold text-gray-700 mb-1">No sources found</p>
-              <p className="text-sm text-gray-600">Sources will appear here when AI responses include citations or URLs.</p>
+              <p className="text-base font-semibold text-gray-700 dark:text-gray-100 mb-1">No sources found</p>
+              <p className="text-sm text-gray-600 dark:text-gray-200">Sources will appear here when AI responses include citations or URLs.</p>
             </div>
           </CardContent>
         </Card>
@@ -205,9 +205,9 @@ export function SourceTrackerTab({
           <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-white border-b">
             <div className="flex items-center gap-2">
               <Globe className="w-5 h-5 text-blue-600" />
-              <CardTitle className="text-xl font-bold text-gray-900">Top Cited Domains</CardTitle>
+              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">Top Cited Domains</CardTitle>
             </div>
-            <CardDescription className="text-sm text-gray-600 mt-1.5">
+            <CardDescription className="text-sm text-gray-600 dark:text-gray-200 mt-1.5">
               Domains that cite {brandName} most frequently
             </CardDescription>
           </CardHeader>
@@ -272,9 +272,9 @@ export function SourceTrackerTab({
           <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-white border-b">
             <div className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-purple-600" />
-              <CardTitle className="text-xl font-bold text-gray-900">Top Cited Pages</CardTitle>
+              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">Top Cited Pages</CardTitle>
             </div>
-            <CardDescription className="text-sm text-gray-600 mt-1.5">
+            <CardDescription className="text-sm text-gray-600 dark:text-gray-200 mt-1.5">
               Specific pages that cite {brandName}
             </CardDescription>
           </CardHeader>
@@ -300,8 +300,8 @@ export function SourceTrackerTab({
                     </div>
                     <div className="flex-1 min-w-0">
                       {page.title ? (
-                        <p className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">
-                          {page.title}
+<p className="text-sm font-semibold text-gray-900 dark:text-white mb-1 line-clamp-2">
+                        {page.title}
                         </p>
                       ) : null}
                       <a
@@ -315,8 +315,8 @@ export function SourceTrackerTab({
                       </a>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="text-sm font-bold text-gray-900">{page.timesCited}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{page.shareOfCitations}%</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{page.timesCited}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-300">{page.shareOfCitations}%</p>
                     </div>
                   </div>
                 );
@@ -332,9 +332,9 @@ export function SourceTrackerTab({
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-50 to-white border-b">
             <div className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-orange-600" />
-              <CardTitle className="text-xl font-bold text-gray-900">Source Categories</CardTitle>
+              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">Source Categories</CardTitle>
             </div>
-            <CardDescription className="text-sm text-gray-600 mt-1.5">
+            <CardDescription className="text-sm text-gray-600 dark:text-gray-200 mt-1.5">
               Breakdown of citation sources by category
             </CardDescription>
           </CardHeader>
@@ -342,7 +342,7 @@ export function SourceTrackerTab({
             <div className="space-y-3">
               {categories.map((category) => (
                 <div key={category.name} className="flex items-center gap-4">
-                  <div className="w-32 text-sm font-medium text-gray-700 capitalize">
+                  <div className="w-32 text-sm font-medium text-gray-700 dark:text-gray-200 capitalize">
                     {category.name}
                   </div>
                   <div className="flex-1">
@@ -353,10 +353,10 @@ export function SourceTrackerTab({
                           style={{ width: `${category.percentage}%` }}
                         />
                       </div>
-                      <div className="w-20 text-right text-sm font-semibold text-gray-900">
+                      <div className="w-20 text-right text-sm font-semibold text-gray-900 dark:text-white">
                         {category.percentage}%
                       </div>
-                      <div className="w-16 text-right text-xs text-gray-500 dark:text-gray-400">
+                      <div className="w-16 text-right text-xs text-gray-500 dark:text-gray-300">
                         ({category.count})
                       </div>
                     </div>

@@ -31,7 +31,7 @@ export function ResultsNavigation({
   
   const btnBase = 'w-full text-left px-4 py-3 text-sm font-medium transition-colors rounded-none border-2 ';
   const btnActive = 'bg-blue-600 text-white border-blue-600 dark:border-blue-600';
-  const btnInactive = 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700';
+  const btnInactive = 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700';
 
   return (
     <nav className="w-80 flex-shrink-0 animate-fade-in flex flex-col h-[calc(100vh-8rem)] ml-[-2rem] sticky top-8" style={{ animationDelay: '0.3s' }}>
