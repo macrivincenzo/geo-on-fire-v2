@@ -24,6 +24,21 @@ export default function PurchaseButton({ productId, disabled, className, childre
     setMounted(true);
   }, []);
 
+  // When user returns from Stripe (back button, cancel, or tab switch), clear loading so button shows normal state
+  useEffect(() => {
+    const clearLoading = () => setLoading(false);
+    const onVisible = () => clearLoading();
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) clearLoading(); // bfcache restore (e.g. back from Stripe)
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('pageshow', onPageShow);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('pageshow', onPageShow);
+    };
+  }, []);
+
   const handlePurchase = async (e: React.MouseEvent) => {
     // Prevent any default behavior and stop propagation
     e.preventDefault();
