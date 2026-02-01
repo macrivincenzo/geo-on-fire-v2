@@ -12,14 +12,15 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.aibrandtrack.com'),
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
 
   // OPTIMIZED: More specific, AI-quotable title with year
   title: {

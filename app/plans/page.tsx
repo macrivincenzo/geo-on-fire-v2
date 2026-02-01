@@ -5,7 +5,7 @@ import { useSession } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
 
 // Dynamically import PurchaseButton to avoid SSR issues with useCustomer hook
@@ -19,7 +19,15 @@ const PurchaseButton = dynamic(
 
 const CHECKOUT_PRODUCT_IDS = new Set(['single-analysis', 'credit-pack', 'starter-monthly', 'pro-monthly']);
 
-export default function PricingPage() {
+function PlansLoading() {
+  return (
+    <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center py-12">
+      <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+    </div>
+  );
+}
+
+function PricingPageContent() {
   const { data: session, isPending } = useSession();
   const searchParams = useSearchParams();
   const hasRedirected = useRef(false);
@@ -460,5 +468,13 @@ export default function PricingPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={<PlansLoading />}>
+      <PricingPageContent />
+    </Suspense>
   );
 }
