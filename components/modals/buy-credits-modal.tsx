@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-import { X } from 'lucide-react';
-import { usePricingTable } from 'autumn-js/react';
+import React, { useState } from 'react';
+import { X, Loader2 } from 'lucide-react';
 import { useCustomer } from '@/hooks/useAutumnCustomer';
 
 interface BuyCreditsModalProps {
@@ -19,16 +18,41 @@ const TOP_UP_PLANS = [
 
 export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
   const { customer } = useCustomer();
-  const { attach, isLoading } = usePricingTable();
+  const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
   const messageUsage = customer?.features?.messages;
   const remainingCredits = messageUsage ? (messageUsage.balance || 0) : 0;
 
   const handlePurchase = async (productId: string) => {
+    setLoadingPlanId(productId);
     try {
-      await attach(productId);
-      setTimeout(() => onClose(), 500);
+      const base = typeof window !== 'undefined' ? window.location.origin : '';
+      const returnPath = typeof window !== 'undefined' ? window.location.pathname : '/brand-monitor';
+      const response = await fetch('/api/autumn/attach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          product_id: productId,
+          return_url: base + returnPath,
+          success_url: base + returnPath,
+          cancel_url: base + returnPath,
+        }),
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.message || err?.error || `HTTP ${response.status}`);
+      }
+      const result = await response.json();
+      const checkoutUrl = result?.data?.checkout_url ?? result?.checkout_url;
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+        return;
+      }
+      throw new Error('No checkout URL returned');
     } catch (error) {
-      console.error('Failed to purchase credits:', error);
+      console.error('Failed to start checkout:', error);
+      setLoadingPlanId(null);
+      alert(`Checkout failed: ${error instanceof Error ? error.message : 'Please try again.'}`);
     }
   };
 
@@ -36,73 +60,70 @@ export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
 
   return (
     <>
-      {/* Light backdrop — click to close, doesn't block the whole page */}
+      {/* No backdrop — page stays clear and clickable; close via X only */}
+      {/* Panel: smaller, right-below corner */}
       <div
-        className="fixed inset-0 z-40 bg-black/20 dark:bg-black/40 backdrop-blur-[2px]"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      {/* Panel: right-below corner, same design as rest of site */}
-      <div
-        className="fixed bottom-4 right-4 left-4 sm:left-auto z-50 w-full sm:max-w-md rounded-xl border border-gray-200 dark:border-gray-600/80 bg-white dark:bg-gray-800 shadow-lg dark:shadow-black/20 font-sans tracking-tight overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-200"
+        className="fixed bottom-4 right-4 left-4 sm:left-auto sm:w-[320px] z-50 rounded-xl border border-gray-200 dark:border-gray-600/80 bg-white dark:bg-gray-800 shadow-lg dark:shadow-black/20 font-sans tracking-tight overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-200"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-labelledby="buy-credits-title"
       >
-        {/* Header — clean, no gradient */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-600/80">
+        {/* Header — compact */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-600/80">
           <div>
-            <h2 id="buy-credits-title" className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 id="buy-credits-title" className="text-lg font-bold text-gray-900 dark:text-white">
               Buy More Credits
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
               You have <span className="font-semibold text-gray-700 dark:text-gray-300">{remainingCredits} credits</span>
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
             aria-label="Close"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-5 space-y-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Add credits to your account. Credits never expire.
+        {/* Content — compact */}
+        <div className="p-4 space-y-3">
+          <p className="text-xs text-gray-600 dark:text-gray-400">
+            Add credits. Credits never expire.
           </p>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {TOP_UP_PLANS.map((plan) => {
               const pricePerCredit = plan.credits > 0 ? (plan.price / plan.credits).toFixed(2) : '0';
+              const loading = loadingPlanId === plan.id;
               return (
                 <div
                   key={plan.id}
-                  className="rounded-lg border border-gray-200 dark:border-gray-600/80 bg-gray-50/50 dark:bg-gray-700/50 p-4 hover:border-gray-300 dark:hover:border-gray-500 transition-colors"
+                  className="rounded-lg border border-gray-200 dark:border-gray-600/80 bg-gray-50/50 dark:bg-gray-700/50 p-3 hover:border-gray-300 dark:hover:border-gray-500 transition-colors"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                         {plan.name}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                        {plan.tagline}
-                      </p>
-                      <p className="mt-2 text-lg font-bold text-gray-900 dark:text-white">
-                        ${plan.price}
-                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-1">
-                          one-off · ${pricePerCredit}/credit
-                        </span>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        ${plan.price} one-off · ${pricePerCredit}/credit
                       </p>
                     </div>
                     <button
                       onClick={() => handlePurchase(plan.id)}
-                      disabled={isLoading}
-                      className="shrink-0 h-9 px-4 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      disabled={!!loadingPlanId}
+                      className="shrink-0 h-8 px-3 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
                     >
-                      {isLoading ? '…' : 'Purchase'}
+                      {loading ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          …
+                        </>
+                      ) : (
+                        'Purchase'
+                      )}
                     </button>
                   </div>
                 </div>
@@ -110,9 +131,9 @@ export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
             })}
           </div>
 
-          <div className="pt-2 pb-1 px-3 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200/60 dark:border-blue-800/60">
-            <p className="text-xs text-blue-800 dark:text-blue-300">
-              <strong>Note:</strong> Credits are added instantly and never expire. Each Boost Action uses 5 credits.
+          <div className="pt-1.5 pb-1 px-2.5 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200/60 dark:border-blue-800/60">
+            <p className="text-[11px] text-blue-800 dark:text-blue-300">
+              <strong>Note:</strong> Credits added instantly. Each Boost Action uses 5 credits.
             </p>
           </div>
         </div>
