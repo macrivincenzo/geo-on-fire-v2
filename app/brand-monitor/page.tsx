@@ -2,7 +2,7 @@
 
 import { BrandMonitor } from '@/components/brand-monitor/brand-monitor';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Menu, X, Plus, Trash2, Loader2 } from 'lucide-react';
 import { useCustomer, useRefreshCustomer } from '@/hooks/useAutumnCustomer';
 import { useBrandAnalyses, useBrandAnalysis, useDeleteBrandAnalysis } from '@/hooks/useBrandAnalyses';
@@ -14,6 +14,7 @@ import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 // Separate component that uses Autumn hooks
 function BrandMonitorContent({ session }: { session: any }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { customer, isLoading, error } = useCustomer({
     skip: !session
   });
@@ -26,6 +27,18 @@ function BrandMonitorContent({ session }: { session: any }) {
   // Queries and mutations
   const { data: analyses, isLoading: analysesLoading } = useBrandAnalyses();
   const { data: currentAnalysis } = useBrandAnalysis(selectedAnalysisId);
+
+  // URL is source of truth: on load and when user uses back/forward, restore selection from URL
+  useEffect(() => {
+    const id = searchParams.get('analysis');
+    setSelectedAnalysisId(id || null);
+  }, [searchParams]);
+
+  const setSelectedAndUpdateUrl = (id: string | null) => {
+    setSelectedAnalysisId(id);
+    const url = id ? `/brand-monitor?analysis=${encodeURIComponent(id)}` : '/brand-monitor';
+    router.replace(url);
+  };
   const deleteAnalysis = useDeleteBrandAnalysis();
   
   // Get credits from customer data
@@ -49,18 +62,18 @@ function BrandMonitorContent({ session }: { session: any }) {
     setDeleteDialogOpen(true);
   };
 
-  const confirmDelete = async () => {
+  const const confirmDelete = async () => {
     if (analysisToDelete) {
       await deleteAnalysis.mutateAsync(analysisToDelete);
       if (selectedAnalysisId === analysisToDelete) {
-        setSelectedAnalysisId(null);
+        setSelectedAndUpdateUrl(null);
       }
       setAnalysisToDelete(null);
     }
   };
   
   const handleNewAnalysis = () => {
-    setSelectedAnalysisId(null);
+    setSelectedAndUpdateUrl(null);
   };
 
   return (
@@ -127,7 +140,7 @@ function BrandMonitorContent({ session }: { session: any }) {
                     className={`p-3 cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
                       selectedAnalysisId === analysis.id ? 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600' : ''
                     }`}
-                    onClick={() => setSelectedAnalysisId(analysis.id)}
+                    onClick={() => setSelectedAndUpdateUrl(analysis.id)}
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex-1 min-w-0">
@@ -167,8 +180,8 @@ function BrandMonitorContent({ session }: { session: any }) {
               onCreditsUpdate={handleCreditsUpdate}
               selectedAnalysis={selectedAnalysisId ? currentAnalysis : null}
               onSaveAnalysis={(analysis) => {
-                // This will be called when analysis completes
-                // We'll implement this in the next step
+                // After analysis completes, put it in the URL so refresh keeps you here (like big apps)
+                if (analysis?.id) setSelectedAndUpdateUrl(analysis.id);
               }}
             />
           </div>
