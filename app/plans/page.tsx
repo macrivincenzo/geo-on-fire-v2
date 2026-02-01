@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { useSession } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
+import { Loader2 } from 'lucide-react';
 
 // Dynamically import PurchaseButton to avoid SSR issues with useCustomer hook
 const PurchaseButton = dynamic(
@@ -14,9 +17,63 @@ const PurchaseButton = dynamic(
   }
 );
 
+const CHECKOUT_PRODUCT_IDS = new Set(['single-analysis', 'credit-pack', 'starter-monthly', 'pro-monthly']);
+
 export default function PricingPage() {
   const { data: session, isPending } = useSession();
+  const searchParams = useSearchParams();
+  const hasRedirected = useRef(false);
 
+  // When user lands with ?checkout=productId (e.g. from home or after login), go straight to Stripe checkout
+  useEffect(() => {
+    const checkoutProductId = searchParams.get('checkout');
+    if (!checkoutProductId || !CHECKOUT_PRODUCT_IDS.has(checkoutProductId) || !session?.user || hasRedirected.current) return;
+
+    hasRedirected.current = true;
+
+    (async () => {
+      try {
+        const response = await fetch('/api/autumn/attach', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            product_id: checkoutProductId,
+            return_url: window.location.origin + '/plans',
+            success_url: window.location.origin + '/dashboard',
+            cancel_url: window.location.origin + '/plans',
+          }),
+        });
+        if (!response.ok) {
+          hasRedirected.current = false;
+          return;
+        }
+        const result = await response.json();
+        const checkoutUrl = result?.data?.checkout_url || result?.checkout_url;
+        if (checkoutUrl) {
+          window.location.href = checkoutUrl;
+        } else {
+          hasRedirected.current = false;
+        }
+      } catch {
+        hasRedirected.current = false;
+      }
+    })();
+  }, [searchParams, session?.user]);
+
+  const checkoutProductId = searchParams.get('checkout');
+  const isRedirectingToCheckout = session?.user && checkoutProductId && CHECKOUT_PRODUCT_IDS.has(checkoutProductId);
+
+  if (isRedirectingToCheckout) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-10 w-10 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-400">Taking you to checkout...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 py-12">
@@ -123,7 +180,7 @@ export default function PricingPage() {
                 </PurchaseButton>
               ) : (
                 <Link
-                  href="/login?redirect=/plans"
+                  href="/login?redirect=/plans?checkout=single-analysis"
                   className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-md"
                 >
                   Buy Now
@@ -174,7 +231,7 @@ export default function PricingPage() {
                 </PurchaseButton>
               ) : (
                 <Link
-                  href="/login?redirect=/plans"
+                  href="/login?redirect=/plans?checkout=credit-pack"
                   className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
                 >
                   Buy Now
@@ -240,7 +297,7 @@ export default function PricingPage() {
                 </PurchaseButton>
               ) : (
                 <Link
-                  href="/login?redirect=/plans"
+                  href="/login?redirect=/plans?checkout=starter-monthly"
                   className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-md"
                 >
                   Subscribe
@@ -307,7 +364,7 @@ export default function PricingPage() {
                 </PurchaseButton>
               ) : (
                 <Link
-                  href="/login?redirect=/plans"
+                  href="/login?redirect=/plans?checkout=pro-monthly"
                   className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-md"
                 >
                   Subscribe

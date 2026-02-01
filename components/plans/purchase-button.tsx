@@ -4,14 +4,21 @@ import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 
-export default function PurchaseButton({ productId, disabled, className, children }: { 
+export default function PurchaseButton({ productId, disabled, className, children, returnUrl, cancelUrl }: { 
   productId: string; 
-  disabled: boolean; 
+  disabled?: boolean;
   className: string; 
   children: React.ReactNode;
+  /** Where to send user after payment (e.g. / or /plans). Default /plans */
+  returnUrl?: string;
+  /** Where to send user if they cancel. Default same as returnUrl */
+  cancelUrl?: string;
 }) {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const base = typeof window !== 'undefined' ? window.location.origin : '';
+  const returnPath = returnUrl ?? '/plans';
+  const cancelPath = cancelUrl ?? returnPath;
 
   useEffect(() => {
     setMounted(true);
@@ -38,9 +45,9 @@ export default function PurchaseButton({ productId, disabled, className, childre
         credentials: 'include',
         body: JSON.stringify({
           product_id: productId,
-          return_url: window.location.origin + '/plans',
-          success_url: window.location.origin + '/dashboard',
-          cancel_url: window.location.origin + '/plans',
+          return_url: base + returnPath,
+          success_url: base + '/dashboard',
+          cancel_url: base + cancelPath,
         }),
       });
 
@@ -51,7 +58,7 @@ export default function PurchaseButton({ productId, disabled, className, childre
         // If 401, redirect to login
         if (response.status === 401) {
           console.error('Authentication failed - redirecting to login');
-          window.location.href = '/login?redirect=/plans';
+          window.location.href = `/login?redirect=${encodeURIComponent('/plans?checkout=' + productId)}`;
           return;
         }
         
@@ -85,7 +92,7 @@ export default function PurchaseButton({ productId, disabled, className, childre
       if (error instanceof Error) {
         console.error('Error details:', error.message, error.stack);
         if (error.message.includes('auth') || error.message.includes('unauthorized') || error.message.includes('401')) {
-          window.location.href = '/login?redirect=/plans';
+          window.location.href = `/login?redirect=${encodeURIComponent('/plans?checkout=' + productId)}`;
         }
       }
     }
@@ -95,7 +102,7 @@ export default function PurchaseButton({ productId, disabled, className, childre
     <Button
       type="button"
       onClick={handlePurchase}
-      disabled={disabled || !mounted || loading}
+      disabled={!!(disabled || !mounted || loading)}
       className={className}
     >
       {loading ? (

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useSession } from "@/lib/auth-client";
+import { PlanCheckoutLink } from "@/components/plans/plan-checkout-link";
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -707,12 +708,13 @@ export default function Home() {
                     Free competitor scraping
                   </li>
                 </ul>
-                <Link
-                  href="/plans"
+                <PlanCheckoutLink
+                  productId="single-analysis"
                   className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600 hover:border-blue-700"
+                  returnUrl="/"
                 >
                   Buy Now
-                </Link>
+                </PlanCheckoutLink>
               </div>
 
               {/* Credit Pack */}
@@ -742,12 +744,13 @@ export default function Home() {
                     Priority support
                   </li>
                 </ul>
-                <Link
-                  href="/plans"
+                <PlanCheckoutLink
+                  productId="credit-pack"
                   className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-none"
+                  returnUrl="/"
                 >
                   Buy Now
-                </Link>
+                </PlanCheckoutLink>
               </div>
             </div>
           </div>
@@ -798,12 +801,13 @@ export default function Home() {
                     Basic tracking features
                   </li>
                 </ul>
-                <Link
-                  href="/plans"
+                <PlanCheckoutLink
+                  productId="starter-monthly"
                   className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-none"
+                  returnUrl="/"
                 >
                   Subscribe
-                </Link>
+                </PlanCheckoutLink>
               </div>
 
               {/* Pro Plan */}
@@ -855,12 +859,13 @@ export default function Home() {
                     Priority support
                   </li>
                 </ul>
-                <Link
-                  href="/plans"
+                <PlanCheckoutLink
+                  productId="pro-monthly"
                   className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600 hover:border-blue-700"
+                  returnUrl="/"
                 >
                   Subscribe
-                </Link>
+                </PlanCheckoutLink>
               </div>
 
               {/* Enterprise Plan */}
