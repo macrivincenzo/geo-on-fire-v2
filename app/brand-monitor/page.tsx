@@ -62,7 +62,7 @@ function BrandMonitorContent({ session }: { session: any }) {
     setDeleteDialogOpen(true);
   };
 
-  const const confirmDelete = async () => {
+  const confirmDelete = async () => {
     if (analysisToDelete) {
       await deleteAnalysis.mutateAsync(analysisToDelete);
       if (selectedAnalysisId === analysisToDelete) {
