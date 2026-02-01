@@ -99,7 +99,7 @@ export default function RegisterPage() {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
               Or{' '}
-              <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link href="/login" className="font-medium text-blue-600 hover:text-blue-700">
                 sign in to existing account
               </Link>
             </p>
@@ -118,7 +118,7 @@ export default function RegisterPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base rounded"
+                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -134,7 +134,7 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base rounded"
+                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
                   placeholder="Enter your email"
                 />
               </div>
@@ -150,7 +150,7 @@ export default function RegisterPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base rounded"
+                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
                   placeholder="Choose a strong password"
                 />
                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Must be at least 8 characters long</p>
@@ -170,13 +170,13 @@ export default function RegisterPage() {
                     <div className="flex flex-col sm:flex-row gap-2">
                       <Link
                         href={`/login?email=${encodeURIComponent(email)}`}
-                        className="inline-flex items-center justify-center px-4 py-2 border border-blue-500 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors"
+                        className="inline-flex items-center justify-center px-4 py-2 border-2 border-blue-600 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
                       >
                         Sign in instead
                       </Link>
                       <Link
                         href="/forgot-password"
-                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 focus:underline transition-colors"
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 focus:underline transition-colors"
                       >
                         Forgot password?
                       </Link>
@@ -193,15 +193,15 @@ export default function RegisterPage() {
                   name="terms"
                   type="checkbox"
                   required
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-600 border-gray-300 rounded"
                 />
                 <label htmlFor="terms" className="ml-2 block text-sm text-gray-900 dark:text-gray-200">
                   I agree to the{' '}
-                  <Link href="#" className="text-blue-600 hover:text-blue-500">
+                  <Link href="#" className="text-blue-600 hover:text-blue-700">
                     Terms of Service
                   </Link>{' '}
                   and{' '}
-                  <Link href="#" className="text-blue-600 hover:text-blue-500">
+                  <Link href="#" className="text-blue-600 hover:text-blue-700">
                     Privacy Policy
                   </Link>
                 </label>

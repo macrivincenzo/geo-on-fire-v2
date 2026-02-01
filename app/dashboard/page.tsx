@@ -147,7 +147,7 @@ function DashboardContent({ session }: { session: any }) {
                   type="text"
                   value={profileForm.displayName}
                   onChange={(e) => setProfileForm({ ...profileForm, displayName: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-600 dark:focus:border-blue-600 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter your display name"
                 />
               ) : (
@@ -167,7 +167,7 @@ function DashboardContent({ session }: { session: any }) {
                   type="tel"
                   value={profileForm.phone}
                   onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-600 dark:focus:border-blue-600 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter your phone number"
                 />
               ) : (
@@ -185,7 +185,7 @@ function DashboardContent({ session }: { session: any }) {
                 <textarea
                   value={profileForm.bio}
                   onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-600 dark:focus:border-blue-600 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   rows={3}
                   placeholder="Tell us about yourself"
                 />
@@ -210,7 +210,7 @@ function DashboardContent({ session }: { session: any }) {
               <button
                 onClick={() => handleSettingToggle('emailNotifications', !settings?.emailNotifications)}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  settings?.emailNotifications ? 'bg-blue-500' : 'bg-gray-200'
+                  settings?.emailNotifications ? 'bg-blue-600' : 'bg-gray-200'
                 }`}
                 disabled={updateSettings.isPending}
               >
@@ -230,7 +230,7 @@ function DashboardContent({ session }: { session: any }) {
               <button
                 onClick={() => handleSettingToggle('marketingEmails', !settings?.marketingEmails)}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  settings?.marketingEmails ? 'bg-blue-500' : 'bg-gray-200'
+                  settings?.marketingEmails ? 'bg-blue-600' : 'bg-gray-200'
                 }`}
                 disabled={updateSettings.isPending}
               >

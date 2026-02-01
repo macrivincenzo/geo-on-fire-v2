@@ -30,7 +30,7 @@ const providerIcons = {
 
 const statusIcons = {
   'pending': <div className="h-4 w-4 rounded-full bg-gray-200" />,
-  'running': <Loader2 className="h-4 w-4 animate-spin text-blue-500" />,
+  'running': <Loader2 className="h-4 w-4 animate-spin text-blue-600" />,
   'completed': <CheckCircle2 className="h-4 w-4 text-green-500" />,
   'failed': <XCircle className="h-4 w-4 text-red-500" />,
 };

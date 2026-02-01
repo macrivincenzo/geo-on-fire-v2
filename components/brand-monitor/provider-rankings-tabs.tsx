@@ -275,7 +275,7 @@ export function ProviderRankingsTabs({
                                 <div className="w-20 bg-gray-200 h-1.5 overflow-hidden">
                                   <div
                                     className={`h-full transition-all duration-300 ${
-                                      competitor.isOwn ? 'bg-orange-500' : 'bg-blue-500'
+                                      competitor.isOwn ? 'bg-orange-500' : 'bg-blue-600'
                                     }`}
                                     style={{ width: `${competitor.visibilityScore}%` }}
                                   />

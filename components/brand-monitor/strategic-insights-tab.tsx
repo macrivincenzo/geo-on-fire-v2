@@ -80,7 +80,7 @@ function AIBrandStrengthCard({
   };
 
   return (
-    <Card className={`${getScoreBgColor(brandStrength.score)} border-2 shadow-lg`}>
+    <Card className={`${getScoreBgColor(brandStrength.score)} rounded-none border-2 shadow-sm`}>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
@@ -108,19 +108,19 @@ function AIBrandStrengthCard({
 
         {/* Breakdown */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-white/60 rounded-lg p-3">
+          <div className="bg-white/60 dark:bg-white/10 rounded-none border border-gray-200/50 dark:border-gray-600/50 p-3">
             <div className="text-xs text-gray-600 mb-1">Visibility</div>
             <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.visibility}%</div>
           </div>
-          <div className="bg-white/60 rounded-lg p-3">
+          <div className="bg-white/60 dark:bg-white/10 rounded-none border border-gray-200/50 dark:border-gray-600/50 p-3">
             <div className="text-xs text-gray-600 mb-1">Sentiment</div>
             <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.sentiment}%</div>
           </div>
-          <div className="bg-white/60 rounded-lg p-3">
+          <div className="bg-white/60 dark:bg-white/10 rounded-none border border-gray-200/50 dark:border-gray-600/50 p-3">
             <div className="text-xs text-gray-600 mb-1">Share of Voice</div>
             <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.shareOfVoice}%</div>
           </div>
-          <div className="bg-white/60 rounded-lg p-3">
+          <div className="bg-white/60 dark:bg-white/10 rounded-none border border-gray-200/50 dark:border-gray-600/50 p-3">
             <div className="text-xs text-gray-600 mb-1">Ranking</div>
             <div className="text-lg font-semibold text-gray-900">{brandStrength.breakdown.ranking}%</div>
           </div>
@@ -134,11 +134,11 @@ function AIBrandStrengthCard({
               {competitorStrengths.map(({ name, strength }) => (
                 <div key={name} className="flex items-center gap-3">
                   <div className="w-24 text-xs text-gray-600 truncate">{name}</div>
-                  <div className="flex-1 bg-gray-200 rounded-full h-4 relative overflow-hidden">
+                  <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-none h-4 relative overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all ${
+                      className={`h-full rounded-none transition-all ${
                         strength.score >= 70 ? 'bg-green-500' :
-                        strength.score >= 50 ? 'bg-blue-500' :
+                        strength.score >= 50 ? 'bg-blue-600' :
                         strength.score >= 30 ? 'bg-amber-500' : 'bg-red-500'
                       }`}
                       style={{ width: `${strength.score}%` }}
@@ -152,9 +152,9 @@ function AIBrandStrengthCard({
               {/* Your brand bar */}
               <div className="flex items-center gap-3 pt-2 border-t border-gray-300">
                 <div className="w-24 text-xs font-semibold text-gray-900 truncate">{brandName}</div>
-                <div className="flex-1 bg-gray-200 rounded-full h-5 relative overflow-hidden">
+                <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-none h-5 relative overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all ${
+                    className={`h-full rounded-none transition-all ${
                       brandStrength.score >= 70 ? 'bg-green-600' :
                       brandStrength.score >= 50 ? 'bg-blue-600' :
                       brandStrength.score >= 30 ? 'bg-amber-600' : 'bg-red-600'
@@ -181,7 +181,7 @@ function HealthScoreCard({ insights }: { insights: StrategicInsights }) {
   const getStrokeColor = (health: string): string => {
     const colorMap: Record<string, string> = {
       excellent: '#10b981', // green-500
-      good: '#3b82f6',       // blue-500
+      good: '#2563eb',       // blue-600
       'needs-work': '#f59e0b', // amber-500
       critical: '#ef4444'    // red-500
     };
@@ -203,7 +203,7 @@ function HealthScoreCard({ insights }: { insights: StrategicInsights }) {
   };
   
   return (
-    <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+    <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
       <CardContent className="pt-6">
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -277,7 +277,7 @@ function ActionItemsCard({ actions, title, icon }: {
   if (actions.length === 0) return null;
   
   return (
-    <Card className="shadow-sm hover:shadow-md transition-shadow">
+    <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-4 bg-gradient-to-r from-gray-50 to-white">
         <div className="flex items-center gap-2">
           {icon}
@@ -288,7 +288,7 @@ function ActionItemsCard({ actions, title, icon }: {
         {actions.map((action) => (
           <div 
             key={action.id} 
-            className={`p-4 rounded-lg border ${priorityColors[action.priority]}`}
+            className={`p-4 rounded-none border-2 border-gray-200 dark:border-gray-600 ${priorityColors[action.priority]}`}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1">
@@ -318,7 +318,7 @@ function CompetitiveGapsCard({ gaps }: { gaps: CompetitiveGap[] }) {
   if (gaps.length === 0) return null;
   
   return (
-    <Card className="shadow-sm hover:shadow-md transition-shadow">
+    <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-white border-b">
         <div className="flex items-center gap-2">
           <BarChart3 className="w-5 h-5 text-purple-600" />
@@ -353,9 +353,9 @@ function CompetitiveGapsCard({ gaps }: { gaps: CompetitiveGap[] }) {
             {/* Visual bar comparison */}
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-500 w-12">You</span>
-              <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-none overflow-hidden">
                 <div 
-                  className="h-full bg-orange-500 rounded-full transition-all"
+                  className="h-full bg-orange-500 rounded-none transition-all"
                   style={{ width: `${Math.min(100, gap.yourScore)}%` }}
                 />
               </div>
@@ -363,9 +363,9 @@ function CompetitiveGapsCard({ gaps }: { gaps: CompetitiveGap[] }) {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-500 w-12">Them</span>
-              <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-none overflow-hidden">
                 <div 
-                  className="h-full bg-blue-500 rounded-full transition-all"
+                  className="h-full bg-blue-600 rounded-none transition-all"
                   style={{ width: `${Math.min(100, gap.competitorScore)}%` }}
                 />
               </div>
@@ -394,7 +394,7 @@ function BrandQuotesCard({ quotes, brandName }: { quotes: BrandQuote[]; brandNam
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-10 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-dashed border-gray-300">
+          <div className="text-center py-10 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-dashed border-gray-300 dark:border-gray-600">
             <Quote className="w-12 h-12 mx-auto mb-4 text-gray-400" />
             <p className="text-base font-semibold text-gray-700 mb-1">No direct quotes found mentioning {brandName}</p>
             <p className="text-sm text-gray-600">This is an opportunity to create more content!</p>
@@ -417,7 +417,7 @@ function BrandQuotesCard({ quotes, brandName }: { quotes: BrandQuote[]; brandNam
   };
   
   return (
-    <Card className="shadow-sm hover:shadow-md transition-shadow">
+    <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-4 bg-gradient-to-r from-teal-50 to-white border-b">
         <div className="flex items-center gap-2">
           <MessageSquareQuote className="w-5 h-5 text-teal-600" />
@@ -429,7 +429,7 @@ function BrandQuotesCard({ quotes, brandName }: { quotes: BrandQuote[]; brandNam
         {quotes.slice(0, 5).map((quote, idx) => (
           <div 
             key={idx} 
-            className={`p-3 rounded-r-lg border-l-4 ${sentimentColors[quote.sentiment]}`}
+            className={`p-3 rounded-none border-l-4 ${sentimentColors[quote.sentiment]}`}
           >
             <div className="flex items-start gap-2">
               {sentimentIcons[quote.sentiment]}
@@ -471,7 +471,7 @@ function ContentSuggestionsCard({ suggestions }: { suggestions: ContentSuggestio
   };
   
   return (
-    <Card className="shadow-sm hover:shadow-md transition-shadow">
+    <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-4 bg-gradient-to-r from-yellow-50 to-white border-b">
         <div className="flex items-center gap-2">
           <Lightbulb className="w-5 h-5 text-yellow-600" />
@@ -481,9 +481,9 @@ function ContentSuggestionsCard({ suggestions }: { suggestions: ContentSuggestio
       </CardHeader>
       <CardContent className="space-y-3">
         {suggestions.slice(0, 5).map((suggestion, idx) => (
-          <div key={idx} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <div key={idx} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-gray-200 dark:border-gray-600">
             <div className="flex items-start gap-3">
-              <div className={`p-2 rounded-lg ${typeColors[suggestion.type]}`}>
+              <div className={`p-2 rounded-none border border-gray-200 dark:border-gray-600 ${typeColors[suggestion.type]}`}>
                 {typeIcons[suggestion.type]}
               </div>
               <div className="flex-1">
@@ -515,7 +515,7 @@ function ContentSuggestionsCard({ suggestions }: { suggestions: ContentSuggestio
 // ============================================
 function ProviderInsightsCard({ insights, brandName }: { insights: ProviderInsight[]; brandName: string }) {
   return (
-    <Card className="shadow-sm hover:shadow-md transition-shadow">
+    <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-4 bg-gradient-to-r from-indigo-50 to-white border-b">
         <div className="flex items-center gap-2">
           <Shield className="w-5 h-5 text-indigo-600" />
@@ -525,7 +525,7 @@ function ProviderInsightsCard({ insights, brandName }: { insights: ProviderInsig
       </CardHeader>
       <CardContent className="space-y-4">
         {insights.map((insight, idx) => (
-          <div key={idx} className="p-3 bg-gray-50 rounded-lg">
+          <div key={idx} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-none border border-gray-200 dark:border-gray-600">
             <div className="flex items-center justify-between mb-2">
               <span className="font-semibold text-sm">{insight.provider}</span>
               <div className="flex items-center gap-2">
@@ -608,7 +608,7 @@ export function StrategicInsightsTab({
             <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Visibility Score</p>
           </div>
         </Card>
-        <Card className="p-5 shadow-sm hover:shadow-md transition-all hover:scale-105 border-l-4 border-l-blue-500">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm hover:shadow-md transition-all border-l-4 border-l-blue-600">
           <div className="text-center">
             <p className="text-3xl font-bold text-blue-600">
               #{(() => {
@@ -619,13 +619,13 @@ export function StrategicInsightsTab({
             <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Market Rank</p>
           </div>
         </Card>
-        <Card className="p-5 shadow-sm hover:shadow-md transition-all hover:scale-105 border-l-4 border-l-purple-500">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm hover:shadow-md transition-all border-l-4 border-l-purple-500">
           <div className="text-center">
             <p className="text-3xl font-bold text-purple-600">{insights.actionItems.length}</p>
             <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Action Items</p>
           </div>
         </Card>
-        <Card className="p-5 shadow-sm hover:shadow-md transition-all hover:scale-105 border-l-4 border-l-green-500">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm hover:shadow-md transition-all border-l-4 border-l-green-500">
           <div className="text-center">
             <p className="text-3xl font-bold text-green-600">{brandData.mentions}</p>
             <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Brand Mentions</p>

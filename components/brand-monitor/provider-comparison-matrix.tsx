@@ -59,7 +59,7 @@ const getProviderIcon = (provider: string) => {
         />
       );
     default:
-      return <div className="w-5 h-5 bg-gray-400 rounded" />;
+      return <div className="w-5 h-5 bg-gray-400 dark:bg-gray-600 rounded-none" />;
   }
 };
 
@@ -96,7 +96,7 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
   
   if (!data || data.length === 0) {
     return (
-      <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border-2 border-dashed border-gray-300">
+      <div className="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-dashed border-gray-300 dark:border-gray-600">
         <div className="max-w-md mx-auto">
           <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -194,7 +194,7 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
   if (providers.length === 0) return null;
   
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+    <div className="overflow-x-auto rounded-none border-2 border-gray-200 dark:border-gray-700 shadow-sm">
       <table className="w-full border-collapse bg-white">
         <thead>
           <tr>

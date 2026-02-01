@@ -230,7 +230,7 @@ export function HistoricalTrackingTab({ analysisId, brandName, brandUrl }: Histo
               <select
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value as DateRange)}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                 <option value="7d">Last 7 days</option>
                 <option value="30d">Last 30 days</option>

@@ -70,7 +70,7 @@ export function CookieConsent() {
                 non-essential cookies or learn more in our{' '}
                 <Link 
                   href="/privacy-policy" 
-                  className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  className="text-blue-600 dark:text-blue-300 hover:underline font-medium"
                 >
                   Privacy Policy
                 </Link>

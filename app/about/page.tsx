@@ -56,7 +56,7 @@ export default function AboutPage() {
           <nav className="mb-8" aria-label="Breadcrumb">
             <ol className="flex items-center space-x-2 text-sm text-zinc-600 dark:text-zinc-400">
               <li>
-                <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-300 transition-colors">
                   Home
                 </Link>
               </li>
@@ -77,15 +77,15 @@ export default function AboutPage() {
           <div className="prose prose-lg dark:prose-invert max-w-none">
             <div className="space-y-6 text-zinc-700 dark:text-zinc-300">
               <p className="text-lg leading-relaxed">
-                At AI Brand Track, our main mission is to empower businesses to take control of how AI models present their brand to the world. As AI-powered search becomes increasingly prevalent, understanding your brand's visibility across platforms like <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline">ChatGPT, Claude, Perplexity, and Google Gemini</Link> is crucial for maintaining a competitive edge.
+                At AI Brand Track, our main mission is to empower businesses to take control of how AI models present their brand to the world. As AI-powered search becomes increasingly prevalent, understanding your brand's visibility across platforms like <Link href="/" className="text-blue-600 dark:text-blue-300 hover:underline">ChatGPT, Claude, Perplexity, and Google Gemini</Link> is crucial for maintaining a competitive edge.
               </p>
 
               <p className="text-lg leading-relaxed">
-                We believe that every business deserves transparency into how AI models rank and mention their brand. Our <Link href="/brand-monitor" className="text-blue-600 dark:text-blue-400 hover:underline">brand monitoring platform</Link> provides real-time insights, competitor analysis, and actionable recommendations to help you optimize your AI presence and ensure your brand is accurately represented across all major AI platforms.
+                We believe that every business deserves transparency into how AI models rank and mention their brand. Our <Link href="/brand-monitor" className="text-blue-600 dark:text-blue-300 hover:underline">brand monitoring platform</Link> provides real-time insights, competitor analysis, and actionable recommendations to help you optimize your AI presence and ensure your brand is accurately represented across all major AI platforms.
               </p>
 
               <p className="text-lg leading-relaxed">
-                Whether you're a startup looking to establish your brand in AI search results or an established company monitoring your competitive position, AI Brand Track gives you the tools and insights you need to succeed in the age of AI-powered discovery. <Link href="/plans" className="text-blue-600 dark:text-blue-400 hover:underline">Explore our pricing plans</Link> to get started with comprehensive AI brand visibility monitoring.
+                Whether you're a startup looking to establish your brand in AI search results or an established company monitoring your competitive position, AI Brand Track gives you the tools and insights you need to succeed in the age of AI-powered discovery. <Link href="/plans" className="text-blue-600 dark:text-blue-300 hover:underline">Explore our pricing plans</Link> to get started with comprehensive AI brand visibility monitoring.
               </p>
             </div>
           </div>
@@ -94,19 +94,19 @@ export default function AboutPage() {
           <div className="mt-16 pt-8 border-t border-zinc-200 dark:border-zinc-800">
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-6">Related Resources</h2>
             <div className="grid md:grid-cols-2 gap-4">
-              <Link href="/brand-monitor" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500 transition-colors">
+              <Link href="/brand-monitor" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-600 transition-colors">
                 <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Start Brand Monitoring</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">Track your brand visibility across AI platforms</p>
               </Link>
-              <Link href="/plans" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500 transition-colors">
+              <Link href="/plans" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-600 transition-colors">
                 <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">View Pricing</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">Simple pay-as-you-go pricing plans</p>
               </Link>
-              <Link href="/blog" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500 transition-colors">
+              <Link href="/blog" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-600 transition-colors">
                 <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Read Our Blog</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">AI brand tracking insights and tips</p>
               </Link>
-              <Link href="/" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500 transition-colors">
+              <Link href="/" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-600 transition-colors">
                 <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Learn More</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">Discover how AI Brand Track works</p>
               </Link>

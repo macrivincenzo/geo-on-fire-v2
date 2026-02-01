@@ -124,11 +124,11 @@ export default function PublicPricingPage() {
               <div 
                 key={product.id}
                 className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 ${
-                  isRecommended ? 'border-2 border-blue-500 relative' : ''
+                  isRecommended ? 'border-2 border-blue-600 relative' : ''
                 }`}
               >
                 {isRecommended && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm">
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-none border-2 border-blue-600 text-sm">
                     {product.display.recommend_text}
                   </div>
                 )}

@@ -188,7 +188,7 @@ export function DomainComparisonsTab({
   if (totalTrackedCitations === 0) {
     return (
       <div className="flex flex-col h-full">
-        <Card className="p-6 bg-white border-slate-200 shadow-sm">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-gray-800 shadow-sm">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-gray-900">Domain Comparisons</CardTitle>
             <CardDescription className="text-base text-gray-600 mt-2">
@@ -196,7 +196,7 @@ export function DomainComparisonsTab({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-10 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-dashed border-gray-300">
+            <div className="text-center py-10 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-dashed border-gray-300 dark:border-gray-600">
               <Globe className="w-12 h-12 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
               <p className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-1">No brand domain citations found</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -212,7 +212,7 @@ export function DomainComparisonsTab({
   return (
     <div className="flex flex-col h-full gap-6">
       {/* Header */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-gray-900">Domain Comparisons</CardTitle>
           <CardDescription className="text-base text-gray-600 mt-2">
@@ -223,7 +223,7 @@ export function DomainComparisonsTab({
 
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-white border-slate-200 shadow-sm">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
           <CardContent className="pt-6">
             <div className="text-center">
               <p className="text-3xl font-bold text-blue-600">{yourDomains.length}</p>
@@ -232,7 +232,7 @@ export function DomainComparisonsTab({
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white border-slate-200 shadow-sm">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
           <CardContent className="pt-6">
             <div className="text-center">
               <p className="text-3xl font-bold text-orange-600">{competitorDomains.length}</p>
@@ -241,7 +241,7 @@ export function DomainComparisonsTab({
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white border-slate-200 shadow-sm">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
           <CardContent className="pt-6">
             <div className="text-center">
               <p className="text-3xl font-bold text-green-600">
@@ -255,7 +255,7 @@ export function DomainComparisonsTab({
       </div>
 
       {/* Top Cited Brand Domains Table */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -267,7 +267,7 @@ export function DomainComparisonsTab({
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('domains')}
-                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3 py-1.5 text-sm font-medium rounded-none border-2 transition-colors ${
                   viewMode === 'domains'
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -277,7 +277,7 @@ export function DomainComparisonsTab({
               </button>
               <button
                 onClick={() => setViewMode('pages')}
-                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3 py-1.5 text-sm font-medium rounded-none border-2 transition-colors ${
                   viewMode === 'pages'
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -330,7 +330,7 @@ export function DomainComparisonsTab({
             <div className="space-y-4">
               {brandDomainData.slice(0, 10).flatMap((domain, domainIndex) => 
                 domain.pages.slice(0, 3).map((page, pageIndex) => (
-                  <div key={`${domain.domain}-${page.url}`} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                  <div key={`${domain.domain}-${page.url}`} className="border-2 border-gray-200 dark:border-gray-600 rounded-none p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
@@ -373,7 +373,7 @@ export function DomainComparisonsTab({
 
       {/* Citation Share Chart */}
       {chartData.length > 0 && (
-        <Card className="bg-white border-slate-200 shadow-sm">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl font-bold text-gray-900">Citation Share by Domain</CardTitle>
             <CardDescription className="text-sm text-gray-600 mt-1">

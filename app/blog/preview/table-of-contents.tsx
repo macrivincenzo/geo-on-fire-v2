@@ -72,8 +72,8 @@ export function TableOfContents({ content }: TableOfContentsProps) {
                   : 'text-zinc-600 dark:text-zinc-400 ml-4'
               } ${
                 activeId === heading.id
-                  ? 'text-blue-600 dark:text-blue-400'
-                  : 'hover:text-blue-600 dark:hover:text-blue-400'
+                  ? 'text-blue-600 dark:text-blue-300'
+                  : 'hover:text-blue-600 dark:hover:text-blue-300'
               }`}
               onClick={(e) => {
                 e.preventDefault();

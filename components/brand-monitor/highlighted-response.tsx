@@ -173,7 +173,7 @@ export function HighlightedResponse({
   if (renderMarkdown) {
     // For markdown with highlighting, render markdown first, then apply highlights to the final text
     return (
-      <div className="prose prose-sm max-w-none prose-slate">
+      <div className="prose prose-sm max-w-none prose-gray dark:prose-invert">
         <ReactMarkdown 
           remarkPlugins={[remarkGfm]}
           components={{

@@ -57,7 +57,7 @@ export default function BlogPage() {
           <nav className="mb-8" aria-label="Breadcrumb">
             <ol className="flex items-center space-x-2 text-sm text-zinc-600 dark:text-zinc-400">
               <li>
-                <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-300 transition-colors">
                   Home
                 </Link>
               </li>
@@ -77,7 +77,7 @@ export default function BlogPage() {
 
           <div className="text-center py-16">
             <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8">
-              We're working on creating valuable content for you. Check back soon for blog posts about <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline">AI brand tracking</Link>, <Link href="/about" className="text-blue-600 dark:text-blue-400 hover:underline">SEO strategies</Link>, and industry insights.
+              We're working on creating valuable content for you. Check back soon for blog posts about <Link href="/" className="text-blue-600 dark:text-blue-300 hover:underline">AI brand tracking</Link>, <Link href="/about" className="text-blue-600 dark:text-blue-300 hover:underline">SEO strategies</Link>, and industry insights.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -99,15 +99,15 @@ export default function BlogPage() {
           <div className="mt-16 pt-8 border-t border-zinc-200 dark:border-zinc-800">
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-6">Explore More</h2>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500 transition-colors">
+              <Link href="/" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-600 transition-colors">
                 <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Home</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">Learn about AI brand tracking</p>
               </Link>
-              <Link href="/about" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500 transition-colors">
+              <Link href="/about" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-600 transition-colors">
                 <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">About Us</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">Our mission and values</p>
               </Link>
-              <Link href="/brand-monitor" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500 transition-colors">
+              <Link href="/brand-monitor" className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-600 transition-colors">
                 <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Brand Monitor</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">Start tracking your brand</p>
               </Link>

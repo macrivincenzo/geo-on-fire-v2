@@ -33,8 +33,8 @@ export function UrlInputSection({
               urlValid === false
                 ? 'border-red-300 dark:border-red-700 focus:ring-red-500 focus:border-transparent'
                 : urlValid === true
-                ? 'border-blue-300 dark:border-blue-700 focus:ring-blue-500 focus:border-transparent'
-                : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-transparent'
+                ? 'border-blue-300 dark:border-blue-700 focus:ring-blue-600 focus:border-transparent'
+                : 'border-gray-300 dark:border-gray-600 focus:ring-blue-600 focus:border-transparent'
             } ${isProcessing ? 'opacity-60' : ''}`}
             placeholder="Enter your website URL (e.g., example.com)"
             value={url}
@@ -59,7 +59,7 @@ export function UrlInputSection({
           <button
             onClick={onSubmit}
             disabled={isProcessing || !url || urlValid === false}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-9 sm:h-10 px-3 sm:px-4 flex items-center gap-1.5 sm:gap-2 transition-all duration-200 rounded-none border-2 shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 active:bg-blue-800 border-blue-600 hover:border-blue-700 disabled:opacity-50 disabled:bg-blue-600 disabled:border-blue-600 disabled:hover:bg-blue-600 text-white font-semibold text-sm sm:text-base whitespace-nowrap"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-9 sm:h-10 px-3 sm:px-4 flex items-center gap-1.5 sm:gap-2 transition-all duration-200 rounded-none border-2 shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 active:bg-blue-800 border-blue-600 hover:border-blue-700 disabled:opacity-50 disabled:bg-blue-600 disabled:border-blue-600 disabled:hover:bg-blue-600 text-white font-semibold text-sm sm:text-base whitespace-nowrap"
             aria-label="Analyze website"
           >
             {loading ? (

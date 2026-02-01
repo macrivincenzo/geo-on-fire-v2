@@ -313,13 +313,13 @@ export default async function BlogPreviewPage() {
           <nav className="mb-8" aria-label="Breadcrumb">
             <ol className="flex items-center space-x-2 text-sm text-zinc-600 dark:text-zinc-400">
               <li>
-                <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-300 transition-colors">
                   Home
                 </Link>
               </li>
               <li>/</li>
               <li>
-                <Link href="/blog" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/blog" className="hover:text-blue-600 dark:hover:text-blue-300 transition-colors">
                   Blog
                 </Link>
               </li>
@@ -485,7 +485,7 @@ export default async function BlogPreviewPage() {
                         return (
                           <Link 
                             href={fixedHref || '#'} 
-                            className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                            className="text-blue-600 dark:text-blue-300 hover:underline font-medium"
                             {...props}
                           />
                         );
@@ -493,7 +493,7 @@ export default async function BlogPreviewPage() {
                       return (
                         <a 
                           href={href} 
-                          className="text-blue-600 dark:text-blue-400 hover:underline"
+                          className="text-blue-600 dark:text-blue-300 hover:underline"
                           target="_blank"
                           rel="noopener noreferrer"
                           {...props}
@@ -507,7 +507,7 @@ export default async function BlogPreviewPage() {
                       <ol className="list-decimal list-inside mb-6 space-y-2 text-zinc-700 dark:text-zinc-300 ml-4" {...props} />
                     ),
                     blockquote: ({ node, ...props }) => (
-                      <blockquote className="border-l-4 border-blue-500 pl-6 italic text-zinc-600 dark:text-zinc-400 my-6 bg-zinc-50 dark:bg-zinc-800 py-4 rounded-r" {...props} />
+                      <blockquote className="border-l-4 border-blue-600 pl-6 italic text-zinc-600 dark:text-zinc-400 my-6 bg-zinc-50 dark:bg-zinc-800 py-4 rounded-r" {...props} />
                     ),
                     code: ({ node, inline, ...props }: any) => {
                       if (inline) {
@@ -569,7 +569,7 @@ export default async function BlogPreviewPage() {
               {/* Author Bio */}
               <div className="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                 <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-xl font-bold">
                     {authorName.charAt(0)}
                   </div>
                   <div>
@@ -594,7 +594,7 @@ export default async function BlogPreviewPage() {
                       <Link
                         key={index}
                         href="/blog/preview"
-                        className="block p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500 dark:hover:border-blue-500 transition-colors"
+                        className="block p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-600 dark:hover:border-blue-600 transition-colors"
                       >
                         <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
                           {relatedTopic.title}

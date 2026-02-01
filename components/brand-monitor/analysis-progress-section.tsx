@@ -257,7 +257,7 @@ export function AnalysisProgressSection({
                 <button
                   onClick={onStartAnalysis}
                   disabled={analyzing}
-                  className="h-11 px-8 rounded-lg text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 shadow-md"
+                  className="h-11 px-8 rounded-lg text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 shadow-md"
                 >
                   {analyzing ? (
                     <>

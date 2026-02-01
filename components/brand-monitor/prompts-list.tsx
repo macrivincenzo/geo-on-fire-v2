@@ -90,7 +90,7 @@ export function PromptsList({
   const renderStatusIcon = (status: string) => {
     switch (status) {
       case 'running':
-        return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />;
+        return <Loader2 className="h-4 w-4 animate-spin text-blue-600" />;
       case 'completed':
         return <Check className="h-4 w-4 text-green-500" />;
       case 'failed':

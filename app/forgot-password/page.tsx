@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
               </p>
               <Link 
                 href="/login" 
-                className="mt-6 inline-flex items-center text-sm text-blue-600 hover:text-blue-500"
+                className="mt-6 inline-flex items-center text-sm text-blue-600 hover:text-blue-700"
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to login
@@ -128,7 +128,7 @@ export default function ForgotPasswordPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
                 placeholder="Enter your email"
               />
             </div>
@@ -150,7 +150,7 @@ export default function ForgotPasswordPage() {
             </div>
 
             <div className="text-center">
-              <Link href="/login" className="text-sm text-blue-600 hover:text-blue-500 inline-flex items-center">
+              <Link href="/login" className="text-sm text-blue-600 hover:text-blue-700 inline-flex items-center">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to login
               </Link>

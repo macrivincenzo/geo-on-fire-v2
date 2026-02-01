@@ -133,7 +133,7 @@ export function SourceTrackerTab({
   if (totalCitations === 0) {
     return (
       <div className="flex flex-col h-full">
-        <Card className="p-6 bg-white border-slate-200 shadow-sm">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-gray-800 shadow-sm">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-gray-900">Source Tracker</CardTitle>
             <CardDescription className="text-base text-gray-600 mt-2">
@@ -141,7 +141,7 @@ export function SourceTrackerTab({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-10 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-dashed border-gray-300">
+            <div className="text-center py-10 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-dashed border-gray-300 dark:border-gray-600">
               <Globe className="w-12 h-12 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
               <p className="text-base font-semibold text-gray-700 mb-1">No sources found</p>
               <p className="text-sm text-gray-600">Sources will appear here when AI responses include citations or URLs.</p>
@@ -156,10 +156,10 @@ export function SourceTrackerTab({
     <div className="flex flex-col h-full gap-6">
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-white border-slate-200 shadow-sm">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-none border border-blue-200 dark:border-blue-800">
                 <LinkIcon className="w-5 h-5 text-blue-600" />
               </div>
               <div>
@@ -170,10 +170,10 @@ export function SourceTrackerTab({
           </CardContent>
         </Card>
         
-        <Card className="bg-white border-slate-200 shadow-sm">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
+              <div className="p-2 bg-green-100 dark:bg-green-900/40 rounded-none border border-green-200 dark:border-green-800">
                 <Globe className="w-5 h-5 text-green-600" />
               </div>
               <div>
@@ -184,10 +184,10 @@ export function SourceTrackerTab({
           </CardContent>
         </Card>
         
-        <Card className="bg-white border-slate-200 shadow-sm">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/40 rounded-none border border-purple-200 dark:border-purple-800">
                 <FileText className="w-5 h-5 text-purple-600" />
               </div>
               <div>
@@ -201,7 +201,7 @@ export function SourceTrackerTab({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
         {/* Top Cited Domains */}
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-white border-b">
             <div className="flex items-center gap-2">
               <Globe className="w-5 h-5 text-blue-600" />
@@ -220,10 +220,10 @@ export function SourceTrackerTab({
                 return (
                   <div 
                     key={domain.domain}
-                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div className="w-8 h-8 rounded flex items-center justify-center bg-white border border-gray-200 flex-shrink-0">
+                      <div className="w-8 h-8 rounded-none flex items-center justify-center bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 flex-shrink-0">
                         <img 
                           src={faviconUrl}
                           alt={domain.domain}
@@ -235,7 +235,7 @@ export function SourceTrackerTab({
                           }}
                         />
                         <div 
-                          className="w-full h-full bg-gray-300 flex items-center justify-center text-white text-xs font-bold rounded"
+                          className="w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-white text-xs font-bold rounded-none"
                           style={{ display: 'none' }}
                         >
                           {domain.domainName?.charAt(0) || domain.domain.charAt(0).toUpperCase()}
@@ -268,7 +268,7 @@ export function SourceTrackerTab({
         </Card>
 
         {/* Top Cited Pages */}
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-white border-b">
             <div className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-purple-600" />
@@ -286,9 +286,9 @@ export function SourceTrackerTab({
                 return (
                   <div 
                     key={page.url}
-                    className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+                    className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
-                    <div className="w-6 h-6 rounded flex items-center justify-center bg-white border border-gray-200 flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 rounded-none flex items-center justify-center bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 flex-shrink-0 mt-0.5">
                       <img 
                         src={faviconUrl}
                         alt={page.domain}
@@ -328,7 +328,7 @@ export function SourceTrackerTab({
 
       {/* Source Categories Breakdown */}
       {categories.length > 0 && (
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-50 to-white border-b">
             <div className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-orange-600" />
@@ -347,9 +347,9 @@ export function SourceTrackerTab({
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="flex-1 h-3 bg-gray-200 dark:bg-gray-600 rounded-none overflow-hidden">
                         <div 
-                          className="h-full bg-orange-500 rounded-full transition-all"
+                          className="h-full bg-orange-500 rounded-none transition-all"
                           style={{ width: `${category.percentage}%` }}
                         />
                       </div>

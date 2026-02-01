@@ -27,7 +27,7 @@ export function VisibilityScoreTab({
       <VisibilityScoreExplanation score={brandData.visibilityScore} rank={brandRank} />
       
       {/* Main Content Card */}
-      <Card className="p-2 bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-md hover:shadow-lg transition-shadow border-gray-200 h-full flex flex-col">
+      <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-card text-card-foreground gap-6 p-2 py-6 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
         <CardHeader className="border-b pb-5">
           <div className="flex justify-between items-center">
             <div>
@@ -138,11 +138,11 @@ export function VisibilityScoreTab({
                 return (
                   <div key={idx} className="flex items-center gap-2">
                     <div 
-                      className="w-3 h-3 rounded-full flex-shrink-0" 
+                      className="w-3 h-3 rounded-none flex-shrink-0" 
                       style={{ backgroundColor: color }}
                     />
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-5 h-5 rounded flex items-center justify-center bg-gray-100 flex-shrink-0">
+                      <div className="w-5 h-5 rounded-none flex items-center justify-center bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 flex-shrink-0">
                         {faviconUrl ? (
                           <img 
                             src={faviconUrl}
@@ -157,7 +157,7 @@ export function VisibilityScoreTab({
                         ) : null}
                         <div className={`w-full h-full ${
                           competitor.isOwn ? 'bg-orange-500' : 'bg-gray-300'
-                        } flex items-center justify-center text-white text-[8px] font-bold rounded`} 
+                        } flex items-center justify-center text-white text-[8px] font-bold rounded-none`} 
                         style={{ display: faviconUrl ? 'none' : 'flex' }}>
                           {competitor.name.charAt(0)}
                         </div>

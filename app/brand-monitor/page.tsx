@@ -103,36 +103,48 @@ function BrandMonitorContent({ session }: { session: any }) {
     setSelectedAndUpdateUrl(null);
   };
 
+  const showingAnalysis = !!selectedAnalysisId;
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Hero Section - same design as front page */}
-      <section className="relative pt-24 sm:pt-32 pb-8 sm:pb-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center">
-            <div className="inline-block mb-6">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-300 rounded-none border border-blue-200 dark:border-blue-800">
-                Track ChatGPT, Claude, Perplexity & Gemini
-              </span>
+      {/* Hero: full only when not viewing an analysis; compact when viewing results */}
+      {!showingAnalysis ? (
+        <section className="relative pt-24 sm:pt-32 pb-8 sm:pb-10 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="inline-block mb-6">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-300 rounded-none border border-blue-200 dark:border-blue-800">
+                  Track ChatGPT, Claude, Perplexity & Gemini
+                </span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
+                AI Brand
+                <br />
+                <span className="text-blue-600 dark:text-blue-300">Visibility Monitor</span>
+              </h1>
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
+                Track how AI models rank your brand against competitors. Get actionable insights in 60 seconds.
+              </p>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
-              AI Brand
-              <br />
-              <span className="text-blue-600 dark:text-blue-400">Visibility Monitor</span>
-            </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
-              Track how AI models rank your brand against competitors. Get actionable insights in 60 seconds.
-            </p>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="pt-20 sm:pt-24 pb-3 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-gray-700">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white tracking-tight">
+              <span className="text-blue-600 dark:text-blue-300">Visibility Monitor</span>
+            </h1>
+          </div>
+        </section>
+      )}
 
       <div className="flex relative min-h-screen">
-        {/* Sidebar Toggle Button - Clean Minimal */}
+        {/* Sidebar Toggle Button - higher when viewing analysis (no big hero) */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className={`fixed top-72 sm:top-80 z-20 p-2.5 sm:p-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all rounded-none ${
-            sidebarOpen ? 'left-80 sm:left-[21rem]' : 'left-4'
-          }`}
+          className={`fixed z-20 p-2.5 sm:p-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all rounded-none ${
+            showingAnalysis ? 'top-24 sm:top-28' : 'top-72 sm:top-80'
+          } ${sidebarOpen ? 'left-80 sm:left-[21rem]' : 'left-4'}`}
           aria-label="Toggle sidebar"
         >
           {sidebarOpen ? (

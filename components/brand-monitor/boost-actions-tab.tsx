@@ -328,7 +328,7 @@ export function BoostActionsTab({
 
           {/* Execution Results - Compact View */}
           {executionResults[action.id] && (
-            <div className="pt-2 border-t border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20 rounded p-2">
+            <div className="pt-2 border-t-2 border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20 rounded-none p-2">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3 text-green-600" />
@@ -341,7 +341,7 @@ export function BoostActionsTab({
                     e.stopPropagation();
                     setViewingResults(action.id);
                   }}
-                  className="text-xs px-2 py-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded flex items-center gap-1 transition-all"
+                  className="text-xs px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-none border border-blue-600 flex items-center gap-1 transition-all"
                 >
                   <Eye className="w-3 h-3" />
                   View Results
@@ -422,19 +422,19 @@ export function BoostActionsTab({
                           const isCopied = copiedContent.has(contentId);
                           
                           return (
-                            <div key={idx} className="bg-white dark:bg-gray-800 rounded p-3 border border-gray-200 dark:border-gray-700">
+                            <div key={idx} className="bg-white dark:bg-gray-800 rounded-none p-3 border-2 border-gray-200 dark:border-gray-700">
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex-1">
                                   <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-1">
                                     {content.title}
                                   </h4>
                                   <div className="flex flex-wrap gap-1 text-xs text-gray-500 dark:text-gray-400">
-                                    <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 rounded">
+                                    <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 rounded-none border border-blue-200 dark:border-blue-800">
                                       {content.type}
                                     </span>
                                     <span>{content.wordCount} words</span>
                                     {content.readyToPublish && (
-                                      <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 rounded text-green-700 dark:text-green-300">
+                                      <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 rounded-none border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300">
                                         Ready
                                       </span>
                                     )}
@@ -453,7 +453,7 @@ export function BoostActionsTab({
                                         });
                                       }, 2000);
                                     }}
-                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
+                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-none transition-colors"
                                     title="Copy content"
                                   >
                                     {isCopied ? (
@@ -474,7 +474,7 @@ export function BoostActionsTab({
                                       document.body.removeChild(a);
                                       URL.revokeObjectURL(url);
                                     }}
-                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded transition-colors"
+                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-none transition-colors"
                                     title="Download as TXT"
                                   >
                                     <Download className="w-4 h-4" />
@@ -541,7 +541,7 @@ export function BoostActionsTab({
                                         alert('Failed to generate PDF. Please try downloading as TXT instead.');
                                       }
                                     }}
-                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                                    className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-none transition-colors"
                                     title="Download as PDF"
                                   >
                                     <FileText className="w-4 h-4" />
@@ -554,7 +554,7 @@ export function BoostActionsTab({
                                 </p>
                               )}
                               <details className="mt-2">
-                                <summary className="text-xs text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">
+                                <summary className="text-xs text-blue-600 dark:text-blue-300 cursor-pointer hover:underline">
                                   View Content ({content.wordCount} words)
                                 </summary>
                                 <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
@@ -572,7 +572,7 @@ export function BoostActionsTab({
                   
                   {/* Full details toggle */}
                   <details className="mt-2">
-                    <summary className="text-xs text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">
+                    <summary className="text-xs text-blue-600 dark:text-blue-300 cursor-pointer hover:underline">
                       View Full Details
                     </summary>
                     <pre className="text-xs mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded overflow-auto max-h-40">
@@ -587,7 +587,7 @@ export function BoostActionsTab({
           {/* Credit Cost Display */}
           <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-              <span className="font-medium">Generate Content</span> • <span className="font-semibold text-purple-600 dark:text-purple-400">{CREDITS_PER_ACTION} credits</span> • You have <span className="font-semibold text-blue-600 dark:text-blue-400">{remainingCredits}</span>
+              <span className="font-medium">Generate Content</span> • <span className="font-semibold text-purple-600 dark:text-purple-400">{CREDITS_PER_ACTION} credits</span> • You have <span className="font-semibold text-blue-600 dark:text-blue-300">{remainingCredits}</span>
             </p>
           </div>
           
@@ -596,7 +596,7 @@ export function BoostActionsTab({
             <button
               onClick={() => handleExecuteAction(action)}
               disabled={executingActions.has(action.id) || remainingCredits < CREDITS_PER_ACTION}
-              className="flex-1 text-xs px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded transition-all flex items-center justify-center gap-1 font-medium shadow-sm hover:shadow-md disabled:cursor-not-allowed"
+              className="flex-1 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-none border-2 border-blue-600 hover:border-blue-700 disabled:border-gray-400 transition-all flex items-center justify-center gap-1 font-medium disabled:cursor-not-allowed"
             >
               {executingActions.has(action.id) ? (
                 <>
@@ -663,7 +663,7 @@ export function BoostActionsTab({
   }) => {
     return (
       <div className="space-y-4">
-        <div className={`flex items-center justify-between p-4 rounded-lg border-2 ${
+        <div className={`flex items-center justify-between p-4 rounded-none border-2 ${
           status === 'todo' 
             ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700'
             : status === 'in-progress'
@@ -675,7 +675,7 @@ export function BoostActionsTab({
               status === 'todo' 
                 ? 'text-gray-600 dark:text-gray-400'
                 : status === 'in-progress'
-                ? 'text-blue-600 dark:text-blue-400'
+                ? 'text-blue-600 dark:text-blue-300'
                 : 'text-green-600 dark:text-green-400'
             }`} />
             <h3 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
@@ -731,38 +731,37 @@ export function BoostActionsTab({
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Sales Message Banner */}
-      <Card className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 border-0 shadow-lg">
+      <Card className="rounded-none border-2 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 shadow-sm">
         <CardContent className="pt-6 pb-6">
           <div className="text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
-              LET US IMPROVE, FIX, ACT ON YOUR AI VISIBILITY
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              Improve, fix, and act on your AI visibility
             </h2>
-            <p className="text-white/90 text-sm md:text-base mb-2">
-              Click "Execute" on any action below and we'll generate <strong className="text-white">finished, ready-to-publish content</strong> for you.
+            <p className="text-gray-700 dark:text-gray-300 text-sm md:text-base mb-2">
+              Click &quot;Execute&quot; on any action below and we&apos;ll generate <strong className="text-gray-900 dark:text-white">finished, ready-to-publish content</strong> for you.
             </p>
-            <p className="text-white/80 text-xs md:text-sm">
-              ✨ Get complete blog posts, comparison pages, FAQs, landing pages, and more - all optimized for SEO and ready to use. 
-              No placeholders, no TODOs - just finished content you can copy, download, and publish immediately.
+            <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">
+              Blog posts, comparison pages, FAQs, landing pages, and more — optimized for SEO. No placeholders — just finished content you can copy, download, and publish.
             </p>
           </div>
         </CardContent>
       </Card>
 
-      {/* Header Stats */}
+      {/* Header Stats - front-page style: rounded-none, border-2 */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-300 dark:border-blue-700">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total Actions</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{totalCount}</p>
               </div>
-              <Target className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+              <Target className="w-8 h-8 text-blue-600 dark:text-blue-300" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border-gray-300 dark:border-gray-600">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -774,19 +773,19 @@ export function BoostActionsTab({
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-300 dark:border-blue-700">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">In Progress</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{inProgressCount}</p>
               </div>
-              <Clock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+              <Clock className="w-8 h-8 text-blue-600 dark:text-blue-300" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-300 dark:border-green-700">
+        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -800,17 +799,17 @@ export function BoostActionsTab({
       </div>
 
       {/* Progress Bar */}
-      <Card>
+      <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg font-semibold">Overall Progress</CardTitle>
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">{completionRate}%</span>
+            <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">{completionRate}%</span>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-none h-4 overflow-hidden">
             <div 
-              className="bg-gradient-to-r from-blue-500 to-green-500 h-4 rounded-full transition-all duration-500 flex items-center justify-end pr-2"
+              className="bg-blue-600 h-4 rounded-none transition-all duration-500 flex items-center justify-end pr-2"
               style={{ width: `${completionRate}%` }}
             >
               {completionRate > 10 && (
@@ -911,7 +910,7 @@ export function BoostActionsTab({
                                   {content.title}
                                 </h4>
                                 <div className="flex flex-wrap gap-3 items-center">
-                                  <Badge className="bg-blue-500 text-white px-3 py-1 text-sm font-medium">
+                                  <Badge className="bg-blue-600 text-white px-3 py-1 text-sm font-medium">
                                     {content.type}
                                   </Badge>
                                   <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -940,7 +939,7 @@ export function BoostActionsTab({
                                   className={`px-4 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 shadow-md hover:shadow-lg ${
                                     isCopied 
                                       ? 'bg-green-500 hover:bg-green-600 text-white' 
-                                      : 'bg-blue-500 hover:bg-blue-600 text-white'
+                                      : 'bg-blue-600 hover:bg-blue-700 text-white'
                                   }`}
                                 >
                                   {isCopied ? (
@@ -1049,7 +1048,7 @@ export function BoostActionsTab({
                             </div>
                             
                             {content.metaDescription && (
-                              <div className="mt-4 p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg border-l-4 border-blue-500">
+                              <div className="mt-4 p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg border-l-4 border-blue-600">
                                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                   <span className="font-bold">Meta Description:</span> {content.metaDescription}
                                 </p>
@@ -1092,13 +1091,13 @@ export function BoostActionsTab({
                     {executionResults[viewingResults].data.insights && executionResults[viewingResults].data.insights.length > 0 && (
                       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700">
                         <h4 className="font-bold text-lg text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-                          <TrendingUp className="w-5 h-5 text-blue-500" />
+                          <TrendingUp className="w-5 h-5 text-blue-600" />
                           Key Insights
                         </h4>
                         <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
                           {executionResults[viewingResults].data.insights.map((insight: string, idx: number) => (
                             <li key={idx} className="flex items-start gap-2">
-                              <span className="text-blue-500 mt-1">•</span>
+                              <span className="text-blue-600 mt-1">•</span>
                               <span>{insight}</span>
                             </li>
                           ))}

@@ -129,7 +129,7 @@ function LoginForm() {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
               Or{' '}
-              <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link href="/register" className="font-medium text-blue-600 hover:text-blue-700">
                 create a new account
               </Link>
             </p>
@@ -148,7 +148,7 @@ function LoginForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base rounded"
+                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
                   placeholder="Enter your email"
                 />
               </div>
@@ -164,7 +164,7 @@ function LoginForm() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base rounded"
+                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
                   placeholder="Enter your password"
                 />
               </div>
@@ -176,13 +176,13 @@ function LoginForm() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-600 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-gray-200">
                   Remember me
                 </label>
               </div>
-              <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-500">
+              <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700">
                 Forgot your password?
               </Link>
             </div>
