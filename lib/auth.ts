@@ -52,8 +52,8 @@ export const auth = betterAuth({
   },
   trustedOrigins: [process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'],
   session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 days
-    updateAge: 60 * 60 * 24, // Update session if older than 1 day
+    expiresIn: 40 * 60, // 40 minutes — logout after 40 min idle (bank/payment info)
+    updateAge: 10 * 60, // 10 minutes — activity within 10 min extends session
     cookieOptions: {
       httpOnly: true,
       sameSite: 'lax',
