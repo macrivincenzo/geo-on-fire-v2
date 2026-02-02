@@ -88,9 +88,12 @@ export async function GET(request: NextRequest) {
     const startDate = startDateParam ? new Date(startDateParam) : undefined;
     const endDate = endDateParam ? new Date(endDateParam) : undefined;
 
-    // If URL is provided, aggregate snapshots from all analyses with matching URL
-    if (url) {
-      const normalizedUrl = normalizeUrlForComparison(url);
+    // Aggregate snapshots by brand URL so multiple analyses of the same site show full history
+    // Use url param if provided, otherwise derive from the analysis we looked up
+    const urlForAggregation = url || analysis?.url;
+    
+    if (urlForAggregation) {
+      const normalizedUrl = normalizeUrlForComparison(urlForAggregation);
       
       // Get all analyses for this user
       const allAnalyses = await db.query.brandAnalyses.findMany({
@@ -102,7 +105,7 @@ export async function GET(request: NextRequest) {
         normalizeUrlForComparison(a.url) === normalizedUrl
       );
       
-      console.log(`[Historical Tracking] Found ${matchingAnalyses.length} analyses for URL: ${url} (normalized: ${normalizedUrl})`);
+      console.log(`[Historical Tracking] Found ${matchingAnalyses.length} analyses for URL (normalized: ${normalizedUrl})`);
       
       // Get snapshots from all matching analyses
       const allSnapshots = [];
@@ -129,7 +132,7 @@ export async function GET(request: NextRequest) {
       });
     }
     
-    // If only analysisId is provided, get snapshots for that specific analysis
+    // Fallback: only analysisId, no URL (should not happen if analysis has url)
     console.log(`[Historical Tracking API] Fetching snapshots for analysisId: ${targetAnalysisId}`);
     const snapshots = await getHistoricalSnapshots(targetAnalysisId, startDate, endDate);
     console.log(`[Historical Tracking API] Found ${snapshots.length} snapshots`);
