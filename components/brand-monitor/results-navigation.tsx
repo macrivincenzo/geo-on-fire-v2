@@ -34,7 +34,7 @@ export function ResultsNavigation({
   const btnInactive = 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50';
 
   return (
-    <nav className="w-80 flex-shrink-0 animate-fade-in flex flex-col h-[calc(100vh-8rem)] ml-[-2rem] sticky top-8" style={{ animationDelay: '0.3s' }}>
+    <nav className="hidden md:flex w-80 flex-shrink-0 animate-fade-in flex-col h-[calc(100vh-8rem)] ml-[-2rem] sticky top-8" style={{ animationDelay: '0.3s' }}>
       
       <div className="w-full flex flex-col justify-between flex-1">
         

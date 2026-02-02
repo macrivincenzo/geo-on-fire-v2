@@ -689,10 +689,47 @@ export function BrandMonitor({
 
       {/* Analysis Results */}
       {analysis && brandData && (
-        <div className="flex-1 flex justify-center animate-panel-in pt-8">
+        <div className="flex-1 flex flex-col md:block justify-center animate-panel-in pt-8">
           <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
-            <div className="flex gap-6 relative">
-            {/* Sidebar Navigation */}
+            {/* Mobile tab bar - horizontal scroll, touch-friendly */}
+            <div className="md:hidden mb-4 -mx-4 px-4 overflow-x-auto overflow-y-hidden border-b border-gray-200 pb-2">
+              <div className="flex gap-2 min-w-max">
+                {[
+                  { tab: 'insights' as const, label: 'Insights' },
+                  { tab: 'matrix' as const, label: 'Matrix' },
+                  { tab: 'prompts' as const, label: 'Prompts' },
+                  { tab: 'rankings' as const, label: 'Rankings' },
+                  { tab: 'visibility' as const, label: 'Score' },
+                  { tab: 'sources' as const, label: 'Sources' },
+                  { tab: 'historical' as const, label: 'History' },
+                  { tab: 'domain-comparisons' as const, label: 'Domains' },
+                  { tab: 'boostActions' as const, label: 'Boost' },
+                ].map(({ tab, label }) => (
+                  <button
+                    key={tab}
+                    onClick={() => dispatch({ type: 'SET_ACTIVE_RESULTS_TAB', payload: tab })}
+                    className={`flex-shrink-0 px-4 py-2.5 text-sm font-medium rounded-none border-2 transition-colors touch-manipulation ${
+                      activeResultsTab === tab
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={handleRestart}
+                className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium border-2 border-gray-200 bg-gray-100 text-gray-900 hover:bg-gray-200 rounded-none touch-manipulation"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m7 7h18" />
+                </svg>
+                Analyze another website
+              </button>
+            </div>
+            <div className="flex gap-6 relative min-w-0">
+            {/* Sidebar Navigation - desktop only */}
             <ResultsNavigation
               activeTab={activeResultsTab}
               onTabChange={(tab) => {
@@ -702,7 +739,7 @@ export function BrandMonitor({
             />
             
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col min-w-0">
               {/* Export Button - Add this at the top */}
               <div className="flex justify-end mb-4">
                 <DataExportButton
