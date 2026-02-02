@@ -108,7 +108,7 @@ function PricingPageContent() {
 
           <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6">
             {/* Free Tier */}
-            <div className="bg-white p-8 border border-gray-200 transition-colors hover:border-gray-300 rounded-lg">
+            <div className="bg-white p-8 border-2 border-gray-200 transition-colors hover:border-gray-300 rounded-none">
               <h3 className="text-2xl font-bold mb-2 text-gray-900">Free Trial</h3>
               <p className="text-gray-600 mb-6">Try it out</p>
               <div className="mb-6">
@@ -136,15 +136,15 @@ function PricingPageContent() {
               </ul>
               <Link
                 href={session?.user ? "/dashboard" : "/register"}
-                className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 transition-colors rounded-md"
+                className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border-2 border-gray-300 hover:bg-gray-50 transition-colors rounded-none"
               >
                 {session?.user ? 'Go to Dashboard' : 'Start Free'}
               </Link>
             </div>
 
             {/* Single Analysis */}
-            <div className="bg-white p-8 border-2 border-blue-600 relative rounded-lg">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 text-sm font-semibold rounded-full">
+            <div className="bg-white p-8 border-2 border-blue-600 relative rounded-none">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1.5 text-sm font-semibold rounded-none border-2 border-blue-600">
                 Most Popular
               </div>
               <h3 className="text-2xl font-bold mb-2 text-gray-900">Single Analysis</h3>
@@ -182,14 +182,14 @@ function PricingPageContent() {
                 <PurchaseButton
                   productId="single-analysis"
                   disabled={isPending}
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600 hover:border-blue-700"
                 >
                   {isPending ? 'Loading...' : 'Buy Now'}
                 </PurchaseButton>
               ) : (
                 <Link
                   href="/login?redirect=/plans?checkout=single-analysis"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600 hover:border-blue-700"
                 >
                   Buy Now
                 </Link>
@@ -197,7 +197,7 @@ function PricingPageContent() {
             </div>
 
             {/* Credit Pack */}
-            <div className="bg-white p-8 border border-gray-200 transition-colors hover:border-gray-300 rounded-lg">
+            <div className="bg-white p-8 border-2 border-gray-200 transition-colors hover:border-gray-300 rounded-none">
               <h3 className="text-2xl font-bold mb-2 text-gray-900">Credit Pack</h3>
               <p className="text-gray-600 mb-6">Best value</p>
               <div className="mb-6">
@@ -233,14 +233,14 @@ function PricingPageContent() {
                 <PurchaseButton
                   productId="credit-pack"
                   disabled={isPending}
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border-2 border-gray-300 hover:bg-gray-50 transition-colors rounded-none"
                 >
                   {isPending ? 'Loading...' : 'Buy Now'}
                 </PurchaseButton>
               ) : (
                 <Link
                   href="/login?redirect=/plans?checkout=credit-pack"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border-2 border-gray-300 hover:bg-gray-50 transition-colors rounded-none"
                 >
                   Buy Now
                 </Link>
@@ -262,7 +262,7 @@ function PricingPageContent() {
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
             {/* Starter Plan */}
-            <div className="bg-white p-8 border border-gray-200 transition-colors hover:border-gray-300 rounded-lg">
+            <div className="bg-white p-8 border-2 border-gray-200 transition-colors hover:border-gray-300 rounded-none">
               <h3 className="text-2xl font-bold mb-2 text-gray-900">Starter</h3>
               <p className="text-gray-600 mb-6">Perfect for individuals</p>
               <div className="mb-6">
@@ -299,14 +299,14 @@ function PricingPageContent() {
                 <PurchaseButton
                   productId="starter-monthly"
                   disabled={isPending}
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border-2 border-gray-300 hover:bg-gray-50 transition-colors rounded-none"
                 >
                   {isPending ? 'Loading...' : 'Subscribe'}
                 </PurchaseButton>
               ) : (
                 <Link
                   href="/login?redirect=/plans?checkout=starter-monthly"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border-2 border-gray-300 hover:bg-gray-50 transition-colors rounded-none"
                 >
                   Subscribe
                 </Link>
@@ -314,8 +314,8 @@ function PricingPageContent() {
             </div>
 
             {/* Pro Plan */}
-            <div className="bg-white p-8 border-2 border-blue-600 relative rounded-lg">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 text-sm font-semibold rounded-full">
+            <div className="bg-white p-8 border-2 border-blue-600 relative rounded-none">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1.5 text-sm font-semibold rounded-none border-2 border-blue-600">
                 Recommended
               </div>
               <h3 className="text-2xl font-bold mb-2 text-gray-900">Pro</h3>
@@ -366,14 +366,14 @@ function PricingPageContent() {
                 <PurchaseButton
                   productId="pro-monthly"
                   disabled={isPending}
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600 hover:border-blue-700"
                 >
                   {isPending ? 'Loading...' : 'Subscribe'}
                 </PurchaseButton>
               ) : (
                 <Link
                   href="/login?redirect=/plans?checkout=pro-monthly"
-                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-md"
+                  className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600 hover:border-blue-700"
                 >
                   Subscribe
                 </Link>
@@ -381,7 +381,7 @@ function PricingPageContent() {
             </div>
 
             {/* Enterprise Plan */}
-            <div className="bg-white p-8 border border-gray-200 transition-colors hover:border-gray-300 rounded-lg">
+            <div className="bg-white p-8 border-2 border-gray-200 transition-colors hover:border-gray-300 rounded-none">
               <h3 className="text-2xl font-bold mb-2 text-gray-900">Enterprise</h3>
               <p className="text-gray-600 mb-6">For large organizations</p>
               <div className="mb-6">
@@ -427,7 +427,7 @@ function PricingPageContent() {
               </ul>
               <Link
                 href="mailto:support@aibrandtrack.com?subject=Enterprise%20Plan%20Inquiry"
-                className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 transition-colors rounded-md"
+                className="w-full inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-gray-900 bg-white border-2 border-gray-300 hover:bg-gray-50 transition-colors rounded-none"
               >
                 Contact Sales
               </Link>
