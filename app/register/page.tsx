@@ -86,18 +86,18 @@ export default function RegisterPage() {
       </div>
 
       {/* Right side - Form */}
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-md w-full space-y-8">
           <div>
             <div className="lg:hidden mb-8 flex justify-center">
-              <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+              <h2 className="text-2xl font-bold text-zinc-900">
                 AI Brand Track
               </h2>
             </div>
-            <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+            <h2 className="text-center text-3xl font-extrabold text-gray-900">
               Create your account
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-2 text-center text-sm text-gray-600">
               Or{' '}
               <Link href="/login" className="font-medium text-blue-600 hover:text-blue-700">
                 sign in to existing account
@@ -107,7 +107,7 @@ export default function RegisterPage() {
           <form className="mt-8 space-y-6" onSubmit={handleRegister}>
             <div className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   Full name
                 </label>
                 <input
@@ -118,12 +118,12 @@ export default function RegisterPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
+                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
                   placeholder="Enter your full name"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email address
                 </label>
                 <input
@@ -134,12 +134,12 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
+                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
                   placeholder="Enter your email"
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
                 <input
@@ -150,10 +150,10 @@ export default function RegisterPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
+                  className="appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base rounded"
                   placeholder="Choose a strong password"
                 />
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Must be at least 8 characters long</p>
+                <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
               </div>
             </div>
 
@@ -176,7 +176,7 @@ export default function RegisterPage() {
                       </Link>
                       <Link
                         href="/forgot-password"
-                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 focus:underline transition-colors"
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 focus:underline transition-colors"
                       >
                         Forgot password?
                       </Link>
@@ -195,7 +195,7 @@ export default function RegisterPage() {
                   required
                   className="h-4 w-4 text-blue-600 focus:ring-blue-600 border-gray-300 rounded"
                 />
-                <label htmlFor="terms" className="ml-2 block text-sm text-gray-900 dark:text-gray-200">
+                <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
                   I agree to the{' '}
                   <Link href="#" className="text-blue-600 hover:text-blue-700">
                     Terms of Service

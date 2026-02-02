@@ -83,24 +83,24 @@ export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
       {/* No backdrop — page stays clear and clickable; close via X only */}
       {/* Panel: smaller on desktop, full-width with margins on mobile; safe-area for notches */}
       <div
-        className="fixed bottom-4 right-4 left-4 sm:left-auto sm:w-[320px] z-50 rounded-xl border border-gray-200 dark:border-gray-600/80 bg-white dark:bg-gray-800 shadow-lg dark:shadow-black/20 font-sans tracking-tight overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-200 pb-[env(safe-area-inset-bottom)] max-h-[85vh] overflow-y-auto"
+        className="fixed bottom-4 right-4 left-4 sm:left-auto sm:w-[320px] z-50 rounded-xl border border-gray-200 bg-white shadow-lg font-sans tracking-tight overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-200 pb-[env(safe-area-inset-bottom)] max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-labelledby="buy-credits-title"
       >
         {/* Header — compact */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-600/80">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
           <div>
-            <h2 id="buy-credits-title" className="text-lg font-bold text-gray-900 dark:text-white">
+            <h2 id="buy-credits-title" className="text-lg font-bold text-gray-900">
               Buy More Credits
             </h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-              You have <span className="font-semibold text-gray-700 dark:text-gray-300">{remainingCredits} credits</span>
+            <p className="text-xs text-gray-500 mt-0.5">
+              You have <span className="font-semibold text-gray-700">{remainingCredits} credits</span>
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
@@ -109,7 +109,7 @@ export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
 
         {/* Content — compact */}
         <div className="p-4 space-y-3">
-          <p className="text-xs text-gray-600 dark:text-gray-400">
+          <p className="text-xs text-gray-600">
             Add credits. Credits never expire.
           </p>
 
@@ -120,21 +120,21 @@ export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
               return (
                 <div
                   key={plan.id}
-                  className="rounded-lg border border-gray-200 dark:border-gray-600/80 bg-gray-50/50 dark:bg-gray-700/50 p-3 hover:border-gray-300 dark:hover:border-gray-500 transition-colors"
+                  className="rounded-lg border border-gray-200 bg-gray-50/50 p-3 hover:border-gray-300 transition-colors"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                      <p className="text-sm font-semibold text-gray-900 truncate">
                         {plan.name}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-gray-500">
                         ${plan.price} one-off · ${pricePerCredit}/credit
                       </p>
                     </div>
                     <button
                       onClick={() => handlePurchase(plan.id)}
                       disabled={!!loadingPlanId}
-                      className="shrink-0 min-h-[44px] h-9 sm:h-8 px-4 sm:px-3 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1 touch-manipulation"
+                      className="shrink-0 min-h-[44px] h-9 sm:h-8 px-4 sm:px-3 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1 touch-manipulation"
                     >
                       {loading ? (
                         <>
@@ -151,8 +151,8 @@ export function BuyCreditsModal({ open, onClose }: BuyCreditsModalProps) {
             })}
           </div>
 
-          <div className="pt-1.5 pb-1 px-2.5 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200/60 dark:border-blue-800/60">
-            <p className="text-[11px] text-blue-800 dark:text-blue-300">
+          <div className="pt-1.5 pb-1 px-2.5 rounded-lg bg-blue-50 border border-blue-200/60">
+            <p className="text-[11px] text-blue-800">
               <strong>Note:</strong> Credits added instantly. Each Boost Action uses 5 credits.
             </p>
           </div>

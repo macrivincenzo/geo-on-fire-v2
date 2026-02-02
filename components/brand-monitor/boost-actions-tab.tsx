@@ -43,21 +43,21 @@ interface ActionWithStatus extends ActionItem {
 }
 
 const STATUS_COLORS = {
-  'todo': 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700',
-  'in-progress': 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700',
-  'done': 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
+  'todo': 'bg-gray-100 border-gray-300',
+  'in-progress': 'bg-blue-50 border-blue-300',
+  'done': 'bg-green-50 border-green-300'
 };
 
 const PRIORITY_COLORS = {
-  'high': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-  'medium': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-  'low': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+  'high': 'bg-red-100 text-red-800',
+  'medium': 'bg-yellow-100 text-yellow-800',
+  'low': 'bg-gray-100 text-gray-800'
 };
 
 const EFFORT_COLORS = {
-  'easy': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  'medium': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  'hard': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+  'easy': 'bg-green-100 text-green-800',
+  'medium': 'bg-blue-100 text-blue-800',
+  'hard': 'bg-purple-100 text-purple-800'
 };
 
 const CATEGORY_ICONS = {
@@ -294,16 +294,16 @@ export function BoostActionsTab({
       >
         <CardHeader className="pb-3">
           <div className="flex items-start gap-2">
-            <CategoryIcon className="w-5 h-5 mt-0.5 text-gray-600 dark:text-gray-100 flex-shrink-0" />
+            <CategoryIcon className="w-5 h-5 mt-0.5 text-gray-600 flex-shrink-0" />
             <div className="flex-1 min-w-0">
-              <CardTitle className="text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
+              <CardTitle className="text-sm font-semibold text-gray-900 line-clamp-2">
                 {action.title}
               </CardTitle>
             </div>
           </div>
         </CardHeader>
         <CardContent className="pt-0 space-y-3">
-          <p className="text-xs text-gray-600 dark:text-gray-100 line-clamp-3">
+          <p className="text-xs text-gray-600 line-clamp-3">
             {action.description}
           </p>
           
@@ -320,19 +320,19 @@ export function BoostActionsTab({
           </div>
           
           {action.impact && (
-            <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-              <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">💡 Impact:</p>
-              <p className="text-xs text-gray-600 dark:text-gray-100">{action.impact}</p>
+            <div className="pt-2 border-t border-gray-200">
+              <p className="text-xs font-medium text-gray-700 mb-1">💡 Impact:</p>
+              <p className="text-xs text-gray-600">{action.impact}</p>
             </div>
           )}
 
           {/* Execution Results - Compact View */}
           {executionResults[action.id] && (
-            <div className="pt-2 border-t-2 border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20 rounded-none p-2">
+            <div className="pt-2 border-t-2 border-green-300 bg-green-50 rounded-none p-2">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3 text-green-600" />
-                  <p className="text-xs font-medium text-green-700 dark:text-green-300">
+                  <p className="text-xs font-medium text-green-700">
                     Content Generated Successfully
                   </p>
                 </div>
@@ -347,12 +347,12 @@ export function BoostActionsTab({
                   View Results
                 </button>
               </div>
-              <p className="text-xs text-gray-700 dark:text-gray-200 mb-2">{executionResults[action.id].message}</p>
+              <p className="text-xs text-gray-700 mb-2">{executionResults[action.id].message}</p>
               
               {/* Quick preview of generated content count */}
               {executionResults[action.id].generatedContent && 
                executionResults[action.id].generatedContent.length > 0 && (
-<p className="text-xs text-gray-600 dark:text-gray-100">
+<p className="text-xs text-gray-600">
                 ✨ {executionResults[action.id].generatedContent.length} piece(s) of content ready to use
               </p>
               )}
@@ -361,8 +361,8 @@ export function BoostActionsTab({
                   {/* Display insights/recommendations if available */}
                   {executionResults[action.id].data.insights && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Key Insights:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 mb-1">Key Insights:</p>
+                      <ul className="text-xs text-gray-600 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.insights.slice(0, 3).map((insight: string, idx: number) => (
                           <li key={idx}>{insight}</li>
                         ))}
@@ -371,8 +371,8 @@ export function BoostActionsTab({
                   )}
                   {executionResults[action.id].data.recommendations && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Recommendations:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 mb-1">Recommendations:</p>
+                      <ul className="text-xs text-gray-600 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.recommendations.slice(0, 3).map((rec: string, idx: number) => (
                           <li key={idx}>{rec}</li>
                         ))}
@@ -381,8 +381,8 @@ export function BoostActionsTab({
                   )}
                   {executionResults[action.id].data.contentPlan && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Content Plan:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 mb-1">Content Plan:</p>
+                      <ul className="text-xs text-gray-600 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.contentPlan.slice(0, 3).map((item: any, idx: number) => (
                           <li key={idx}>{item.title} ({item.priority})</li>
                         ))}
@@ -391,8 +391,8 @@ export function BoostActionsTab({
                   )}
                   {executionResults[action.id].data.improvementPlan && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Improvement Plan:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 mb-1">Improvement Plan:</p>
+                      <ul className="text-xs text-gray-600 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.improvementPlan.slice(0, 3).map((item: any, idx: number) => (
                           <li key={idx}>{item.action} - {item.impact}</li>
                         ))}
@@ -401,8 +401,8 @@ export function BoostActionsTab({
                   )}
                   {executionResults[action.id].data.checklist && (
                     <div>
-                      <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Technical Checklist:</p>
-                      <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc list-inside space-y-1">
+                      <p className="text-xs font-medium text-gray-700 mb-1">Technical Checklist:</p>
+                      <ul className="text-xs text-gray-600 list-disc list-inside space-y-1">
                         {executionResults[action.id].data.checklist.slice(0, 3).map((item: any, idx: number) => (
                           <li key={idx}>{item.item} ({item.priority})</li>
                         ))}
@@ -412,8 +412,8 @@ export function BoostActionsTab({
                   {/* Generated Content */}
                   {executionResults[action.id].generatedContent && 
                    executionResults[action.id].generatedContent.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-green-300 dark:border-green-700">
-                      <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-2">
+                    <div className="mt-3 pt-3 border-t border-green-300">
+                      <p className="text-xs font-medium text-green-700 mb-2">
                         ✨ Generated Content (Ready to Use):
                       </p>
                       <div className="space-y-2">
@@ -422,19 +422,19 @@ export function BoostActionsTab({
                           const isCopied = copiedContent.has(contentId);
                           
                           return (
-                            <div key={idx} className="bg-white dark:bg-gray-800 rounded-none p-3 border-2 border-gray-200 dark:border-gray-700">
+                            <div key={idx} className="bg-white rounded-none p-3 border-2 border-gray-200">
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex-1">
-                                  <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                                  <h4 className="text-xs font-semibold text-gray-900 mb-1">
                                     {content.title}
                                   </h4>
-                                  <div className="flex flex-wrap gap-1 text-xs text-gray-500 dark:text-gray-400">
-                                    <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 rounded-none border border-blue-200 dark:border-blue-800">
+                                  <div className="flex flex-wrap gap-1 text-xs text-gray-500">
+                                    <span className="px-2 py-0.5 bg-blue-100 rounded-none border border-blue-200">
                                       {content.type}
                                     </span>
                                     <span>{content.wordCount} words</span>
                                     {content.readyToPublish && (
-                                      <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 rounded-none border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300">
+                                      <span className="px-2 py-0.5 bg-green-100 rounded-none border border-green-200 text-green-700">
                                         Ready
                                       </span>
                                     )}
@@ -453,7 +453,7 @@ export function BoostActionsTab({
                                         });
                                       }, 2000);
                                     }}
-                                    className="p-1.5 text-gray-600 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-none transition-colors"
+                                    className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-none transition-colors"
                                     title="Copy content"
                                   >
                                     {isCopied ? (
@@ -474,7 +474,7 @@ export function BoostActionsTab({
                                       document.body.removeChild(a);
                                       URL.revokeObjectURL(url);
                                     }}
-                                    className="p-1.5 text-gray-600 dark:text-gray-100 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-none transition-colors"
+                                    className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-none transition-colors"
                                     title="Download as TXT"
                                   >
                                     <Download className="w-4 h-4" />
@@ -541,7 +541,7 @@ export function BoostActionsTab({
                                         alert('Failed to generate PDF. Please try downloading as TXT instead.');
                                       }
                                     }}
-                                    className="p-1.5 text-gray-600 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-none transition-colors"
+                                    className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-none transition-colors"
                                     title="Download as PDF"
                                   >
                                     <FileText className="w-4 h-4" />
@@ -549,16 +549,16 @@ export function BoostActionsTab({
                                 </div>
                               </div>
                               {content.metaDescription && (
-                                <p className="text-xs text-gray-600 dark:text-gray-100 mb-2 italic">
+                                <p className="text-xs text-gray-600 mb-2 italic">
                                   {content.metaDescription}
                                 </p>
                               )}
                               <details className="mt-2">
-                                <summary className="text-xs text-blue-600 dark:text-blue-300 cursor-pointer hover:underline">
+                                <summary className="text-xs text-blue-600 cursor-pointer hover:underline">
                                   View Content ({content.wordCount} words)
                                 </summary>
-                                <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
-                                  <pre className="text-xs whitespace-pre-wrap font-sans text-gray-700 dark:text-gray-200 max-h-60 overflow-auto">
+                                <div className="mt-2 p-3 bg-gray-50 rounded border border-gray-200">
+                                  <pre className="text-xs whitespace-pre-wrap font-sans text-gray-700 max-h-60 overflow-auto">
                                     {content.content}
                                   </pre>
                                 </div>
@@ -572,10 +572,10 @@ export function BoostActionsTab({
                   
                   {/* Full details toggle */}
                   <details className="mt-2">
-                    <summary className="text-xs text-blue-600 dark:text-blue-300 cursor-pointer hover:underline">
+                    <summary className="text-xs text-blue-600 cursor-pointer hover:underline">
                       View Full Details
                     </summary>
-                    <pre className="text-xs mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded overflow-auto max-h-40">
+                    <pre className="text-xs mt-2 p-2 bg-gray-100 rounded overflow-auto max-h-40">
                       {JSON.stringify(executionResults[action.id].data, null, 2)}
                     </pre>
                   </details>
@@ -585,9 +585,9 @@ export function BoostActionsTab({
           )}
           
           {/* Credit Cost Display */}
-          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-xs text-gray-600 dark:text-gray-100 mb-1">
-              <span className="font-medium">Generate Content</span> • <span className="font-semibold text-purple-600 dark:text-purple-400">{CREDITS_PER_ACTION} credits</span> • You have <span className="font-semibold text-blue-600 dark:text-blue-300">{remainingCredits}</span>
+          <div className="pt-2 border-t border-gray-200">
+            <p className="text-xs text-gray-600 mb-1">
+              <span className="font-medium">Generate Content</span> • <span className="font-semibold text-purple-600">{CREDITS_PER_ACTION} credits</span> • You have <span className="font-semibold text-blue-600">{remainingCredits}</span>
             </p>
           </div>
           
@@ -618,7 +618,7 @@ export function BoostActionsTab({
             {action.status !== 'todo' && (
               <button
                 onClick={() => handleStatusChange(action.id, 'todo')}
-                className="flex-1 text-xs px-3 py-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded transition-colors flex items-center justify-center gap-1"
+                className="flex-1 text-xs px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded transition-colors flex items-center justify-center gap-1"
               >
                 <Circle className="w-3 h-3" />
                 To Do
@@ -627,7 +627,7 @@ export function BoostActionsTab({
             {action.status !== 'in-progress' && (
               <button
                 onClick={() => handleStatusChange(action.id, 'in-progress')}
-                className="flex-1 text-xs px-3 py-1.5 bg-blue-200 dark:bg-blue-800 hover:bg-blue-300 dark:hover:bg-blue-700 rounded transition-colors flex items-center justify-center gap-1"
+                className="flex-1 text-xs px-3 py-1.5 bg-blue-200 hover:bg-blue-300 rounded transition-colors flex items-center justify-center gap-1"
               >
                 <Clock className="w-3 h-3" />
                 In Progress
@@ -636,7 +636,7 @@ export function BoostActionsTab({
             {action.status !== 'done' && (
               <button
                 onClick={() => handleStatusChange(action.id, 'done')}
-                className="flex-1 text-xs px-3 py-1.5 bg-green-200 dark:bg-green-800 hover:bg-green-300 dark:hover:bg-green-700 rounded transition-colors flex items-center justify-center gap-1"
+                className="flex-1 text-xs px-3 py-1.5 bg-green-200 hover:bg-green-300 rounded transition-colors flex items-center justify-center gap-1"
               >
                 <CheckCircle2 className="w-3 h-3" />
                 Done
@@ -665,27 +665,27 @@ export function BoostActionsTab({
       <div className="space-y-4">
         <div className={`flex items-center justify-between p-4 rounded-none border-2 ${
           status === 'todo' 
-            ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700'
+            ? 'bg-gray-100 border-gray-300'
             : status === 'in-progress'
-            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700'
-            : 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
+            ? 'bg-blue-50 border-blue-300'
+            : 'bg-green-50 border-green-300'
         }`}>
           <div className="flex items-center gap-2">
             <Icon className={`w-5 h-5 ${
               status === 'todo' 
-                ? 'text-gray-600 dark:text-gray-100'
+                ? 'text-gray-600'
                 : status === 'in-progress'
-                ? 'text-blue-600 dark:text-blue-300'
-                : 'text-green-600 dark:text-green-400'
+                ? 'text-blue-600'
+                : 'text-green-600'
             }`} />
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+            <h3 className="font-semibold text-gray-900">{title}</h3>
           </div>
           <Badge className={
             status === 'todo'
-              ? 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+              ? 'bg-gray-200 text-gray-800'
               : status === 'in-progress'
-              ? 'bg-blue-200 text-blue-800 dark:bg-blue-800 dark:text-blue-300'
-              : 'bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-300'
+              ? 'bg-blue-200 text-blue-800'
+              : 'bg-green-200 text-green-800'
           }>
             {count}
           </Badge>
@@ -697,8 +697,8 @@ export function BoostActionsTab({
               <ActionCard key={action.id} action={action} />
             ))
           ) : (
-            <Card className="border-dashed border-2 border-gray-300 dark:border-gray-700">
-              <CardContent className="pt-6 text-center text-gray-400 dark:text-gray-500">
+            <Card className="border-dashed border-2 border-gray-300">
+              <CardContent className="pt-6 text-center text-gray-400">
                 <Icon className="w-12 h-12 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">
                   {status === 'todo' ? 'No actions to do' : 
@@ -722,7 +722,7 @@ export function BoostActionsTab({
   // Safety check: if no brand data, show message
   if (!brandData || !brandName) {
     return (
-      <div className="p-6 text-center text-gray-500 dark:text-gray-400">
+      <div className="p-6 text-center text-gray-500">
         <p>No brand data available. Please run an analysis first.</p>
       </div>
     );
@@ -731,16 +731,16 @@ export function BoostActionsTab({
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Sales Message Banner */}
-      <Card className="rounded-none border-2 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 shadow-sm">
+      <Card className="rounded-none border-2 border-blue-200 bg-blue-50 shadow-sm">
         <CardContent className="pt-6 pb-6">
           <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
               Improve, fix, and act on your AI visibility
             </h2>
-            <p className="text-gray-700 dark:text-gray-200 text-sm md:text-base mb-2">
-              Click &quot;Execute&quot; on any action below and we&apos;ll generate <strong className="text-gray-900 dark:text-white">finished, ready-to-publish content</strong> for you.
+            <p className="text-gray-700 text-sm md:text-base mb-2">
+              Click &quot;Execute&quot; on any action below and we&apos;ll generate <strong className="text-gray-900">finished, ready-to-publish content</strong> for you.
             </p>
-            <p className="text-gray-600 dark:text-gray-100 text-xs md:text-sm">
+            <p className="text-gray-600 text-xs md:text-sm">
               Blog posts, comparison pages, FAQs, landing pages, and more — optimized for SEO. No placeholders — just finished content you can copy, download, and publish.
             </p>
           </div>
@@ -749,65 +749,65 @@ export function BoostActionsTab({
 
       {/* Header Stats - front-page style: rounded-none, border-2 */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <Card className="rounded-none border-2 border-gray-200 bg-white">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-100">Total Actions</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{totalCount}</p>
+                <p className="text-sm text-gray-600">Total Actions</p>
+                <p className="text-2xl font-bold text-gray-900">{totalCount}</p>
               </div>
-              <Target className="w-8 h-8 text-blue-600 dark:text-blue-300" />
+              <Target className="w-8 h-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <Card className="rounded-none border-2 border-gray-200 bg-white">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-100">To Do</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{todoCount}</p>
+                <p className="text-sm text-gray-600">To Do</p>
+                <p className="text-2xl font-bold text-gray-900">{todoCount}</p>
               </div>
-              <Circle className="w-8 h-8 text-gray-600 dark:text-gray-100" />
+              <Circle className="w-8 h-8 text-gray-600" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <Card className="rounded-none border-2 border-gray-200 bg-white">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-100">In Progress</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{inProgressCount}</p>
+                <p className="text-sm text-gray-600">In Progress</p>
+                <p className="text-2xl font-bold text-gray-900">{inProgressCount}</p>
               </div>
-              <Clock className="w-8 h-8 text-blue-600 dark:text-blue-300" />
+              <Clock className="w-8 h-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <Card className="rounded-none border-2 border-gray-200 bg-white">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-100">Completed</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{doneCount}</p>
+                <p className="text-sm text-gray-600">Completed</p>
+                <p className="text-2xl font-bold text-gray-900">{doneCount}</p>
               </div>
-              <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" />
+              <CheckCircle2 className="w-8 h-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Progress Bar */}
-      <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700">
+      <Card className="rounded-none border-2 border-gray-200">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Overall Progress</CardTitle>
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">{completionRate}%</span>
+            <CardTitle className="text-lg font-semibold text-gray-900">Overall Progress</CardTitle>
+            <span className="text-2xl font-bold text-blue-600">{completionRate}%</span>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-none h-4 overflow-hidden">
+          <div className="w-full bg-gray-200 rounded-none h-4 overflow-hidden">
             <div 
               className="bg-blue-600 h-4 rounded-none transition-all duration-500 flex items-center justify-end pr-2"
               style={{ width: `${completionRate}%` }}
@@ -854,7 +854,7 @@ export function BoostActionsTab({
           onClick={() => setViewingResults(null)}
         >
           <div 
-            className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col border border-gray-200 dark:border-gray-800"
+            className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col border border-gray-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Premium Modal Header */}
@@ -878,19 +878,19 @@ export function BoostActionsTab({
             </div>
 
             {/* Modal Content */}
-            <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-gray-50 dark:bg-gray-950">
+            <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-gray-50">
               {/* Generated Content Section - SHOW FIRST AND PROMINENTLY */}
               {executionResults[viewingResults].generatedContent && 
                executionResults[viewingResults].generatedContent.length > 0 ? (
                 <div>
                   <div className="mb-6">
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-3">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-3">
                       <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
                         <FileText className="w-6 h-6 text-white" />
                       </div>
                       Your Generated Content
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-100">
+                    <p className="text-gray-600">
                       {executionResults[viewingResults].generatedContent.length} piece{executionResults[viewingResults].generatedContent.length !== 1 ? 's' : ''} of finished, ready-to-publish content
                     </p>
                   </div>
@@ -901,19 +901,19 @@ export function BoostActionsTab({
                       const isCopied = copiedContent.has(contentId);
                       
                       return (
-                        <div key={idx} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-shadow">
+                        <div key={idx} className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                           {/* Content Header */}
-                          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 border-b border-gray-200 dark:border-gray-700">
+                          <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 border-b border-gray-200">
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
-                                <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                                <h4 className="text-xl font-bold text-gray-900 mb-3">
                                   {content.title}
                                 </h4>
                                 <div className="flex flex-wrap gap-3 items-center">
                                   <Badge className="bg-blue-600 text-white px-3 py-1 text-sm font-medium">
                                     {content.type}
                                   </Badge>
-                                  <span className="text-sm font-medium text-gray-600 dark:text-gray-100">
+                                  <span className="text-sm font-medium text-gray-600">
                                     📝 {content.wordCount.toLocaleString()} words
                                   </span>
                                   {content.readyToPublish && (
@@ -1048,8 +1048,8 @@ export function BoostActionsTab({
                             </div>
                             
                             {content.metaDescription && (
-                              <div className="mt-4 p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg border-l-4 border-blue-600">
-                                <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                              <div className="mt-4 p-4 bg-white/60 rounded-lg border-l-4 border-blue-600">
+                                <p className="text-sm font-medium text-gray-700">
                                   <span className="font-bold">Meta Description:</span> {content.metaDescription}
                                 </p>
                               </div>
@@ -1058,9 +1058,9 @@ export function BoostActionsTab({
                           
                           {/* Content Body */}
                           <div className="p-6">
-                            <div className="prose prose-sm max-w-none dark:prose-invert">
-                              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-                                <pre className="text-sm leading-relaxed whitespace-pre-wrap font-sans text-gray-800 dark:text-gray-200 max-h-[500px] overflow-auto">
+                            <div className="prose prose-sm max-w-none">
+                              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                                <pre className="text-sm leading-relaxed whitespace-pre-wrap font-sans text-gray-800 max-h-[500px] overflow-auto">
                                   {content.content}
                                 </pre>
                               </div>
@@ -1073,11 +1073,11 @@ export function BoostActionsTab({
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <FileText className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     No Content Generated Yet
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-100">
+                  <p className="text-gray-600">
                     Content generation may still be in progress or encountered an issue.
                   </p>
                 </div>
@@ -1085,16 +1085,16 @@ export function BoostActionsTab({
 
               {/* Additional Insights Section - Secondary */}
               {executionResults[viewingResults].data && (
-                <div className="mt-8 pt-8 border-t-2 border-gray-200 dark:border-gray-800">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">📊 Additional Insights & Recommendations</h3>
+                <div className="mt-8 pt-8 border-t-2 border-gray-200">
+                  <h3 className="text-xl font-bold text-gray-900 mb-6">📊 Additional Insights & Recommendations</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     {executionResults[viewingResults].data.insights && executionResults[viewingResults].data.insights.length > 0 && (
-                      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700">
-                        <h4 className="font-bold text-lg text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+                      <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
+                        <h4 className="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
                           <TrendingUp className="w-5 h-5 text-blue-600" />
                           Key Insights
                         </h4>
-                        <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-200">
+                        <ul className="space-y-3 text-sm text-gray-700">
                           {executionResults[viewingResults].data.insights.map((insight: string, idx: number) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-blue-600 mt-1">•</span>
@@ -1106,12 +1106,12 @@ export function BoostActionsTab({
                     )}
                     
                     {executionResults[viewingResults].data.recommendations && executionResults[viewingResults].data.recommendations.length > 0 && (
-                      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700">
-                        <h4 className="font-bold text-lg text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+                      <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
+                        <h4 className="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
                           <Target className="w-5 h-5 text-green-500" />
                           Recommendations
                         </h4>
-                        <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-200">
+                        <ul className="space-y-3 text-sm text-gray-700">
                           {executionResults[viewingResults].data.recommendations.map((rec: string, idx: number) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-green-500 mt-1">•</span>

@@ -773,18 +773,18 @@ export function BrandMonitor({
                     {/* Simple Explanation Card */}
                     <ComparisonMatrixExplanation />
                     
-                  <Card className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
-                    <CardHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
+                  <Card className="p-6 bg-white border border-gray-200 h-full flex flex-col">
+                    <CardHeader className="border-b border-gray-200 pb-4">
                       <div className="flex justify-between items-center">
                         <div>
-                          <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">Comparison Matrix</CardTitle>
-                          <CardDescription className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          <CardTitle className="text-xl font-semibold text-gray-900">Comparison Matrix</CardTitle>
+                          <CardDescription className="text-sm text-gray-600 mt-1">
                             Compare visibility scores across different AI providers
                           </CardDescription>
                         </div>
                         <div className="text-right">
                           <p className="text-2xl font-bold text-blue-600">{brandData.visibilityScore}%</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Average Score</p>
+                          <p className="text-xs text-gray-500 mt-1">Average Score</p>
                         </div>
                       </div>
                     </CardHeader>
@@ -796,7 +796,7 @@ export function BrandMonitor({
                           competitors={identifiedCompetitors}
                         />
                       ) : (
-                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <div className="text-center py-8 text-gray-500">
                           <p>No comparison data available</p>
                           <p className="text-sm mt-2">Please ensure AI providers are configured and the analysis has completed.</p>
                         </div>
@@ -824,18 +824,18 @@ export function BrandMonitor({
                     {/* Simple Explanation Card */}
                     <PromptsResponsesExplanation />
                     
-                  <Card className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
-                    <CardHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
+                  <Card className="p-6 bg-white border border-gray-200 h-full flex flex-col">
+                    <CardHeader className="border-b border-gray-200 pb-4">
                       <div className="flex justify-between items-center">
                         <div>
-                          <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">Prompts & Responses</CardTitle>
-                          <CardDescription className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          <CardTitle className="text-xl font-semibold text-gray-900">Prompts & Responses</CardTitle>
+                          <CardDescription className="text-sm text-gray-600 mt-1">
                             AI responses to your brand queries
                           </CardDescription>
                         </div>
                         <div className="text-right">
                           <p className="text-2xl font-bold text-blue-600">{analysis.prompts.length}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Total Prompts</p>
+                          <p className="text-xs text-gray-500 mt-1">Total Prompts</p>
                         </div>
                       </div>
                     </CardHeader>

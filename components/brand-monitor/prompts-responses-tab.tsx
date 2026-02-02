@@ -114,10 +114,10 @@ export function PromptsResponsesTab({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search prompts and responses..."
-              className="w-full px-4 py-2.5 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent text-sm font-medium bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder-gray-400 placeholder:font-normal"
+              className="w-full px-4 py-2.5 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent text-sm font-medium bg-white text-gray-900 placeholder:text-gray-500 placeholder:font-normal"
             />
             <svg 
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -206,7 +206,7 @@ export function PromptsResponsesTab({
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <p className="text-base font-semibold text-gray-900 dark:text-white truncate">{promptData.prompt}</p>
+                  <p className="text-base font-semibold text-gray-900 truncate">{promptData.prompt}</p>
                   {hasBrandMention && (
                     <Badge
                       variant="default"

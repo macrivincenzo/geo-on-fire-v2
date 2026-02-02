@@ -24,28 +24,28 @@ export function ExplanationCard({
 
   const variantStyles = {
     info: {
-      bg: 'bg-blue-50 dark:bg-blue-950/40',
-      border: 'border-blue-200 dark:border-blue-800',
-      iconBg: 'bg-blue-100 dark:bg-blue-900/50',
-      iconColor: 'text-blue-600 dark:text-blue-300',
-      titleColor: 'text-blue-900 dark:text-blue-100',
-      textColor: 'text-blue-800 dark:text-gray-100'
+      bg: 'bg-blue-50',
+      border: 'border-blue-200',
+      iconBg: 'bg-blue-100',
+      iconColor: 'text-blue-600',
+      titleColor: 'text-blue-900',
+      textColor: 'text-blue-800'
     },
     success: {
-      bg: 'bg-green-50 dark:bg-green-950/40',
-      border: 'border-green-200 dark:border-green-800',
-      iconBg: 'bg-green-100 dark:bg-green-900/50',
-      iconColor: 'text-green-600 dark:text-green-400',
-      titleColor: 'text-green-900 dark:text-green-100',
-      textColor: 'text-green-800 dark:text-green-200'
+      bg: 'bg-green-50',
+      border: 'border-green-200',
+      iconBg: 'bg-green-100',
+      iconColor: 'text-green-600',
+      titleColor: 'text-green-900',
+      textColor: 'text-green-800'
     },
     warning: {
-      bg: 'bg-amber-50 dark:bg-amber-950/40',
-      border: 'border-amber-200 dark:border-amber-800',
-      iconBg: 'bg-amber-100 dark:bg-amber-900/50',
-      iconColor: 'text-amber-600 dark:text-amber-400',
-      titleColor: 'text-amber-900 dark:text-amber-100',
-      textColor: 'text-amber-800 dark:text-gray-100'
+      bg: 'bg-amber-50',
+      border: 'border-amber-200',
+      iconBg: 'bg-amber-100',
+      iconColor: 'text-amber-600',
+      titleColor: 'text-amber-900',
+      textColor: 'text-amber-800'
     }
   };
 

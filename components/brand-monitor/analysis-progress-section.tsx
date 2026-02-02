@@ -94,19 +94,19 @@ export function AnalysisProgressSection({
     <div className="flex items-center justify-center animate-panel-in">
       <div className="max-w-4xl w-full">
         <div className="transition-all duration-400 opacity-100 translate-y-0">
-          <Card className="px-6 sm:px-8 py-6 sm:py-8 bg-white dark:bg-gray-800/95 text-card-foreground rounded-xl border shadow-sm dark:shadow-lg dark:shadow-black/20 border-gray-200 dark:border-gray-600/80 h-full flex flex-col font-sans tracking-tight">
+          <Card className="px-6 sm:px-8 py-6 sm:py-8 bg-white text-card-foreground rounded-xl border shadow-sm border-gray-200 h-full flex flex-col font-sans tracking-tight">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
+                <CardTitle className="text-2xl font-bold text-gray-900 tracking-tight">
                   {analyzing ? 'Analysis Progress' : 'Prompts'}
                 </CardTitle>
                 {/* Competitors list on the right */}
                 {!analyzing && (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Competitors:</span>
+                    <span className="text-sm text-gray-500">Competitors:</span>
                     <div className="flex -space-x-2">
                       {identifiedCompetitors.slice(0, 6).map((comp, idx) => (
-                        <div key={idx} className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 border-2 border-white dark:border-gray-800 shadow-sm overflow-hidden" title={comp.name}>
+                        <div key={idx} className="w-8 h-8 rounded-full bg-white border-2 border-white shadow-sm overflow-hidden" title={comp.name}>
                           {comp.url ? (
                             <img 
                               src={`https://www.google.com/s2/favicons?domain=${comp.url}&sz=64`}
@@ -119,14 +119,14 @@ export function AnalysisProgressSection({
                               }}
                             />
                           ) : null}
-                          <div className="w-full h-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-gray-300" style={{ display: comp.url ? 'none' : 'flex' }}>
+                          <div className="w-full h-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600" style={{ display: comp.url ? 'none' : 'flex' }}>
                             {comp.name.charAt(0)}
                           </div>
                         </div>
                       ))}
                       {identifiedCompetitors.length > 6 && (
-                        <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-600 border-2 border-white dark:border-gray-800 shadow-sm flex items-center justify-center">
-                          <span className="text-xs text-gray-600 dark:text-gray-300 font-medium">+{identifiedCompetitors.length - 6}</span>
+                        <div className="w-8 h-8 rounded-full bg-gray-100 border-2 border-white shadow-sm flex items-center justify-center">
+                          <span className="text-xs text-gray-600 font-medium">+{identifiedCompetitors.length - 6}</span>
                         </div>
                       )}
                     </div>
@@ -134,7 +134,7 @@ export function AnalysisProgressSection({
                 )}
               </div>
               {scrapingCompetitors && !analyzing && (
-                <CardDescription className="mt-2 flex items-center justify-center gap-2 text-orange-600 dark:text-orange-400">
+                <CardDescription className="mt-2 flex items-center justify-center gap-2 text-orange-600">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span>Validating competitor data in background...</span>
                 </CardDescription>
@@ -142,13 +142,13 @@ export function AnalysisProgressSection({
               {analyzing && analysisProgress && (
                 <div className="mt-4">
                   <div className="flex items-center justify-between mb-2">
-                    <CardDescription className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                      <Loader2 className="w-4 h-4 animate-spin text-orange-500 dark:text-orange-400" />
+                    <CardDescription className="flex items-center gap-2 text-gray-600">
+                      <Loader2 className="w-4 h-4 animate-spin text-orange-500" />
                       <span>{analysisProgress.message}</span>
                     </CardDescription>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{analysisProgress.progress}%</span>
+                    <span className="text-sm text-gray-500">{analysisProgress.progress}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                     <div 
                       className="bg-orange-500 h-2 rounded-full transition-all duration-500 ease-out"
                       style={{ width: `${analysisProgress.progress}%` }}
@@ -164,9 +164,9 @@ export function AnalysisProgressSection({
                   {displayPrompts.map((prompt, index) => {
                     const isCustom = customPrompts.includes(prompt);
                     return (
-                      <div key={`${prompt}-${index}`} className="group relative bg-white dark:bg-gray-700/90 rounded-lg border border-gray-200 dark:border-gray-600/80 p-5 sm:p-6 hover:shadow-md dark:shadow-gray-900/20 transition-shadow">
+                      <div key={`${prompt}-${index}`} className="group relative bg-white rounded-lg border border-gray-200 p-5 sm:p-6 hover:shadow-md transition-shadow">
                         <div className="flex items-start justify-between gap-4">
-                          <p className="text-[1.0625rem] font-semibold text-gray-900 dark:text-white flex-1 font-sans tracking-tight leading-snug">
+                          <p className="text-[1.0625rem] font-semibold text-gray-900 flex-1 font-sans tracking-tight leading-snug">
                             {prompt}
                           </p>
                           {!analyzing && !isCustom && (
@@ -178,11 +178,11 @@ export function AnalysisProgressSection({
                                   onRemoveDefaultPrompt(originalIndex);
                                 }
                               }}
-                              className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 focus:outline-none focus:ring-2 focus:ring-red-300 dark:focus:ring-red-700 focus:ring-offset-1"
+                              className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1"
                               title="Delete prompt"
                               aria-label="Delete prompt"
                             >
-                              <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+                              <Trash2 className="w-4 h-4 text-red-600" />
                             </button>
                           )}
                           {!analyzing && isCustom && (
@@ -191,11 +191,11 @@ export function AnalysisProgressSection({
                                 e.stopPropagation();
                                 onRemoveCustomPrompt(prompt);
                               }}
-                              className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 focus:outline-none focus:ring-2 focus:ring-red-300 dark:focus:ring-red-700 focus:ring-offset-1"
+                              className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1"
                               title="Delete prompt"
                               aria-label="Delete prompt"
                             >
-                              <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+                              <Trash2 className="w-4 h-4 text-red-600" />
                             </button>
                           )}
                         </div>
@@ -213,19 +213,19 @@ export function AnalysisProgressSection({
                                 {analyzing && (
                                   <>
                                     {status === 'pending' && (
-                                      <div className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-500" />
+                                      <div className="w-4 h-4 rounded-full border border-gray-300" />
                                     )}
                                     {status === 'running' && (
-                                      <Loader2 className="w-4 h-4 animate-spin text-orange-500 dark:text-orange-400" />
+                                      <Loader2 className="w-4 h-4 animate-spin text-orange-500" />
                                     )}
                                     {status === 'completed' && (
-                                      <CheckIcon className="w-4 h-4 text-green-500 dark:text-green-400" />
+                                      <CheckIcon className="w-4 h-4 text-green-500" />
                                     )}
                                     {status === 'failed' && (
-                                      <div className="w-4 h-4 rounded-full bg-red-500 dark:bg-red-400" />
+                                      <div className="w-4 h-4 rounded-full bg-red-500" />
                                     )}
                                     {status === 'skipped' && (
-                                      <div className="w-4 h-4 rounded-full bg-gray-400 dark:bg-gray-500" />
+                                      <div className="w-4 h-4 rounded-full bg-gray-400" />
                                     )}
                                   </>
                                 )}
@@ -233,7 +233,7 @@ export function AnalysisProgressSection({
                             );
                           })}
                         </div>
-                        {isCustom && <Badge variant="outline" className="text-xs mt-2 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-500">Custom</Badge>}
+                        {isCustom && <Badge variant="outline" className="text-xs mt-2 text-gray-700 border-gray-300">Custom</Badge>}
                       </div>
                     );
                   })}
@@ -245,7 +245,7 @@ export function AnalysisProgressSection({
                 <button
                   onClick={onAddPromptClick}
                   disabled={analyzing}
-                  className="h-9 rounded-lg text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-800 text-white hover:bg-gray-700 border border-gray-700 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 px-4 gap-1.5"
+                  className="h-9 rounded-lg text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-gray-800 text-white hover:bg-gray-700 border border-gray-700 px-4 gap-1.5"
                 >
                   <Plus className="h-4 w-4" />
                   Add Prompt
@@ -257,7 +257,7 @@ export function AnalysisProgressSection({
                 <button
                   onClick={onStartAnalysis}
                   disabled={analyzing}
-                  className="h-11 px-8 rounded-lg text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 shadow-md"
+                  className="h-11 px-8 rounded-lg text-sm font-semibold font-sans flex items-center transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 shadow-md"
                 >
                   {analyzing ? (
                     <>

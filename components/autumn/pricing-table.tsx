@@ -219,7 +219,7 @@ export const PricingCard = ({
       className={cn(
         " w-full h-full py-6 text-foreground border rounded-lg shadow-sm max-w-xl",
         isRecommended &&
-          "lg:-translate-y-6 lg:shadow-lg dark:shadow-zinc-800/80 lg:h-[calc(100%+48px)] bg-secondary/40",
+          "lg:-translate-y-6 lg:shadow-lg lg:h-[calc(100%+48px)] bg-secondary/40",
         className
       )}
     >

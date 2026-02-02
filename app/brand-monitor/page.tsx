@@ -106,33 +106,33 @@ function BrandMonitorContent({ session }: { session: any }) {
   const showingAnalysis = !!selectedAnalysisId;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-white">
       {/* Hero: full only when not viewing an analysis; compact when viewing results */}
       {!showingAnalysis ? (
         <section className="relative pt-24 sm:pt-32 pb-8 sm:pb-10 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="text-center">
               <div className="inline-block mb-6">
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-300 rounded-none border border-blue-200 dark:border-blue-800">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-none border border-blue-200">
                   Track ChatGPT, Claude, Perplexity & Gemini
                 </span>
               </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 tracking-tight">
                 AI Brand
                 <br />
-                <span className="text-blue-600 dark:text-blue-300">Visibility Monitor</span>
+                <span className="text-blue-600">Visibility Monitor</span>
               </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
                 Track how AI models rank your brand against competitors. Get actionable insights in 60 seconds.
               </p>
             </div>
           </div>
         </section>
       ) : (
-        <section className="pt-20 sm:pt-24 pb-3 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-gray-700">
+        <section className="pt-20 sm:pt-24 pb-3 px-4 sm:px-6 lg:px-8 border-b border-gray-200">
           <div className="max-w-6xl mx-auto">
-            <h1 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white tracking-tight">
-              <span className="text-blue-600 dark:text-blue-300">Visibility Monitor</span>
+            <h1 className="text-lg sm:text-xl font-semibold text-gray-900 tracking-tight">
+              <span className="text-blue-600">Visibility Monitor</span>
             </h1>
           </div>
         </section>
@@ -142,21 +142,21 @@ function BrandMonitorContent({ session }: { session: any }) {
         {/* Sidebar Toggle Button - higher when viewing analysis (no big hero) */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className={`fixed z-20 p-2.5 sm:p-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all rounded-none ${
+          className={`fixed z-20 p-2.5 sm:p-2 bg-white border-2 border-gray-200 hover:bg-gray-50 transition-all rounded-none ${
             showingAnalysis ? 'top-24 sm:top-28' : 'top-72 sm:top-80'
           } ${sidebarOpen ? 'left-80 sm:left-[21rem]' : 'left-4'}`}
           aria-label="Toggle sidebar"
         >
           {sidebarOpen ? (
-            <X className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <X className="h-5 w-5 text-gray-600" />
           ) : (
-            <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <Menu className="h-5 w-5 text-gray-600" />
           )}
         </button>
 
         {/* Sidebar - Clean Minimal */}
-        <div className={`${sidebarOpen ? 'w-80 border-r-2 border-gray-200 dark:border-gray-700' : 'w-0'} bg-white dark:bg-gray-800 overflow-hidden flex flex-col transition-all duration-200 fixed left-0 top-0 h-screen z-10`}>
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700 mt-16">
+        <div className={`${sidebarOpen ? 'w-80 border-r-2 border-gray-200' : 'w-0'} bg-white overflow-hidden flex flex-col transition-all duration-200 fixed left-0 top-0 h-screen z-10`}>
+          <div className="p-4 border-b border-gray-200 mt-16">
             <Button
               onClick={handleNewAnalysis}
               className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors rounded-none border-2 border-blue-600"
@@ -176,8 +176,8 @@ function BrandMonitorContent({ session }: { session: any }) {
                 {analyses?.map((analysis) => (
                   <div
                     key={analysis.id}
-                    className={`p-3 cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      selectedAnalysisId === analysis.id ? 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600' : ''
+                    className={`p-3 cursor-pointer border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors ${
+                      selectedAnalysisId === analysis.id ? 'bg-gray-50 border-gray-200' : ''
                     }`}
                     onClick={() => setSelectedAndUpdateUrl(analysis.id)}
                   >
@@ -257,7 +257,7 @@ export default function BrandMonitorPage() {
 
   if (isPending) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
@@ -265,7 +265,7 @@ export default function BrandMonitorPage() {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );

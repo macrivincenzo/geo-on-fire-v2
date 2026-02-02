@@ -56,7 +56,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
 
   return (
     <nav className="max-h-[calc(100vh-8rem)] overflow-y-auto">
-      <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4 uppercase tracking-wide">
+      <h3 className="text-sm font-semibold text-zinc-900 mb-4 uppercase tracking-wide">
         Table of Contents
       </h3>
       <ul className="space-y-2">
@@ -66,14 +66,14 @@ export function TableOfContents({ content }: TableOfContentsProps) {
               href={`#${heading.id}`}
               className={`block text-sm transition-colors ${
                 heading.level === 1
-                  ? 'font-semibold text-zinc-900 dark:text-zinc-100'
+                  ? 'font-semibold text-zinc-900'
                   : heading.level === 2
-                  ? 'font-medium text-zinc-700 dark:text-zinc-300 ml-0'
-                  : 'text-zinc-600 dark:text-zinc-400 ml-4'
+                  ? 'font-medium text-zinc-700 ml-0'
+                  : 'text-zinc-600 ml-4'
               } ${
                 activeId === heading.id
-                  ? 'text-blue-600 dark:text-blue-300'
-                  : 'hover:text-blue-600 dark:hover:text-blue-300'
+                  ? 'text-blue-600'
+                  : 'hover:text-blue-600'
               }`}
               onClick={(e) => {
                 e.preventDefault();

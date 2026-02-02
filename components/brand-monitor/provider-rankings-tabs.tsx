@@ -206,15 +206,15 @@ export function ProviderRankingsTabs({
             
             return (
             <TabsContent key={provider} value={provider} className="mt-0">
-              <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
+              <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-700">
-                      <th className="border-b-2 border-r border-gray-300 dark:border-gray-600 text-left p-4 text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider w-12">#</th>
-                      <th className="border-b-2 border-r border-gray-300 dark:border-gray-600 text-left p-4 text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider w-[200px]">Company</th>
-                      <th className="border-b-2 border-r border-gray-300 dark:border-gray-600 text-right p-4 text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider">Visibility</th>
-                      <th className="border-b-2 border-r border-gray-300 dark:border-gray-600 text-right p-4 text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider">Share of Voice</th>
-                      <th className="border-b-2 border-gray-300 dark:border-gray-600 text-right p-4 text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider">Sentiment</th>
+                    <tr className="bg-gradient-to-r from-gray-50 to-gray-100">
+                      <th className="border-b-2 border-r border-gray-300 text-left p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider w-12">#</th>
+                      <th className="border-b-2 border-r border-gray-300 text-left p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider w-[200px]">Company</th>
+                      <th className="border-b-2 border-r border-gray-300 text-right p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider">Visibility</th>
+                      <th className="border-b-2 border-r border-gray-300 text-right p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider">Share of Voice</th>
+                      <th className="border-b-2 border-gray-300 text-right p-4 text-xs font-semibold text-gray-900 uppercase tracking-wider">Sentiment</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -226,12 +226,12 @@ export function ProviderRankingsTabs({
                         <tr
                           key={idx}
                           className={`
-                            ${idx > 0 ? 'border-t border-gray-200 dark:border-gray-600' : ''}
+                            ${idx > 0 ? 'border-t border-gray-200' : ''}
                             ${competitor.isOwn
-                              ? 'bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 border-l-4 border-l-orange-500'
+                              ? 'bg-gradient-to-r from-orange-50 to-orange-100 border-l-4 border-l-orange-500'
                               : hasVisibility
-                              ? 'hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors'
-                              : 'opacity-60 bg-gray-50 dark:bg-gray-800/80'
+                              ? 'hover:bg-gray-50 transition-colors'
+                              : 'opacity-60 bg-gray-50'
                             }
                           `}
                         >
@@ -244,7 +244,7 @@ export function ProviderRankingsTabs({
                                   #{idx + 1}
                                 </span>
                               ) : (
-                                <span className="text-xs text-gray-400 dark:text-gray-400">N/A</span>
+                                <span className="text-xs text-gray-400">N/A</span>
                               )}
                             </div>
                           </td>
@@ -259,7 +259,7 @@ export function ProviderRankingsTabs({
                             <div className="flex flex-col items-end gap-1">
                               <div className="flex items-center gap-2">
                                 <span className={`text-base font-semibold ${
-                                  competitor.isOwn ? 'text-orange-700 dark:text-orange-300' : 'text-gray-900 dark:text-white'
+                                  competitor.isOwn ? 'text-orange-700' : 'text-gray-900'
                                 }`}>
                                   {competitor.visibilityScore}%
                                 </span>
@@ -298,7 +298,7 @@ export function ProviderRankingsTabs({
                               )}
                             </div>
                           </td>
-                          <td className="p-4 text-right dark:border-gray-600">
+                          <td className="p-4 text-right">
                             {getSentimentBadge(competitor.sentiment)}
                           </td>
                         </tr>

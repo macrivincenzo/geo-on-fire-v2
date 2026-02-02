@@ -215,21 +215,21 @@ export default async function BlogPreviewPage() {
   
   if (!blogData) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
+            <h1 className="text-4xl font-bold text-zinc-900 mb-4">
               No Blog Post Found
             </h1>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-4">
+            <p className="text-lg text-zinc-600 mb-4">
               {errorMessage || 'Please run the blog agent first to generate content.'}
             </p>
             {errorDetails && (
               <details className="mt-4 text-left max-w-2xl mx-auto">
-                <summary className="cursor-pointer text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300">
+                <summary className="cursor-pointer text-sm text-zinc-500 hover:text-zinc-700">
                   Show error details
                 </summary>
-                <pre className="mt-2 p-4 bg-zinc-100 dark:bg-zinc-800 rounded text-xs overflow-auto">
+                <pre className="mt-2 p-4 bg-zinc-100 rounded text-xs overflow-auto">
                   {errorDetails}
                 </pre>
               </details>
@@ -307,24 +307,24 @@ export default async function BlogPreviewPage() {
         />
       )}
 
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Breadcrumb Navigation */}
           <nav className="mb-8" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <ol className="flex items-center space-x-2 text-sm text-zinc-600">
               <li>
-                <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-300 transition-colors">
+                <Link href="/" className="hover:text-blue-600 transition-colors">
                   Home
                 </Link>
               </li>
               <li>/</li>
               <li>
-                <Link href="/blog" className="hover:text-blue-600 dark:hover:text-blue-300 transition-colors">
+                <Link href="/blog" className="hover:text-blue-600 transition-colors">
                   Blog
                 </Link>
               </li>
               <li>/</li>
-              <li className="text-zinc-900 dark:text-zinc-100">Preview</li>
+              <li className="text-zinc-900">Preview</li>
             </ol>
           </nav>
 
@@ -333,7 +333,7 @@ export default async function BlogPreviewPage() {
             {/* Left Sidebar - Table of Contents */}
             <aside className="lg:col-span-3 order-2 lg:order-1">
               <div className="lg:sticky lg:top-24">
-                <div className="bg-white dark:bg-gray-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-5 shadow-sm">
+                <div className="bg-white border border-zinc-200 rounded-lg p-5 shadow-sm">
                   <TableOfContents content={content || ''} />
                 </div>
               </div>
@@ -342,18 +342,18 @@ export default async function BlogPreviewPage() {
             {/* Main Content */}
             <article className="lg:col-span-6 order-1 lg:order-2">
               {/* Article Header */}
-              <header className="mb-8 pb-8 border-b border-zinc-200 dark:border-zinc-800">
-                <h1 className="text-4xl lg:text-5xl font-bold text-zinc-900 dark:text-zinc-100 mb-4 leading-tight">
+              <header className="mb-8 pb-8 border-b border-zinc-200">
+                <h1 className="text-4xl lg:text-5xl font-bold text-zinc-900 mb-4 leading-tight">
                   {articleTitle}
                 </h1>
                 {metaDescription && (
-                  <p className="text-xl text-zinc-600 dark:text-zinc-400 mb-6 leading-relaxed">
+                  <p className="text-xl text-zinc-600 mb-6 leading-relaxed">
                     {metaDescription}
                   </p>
                 )}
-                <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400">
+                <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-zinc-700 dark:text-zinc-300">By {authorName}</span>
+                    <span className="font-medium text-zinc-700">By {authorName}</span>
                   </div>
                   <span>•</span>
                   <time dateTime={publishDate}>
@@ -367,7 +367,7 @@ export default async function BlogPreviewPage() {
               </header>
 
               {/* Article Content */}
-              <div className="prose prose-lg prose-zinc dark:prose-invert max-w-none">
+              <div className="prose prose-lg prose-zinc max-w-none">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
@@ -377,7 +377,7 @@ export default async function BlogPreviewPage() {
                       return (
                         <h1 
                           id={id}
-                          className="text-4xl font-bold text-zinc-900 dark:text-zinc-100 mt-12 mb-6 first:mt-0 scroll-mt-24" 
+                          className="text-4xl font-bold text-zinc-900 mt-12 mb-6 first:mt-0 scroll-mt-24" 
                           {...props}
                         >
                           {children}
@@ -390,7 +390,7 @@ export default async function BlogPreviewPage() {
                       return (
                         <h2 
                           id={id}
-                          className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 mt-12 mb-6 first:mt-0 scroll-mt-24" 
+                          className="text-3xl font-bold text-zinc-900 mt-12 mb-6 first:mt-0 scroll-mt-24" 
                           {...props}
                         >
                           {children}
@@ -403,7 +403,7 @@ export default async function BlogPreviewPage() {
                       return (
                         <h3 
                           id={id}
-                          className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mt-8 mb-4 scroll-mt-24" 
+                          className="text-2xl font-semibold text-zinc-900 mt-8 mb-4 scroll-mt-24" 
                           {...props}
                         >
                           {children}
@@ -427,11 +427,11 @@ export default async function BlogPreviewPage() {
                               <img
                                 src={imageUrl}
                                 alt={title}
-                                className="w-full rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800 block"
+                                className="w-full rounded-lg shadow-lg border border-zinc-200 block"
                                 loading="lazy"
                               />
                               {description && (
-                                <p className="mt-3 text-center text-sm text-zinc-600 dark:text-zinc-400 italic">
+                                <p className="mt-3 text-center text-sm text-zinc-600 italic">
                                   {description}
                                 </p>
                               )}
@@ -457,7 +457,7 @@ export default async function BlogPreviewPage() {
                           <div className="my-8">
                             {imgElement}
                             {altText && (
-                              <p className="mt-3 text-center text-sm text-zinc-600 dark:text-zinc-400 italic">
+                              <p className="mt-3 text-center text-sm text-zinc-600 italic">
                                 {altText}
                               </p>
                             )}
@@ -466,13 +466,13 @@ export default async function BlogPreviewPage() {
                       }
                       
                       return (
-                        <p className="text-lg text-zinc-700 dark:text-zinc-300 mb-6 leading-relaxed" {...props}>
+                        <p className="text-lg text-zinc-700 mb-6 leading-relaxed" {...props}>
                           {children}
                         </p>
                       );
                     },
                     strong: ({ node, ...props }) => (
-                      <strong className="font-semibold text-zinc-900 dark:text-zinc-100" {...props} />
+                      <strong className="font-semibold text-zinc-900" {...props} />
                     ),
                     a: ({ node, href, ...props }) => {
                       // Fix internal links
@@ -485,7 +485,7 @@ export default async function BlogPreviewPage() {
                         return (
                           <Link 
                             href={fixedHref || '#'} 
-                            className="text-blue-600 dark:text-blue-300 hover:underline font-medium"
+                            className="text-blue-600 hover:underline font-medium"
                             {...props}
                           />
                         );
@@ -493,7 +493,7 @@ export default async function BlogPreviewPage() {
                       return (
                         <a 
                           href={href} 
-                          className="text-blue-600 dark:text-blue-300 hover:underline"
+                          className="text-blue-600 hover:underline"
                           target="_blank"
                           rel="noopener noreferrer"
                           {...props}
@@ -501,22 +501,22 @@ export default async function BlogPreviewPage() {
                       );
                     },
                     ul: ({ node, ...props }) => (
-                      <ul className="list-disc list-inside mb-6 space-y-2 text-zinc-700 dark:text-zinc-300 ml-4" {...props} />
+                      <ul className="list-disc list-inside mb-6 space-y-2 text-zinc-700 ml-4" {...props} />
                     ),
                     ol: ({ node, ...props }) => (
-                      <ol className="list-decimal list-inside mb-6 space-y-2 text-zinc-700 dark:text-zinc-300 ml-4" {...props} />
+                      <ol className="list-decimal list-inside mb-6 space-y-2 text-zinc-700 ml-4" {...props} />
                     ),
                     blockquote: ({ node, ...props }) => (
-                      <blockquote className="border-l-4 border-blue-600 pl-6 italic text-zinc-600 dark:text-zinc-400 my-6 bg-zinc-50 dark:bg-zinc-800 py-4 rounded-r" {...props} />
+                      <blockquote className="border-l-4 border-blue-600 pl-6 italic text-zinc-600 my-6 bg-zinc-50 py-4 rounded-r" {...props} />
                     ),
                     code: ({ node, inline, ...props }: any) => {
                       if (inline) {
                         return (
-                          <code className="bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded text-sm font-mono" {...props} />
+                          <code className="bg-zinc-100 px-2 py-1 rounded text-sm font-mono" {...props} />
                         );
                       }
                       return (
-                        <code className="block bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg overflow-x-auto text-sm font-mono mb-6" {...props} />
+                        <code className="block bg-zinc-100 p-4 rounded-lg overflow-x-auto text-sm font-mono mb-6" {...props} />
                       );
                     },
                     img: ({ node, src, alt, ...props }: any) => {
@@ -531,7 +531,7 @@ export default async function BlogPreviewPage() {
                         <img
                           src={src}
                           alt={alt || 'Infographic'}
-                          className="w-full rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800 my-8 block"
+                          className="w-full rounded-lg shadow-lg border border-zinc-200 my-8 block"
                           loading="lazy"
                           {...props}
                         />
@@ -545,17 +545,17 @@ export default async function BlogPreviewPage() {
 
               {/* FAQ Section */}
               {faq?.faqs && faq.faqs.length > 0 && (
-                <div className="mt-16 pt-8 border-t border-zinc-200 dark:border-zinc-800">
-                  <h2 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-8">
+                <div className="mt-16 pt-8 border-t border-zinc-200">
+                  <h2 className="text-3xl font-bold text-zinc-900 mb-8">
                     Frequently Asked Questions
                   </h2>
                   <div className="space-y-6">
                     {faq.faqs.map((item: any, index: number) => (
-                      <div key={index} className="bg-zinc-50 dark:bg-zinc-800 rounded-lg p-6">
-                        <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+                      <div key={index} className="bg-zinc-50 rounded-lg p-6">
+                        <h3 className="text-xl font-semibold text-zinc-900 mb-3">
                           {item.question}
                         </h3>
-                        <div className="prose prose-zinc dark:prose-invert max-w-none">
+                        <div className="prose prose-zinc max-w-none">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {item.answer}
                           </ReactMarkdown>
@@ -567,16 +567,16 @@ export default async function BlogPreviewPage() {
               )}
 
               {/* Author Bio */}
-              <div className="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+              <div className="mt-12 pt-8 border-t border-zinc-200">
                 <div className="flex items-start gap-4">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-xl font-bold">
                     {authorName.charAt(0)}
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
+                    <h3 className="text-lg font-semibold text-zinc-900 mb-1">
                       {authorName}
                     </h3>
-                    <p className="text-zinc-600 dark:text-zinc-400 text-sm">
+                    <p className="text-zinc-600 text-sm">
                       Expert in AI brand visibility, SEO, AEO, and GEO optimization. Helping brands maximize their presence across ChatGPT, Claude, Perplexity, and Google Gemini.
                     </p>
                   </div>
@@ -585,8 +585,8 @@ export default async function BlogPreviewPage() {
 
               {/* Related Articles */}
               {topics && Array.isArray(topics) && topics.length > 1 && (
-                <div className="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
-                  <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-6">
+                <div className="mt-12 pt-8 border-t border-zinc-200">
+                  <h2 className="text-2xl font-bold text-zinc-900 mb-6">
                     Related Articles
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -594,12 +594,12 @@ export default async function BlogPreviewPage() {
                       <Link
                         key={index}
                         href="/blog/preview"
-                        className="block p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-600 dark:hover:border-blue-600 transition-colors"
+                        className="block p-4 border border-zinc-200 rounded-lg hover:border-blue-600 transition-colors"
                       >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                        <h3 className="font-semibold text-zinc-900 mb-2">
                           {relatedTopic.title}
                         </h3>
-                        <p className="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2">
+                        <p className="text-sm text-zinc-600 line-clamp-2">
                           {relatedTopic.description}
                         </p>
                       </Link>
@@ -609,7 +609,7 @@ export default async function BlogPreviewPage() {
               )}
 
               {/* Navigation */}
-              <div className="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+              <div className="mt-12 pt-8 border-t border-zinc-200">
                 <Link
                   href="/blog"
                   className="btn-outline inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-8"
@@ -622,14 +622,14 @@ export default async function BlogPreviewPage() {
             {/* Right Sidebar - CTA */}
             <aside className="lg:col-span-3 order-3">
               <div className="lg:sticky lg:top-24">
-                <div className="bg-white dark:bg-gray-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-6 shadow-sm">
+                <div className="bg-white border border-zinc-200 rounded-lg p-6 shadow-sm">
                   <div className="text-center mb-4">
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">// Get started \\</span>
+                    <span className="text-xs text-zinc-500 font-medium">// Get started \\</span>
                   </div>
-                  <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-4 text-center">
+                  <h3 className="text-2xl font-bold text-zinc-900 mb-4 text-center">
                     Ready to build?
                   </h3>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6 leading-relaxed text-center">
+                  <p className="text-sm text-zinc-600 mb-6 leading-relaxed text-center">
                     Start tracking your AI brand visibility for free and scale seamlessly as your project expands. No credit card needed.
                   </p>
                   <div className="space-y-3">
@@ -642,7 +642,7 @@ export default async function BlogPreviewPage() {
                     </Link>
                     <Link
                       href="/plans?from=blog"
-                      className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-6 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-700"
+                      className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-base font-medium transition-all duration-200 h-12 px-6 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-200"
                       prefetch={false}
                     >
                       See our plans

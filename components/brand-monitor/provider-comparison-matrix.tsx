@@ -59,7 +59,7 @@ const getProviderIcon = (provider: string) => {
         />
       );
     default:
-      return <div className="w-5 h-5 bg-gray-400 dark:bg-gray-600 rounded-none" />;
+      return <div className="w-5 h-5 bg-gray-400 rounded-none" />;
   }
 };
 
@@ -96,7 +96,7 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
   
   if (!data || data.length === 0) {
     return (
-      <div className="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-none border-2 border-dashed border-gray-300 dark:border-gray-600">
+      <div className="text-center py-16 bg-gray-50 rounded-none border-2 border-dashed border-gray-300">
         <div className="max-w-md mx-auto">
           <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -194,14 +194,14 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
   if (providers.length === 0) return null;
   
   return (
-    <div className="overflow-x-auto rounded-none border-2 border-gray-200 dark:border-gray-700 shadow-sm">
-      <table className="w-full border-collapse bg-white dark:bg-gray-800">
+    <div className="overflow-x-auto rounded-none border-2 border-gray-200 shadow-sm">
+      <table className="w-full border-collapse bg-white">
         <thead>
           <tr>
-            <th className="bg-gray-50 dark:bg-gray-700 border-b border-r border-gray-200 dark:border-gray-600 w-[180px]">
+            <th className="bg-gray-50 border-b border-r border-gray-200 w-[180px]">
               <button 
                 onClick={() => handleSort('competitor')} 
-                className="w-full p-3 font-medium text-gray-900 dark:text-gray-100 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-left"
+                className="w-full p-3 font-medium text-gray-900 flex items-center justify-between hover:bg-gray-100 transition-colors text-left"
               >
                 Competitors
                 {getSortIcon('competitor')}
@@ -210,13 +210,13 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
             {providers.map((provider, index) => (
               <th 
                 key={provider}
-                className={`bg-gray-50 dark:bg-gray-700 border-b ${
+                className={`bg-gray-50 border-b ${
                   index < providers.length - 1 ? 'border-r' : ''
-                } border-gray-200 dark:border-gray-600`}
+                } border-gray-200`}
               >
                 <button
                   onClick={() => handleSort(provider)}
-                  className="w-full p-3 font-medium text-gray-900 dark:text-gray-100 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  className="w-full p-3 font-medium text-gray-900 flex items-center justify-center hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-center justify-center gap-2">
                     {getProviderIcon(provider)}
@@ -256,12 +256,12 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
                     <td
                       key={provider}
                       className={`text-center p-4 transition-colors ${
-                        index < providers.length - 1 ? 'border-r border-gray-200 dark:border-gray-600' : ''
-                      } bg-white dark:bg-gray-800`}
+                        index < providers.length - 1 ? 'border-r border-gray-200' : ''
+                      } bg-white`}
                       style={styleProps}
                     >
                       <div className="flex flex-col items-center gap-1">
-                        <span className="text-sm dark:!text-white" style={{ color: styleProps.color, fontWeight: styleProps.fontWeight }}>
+                        <span className="text-sm" style={{ color: styleProps.color, fontWeight: styleProps.fontWeight }}>
                           {score}%
                         </span>
                         {score > 0 && (

@@ -87,14 +87,14 @@ function DashboardContent({ session }: { session: any }) {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 py-12">
+    <div className="min-h-screen bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-8">Dashboard</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8">Dashboard</h1>
 
         {/* Profile Section */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 mb-8">
+        <div className="bg-white border border-gray-200 p-6 mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Profile Information</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
             {!isEditingProfile ? (
               <Button
                 onClick={() => setIsEditingProfile(true)}
@@ -118,7 +118,7 @@ function DashboardContent({ session }: { session: any }) {
                 <Button
                   onClick={handleCancelEdit}
                   size="sm"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
                   disabled={updateProfile.isPending}
                 >
                   <X className="h-4 w-4 mr-2" />
@@ -130,15 +130,15 @@ function DashboardContent({ session }: { session: any }) {
           
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 <Mail className="inline-block h-4 w-4 mr-1" />
                 Email
               </label>
-              <p className="text-gray-900 dark:text-white">{session.user?.email}</p>
+              <p className="text-gray-900">{session.user?.email}</p>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 <User className="inline-block h-4 w-4 mr-1" />
                 Display Name
               </label>
@@ -147,18 +147,18 @@ function DashboardContent({ session }: { session: any }) {
                   type="text"
                   value={profileForm.displayName}
                   onChange={(e) => setProfileForm({ ...profileForm, displayName: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-600 dark:focus:border-blue-600 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:border-blue-600 transition-colors bg-white text-gray-900"
                   placeholder="Enter your display name"
                 />
               ) : (
-                <p className="text-gray-900 dark:text-white">
+                <p className="text-gray-900">
                   {profileData?.profile?.displayName || 'Not set'}
                 </p>
               )}
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 <Phone className="inline-block h-4 w-4 mr-1" />
                 Phone
               </label>
@@ -167,30 +167,30 @@ function DashboardContent({ session }: { session: any }) {
                   type="tel"
                   value={profileForm.phone}
                   onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-600 dark:focus:border-blue-600 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:border-blue-600 transition-colors bg-white text-gray-900"
                   placeholder="Enter your phone number"
                 />
               ) : (
-                <p className="text-gray-900 dark:text-white">
+                <p className="text-gray-900">
                   {profileData?.profile?.phone || 'Not set'}
                 </p>
               )}
             </div>
             
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Bio
               </label>
               {isEditingProfile ? (
                 <textarea
                   value={profileForm.bio}
                   onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-600 dark:focus:border-blue-600 transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:border-blue-600 transition-colors bg-white text-gray-900"
                   rows={3}
                   placeholder="Tell us about yourself"
                 />
               ) : (
-                <p className="text-gray-900 dark:text-white">
+                <p className="text-gray-900">
                   {profileData?.profile?.bio || 'Not set'}
                 </p>
               )}
@@ -199,13 +199,13 @@ function DashboardContent({ session }: { session: any }) {
         </div>
 
         {/* Settings Section */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Settings</h2>
+        <div className="bg-white border border-gray-200 p-6 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Settings</h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900 dark:text-white">Email Notifications</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Receive email notifications for important updates</p>
+                <p className="font-medium text-gray-900">Email Notifications</p>
+                <p className="text-sm text-gray-600">Receive email notifications for important updates</p>
               </div>
               <button
                 onClick={() => handleSettingToggle('emailNotifications', !settings?.emailNotifications)}
@@ -224,8 +224,8 @@ function DashboardContent({ session }: { session: any }) {
             
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900 dark:text-white">Marketing Emails</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Receive emails about new features and offers</p>
+                <p className="font-medium text-gray-900">Marketing Emails</p>
+                <p className="text-sm text-gray-600">Receive emails about new features and offers</p>
               </div>
               <button
                 onClick={() => handleSettingToggle('marketingEmails', !settings?.marketingEmails)}
@@ -245,22 +245,22 @@ function DashboardContent({ session }: { session: any }) {
         </div>
 
         {/* User Info */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Account Information</h2>
+        <div className="bg-white border border-gray-200 p-6 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Account Information</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Email</p>
-              <p className="font-medium text-gray-900 dark:text-white">{session.user?.email}</p>
+              <p className="text-sm text-gray-600">Email</p>
+              <p className="font-medium text-gray-900">{session.user?.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Current Plan</p>
-              <p className="font-medium text-gray-900 dark:text-white flex items-center">
+              <p className="text-sm text-gray-600">Current Plan</p>
+              <p className="font-medium text-gray-900 flex items-center">
                 {activeProduct ? (
                   <>
                     <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
                     {activeProduct.name || activeProduct.id}
                     {scheduledProduct && (
-                      <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="ml-2 text-sm text-gray-500">
                         (Changing to {scheduledProduct.name || scheduledProduct.id} on {new Date(scheduledProduct.started_at || scheduledProduct.current_period_end).toLocaleDateString()})
                       </span>
                     )}
@@ -277,19 +277,19 @@ function DashboardContent({ session }: { session: any }) {
         </div>
 
         {/* Usage Stats */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Usage Statistics</h2>
+        <div className="bg-white border border-gray-200 p-6 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Usage Statistics</h2>
           {Object.keys(userFeatures).length > 0 ? (
             <div className="space-y-4">
               {Object.entries(userFeatures).map(([featureId, feature]) => (
                 <div key={featureId}>
                   <div className="mb-4">
-                    <h3 className="font-medium text-gray-900 dark:text-white mb-2 capitalize">{featureId.replace(/_/g, ' ')}</h3>
-                    <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
+                    <h3 className="font-medium text-gray-900 mb-2 capitalize">{featureId.replace(/_/g, ' ')}</h3>
+                    <div className="flex justify-between text-sm text-gray-600 mb-1">
                       <span>Used</span>
                       <span>{feature.usage || 0} / {feature.included_usage || feature.balance + (feature.usage || 0)}</span>
                     </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 h-2">
+                    <div className="w-full bg-gray-200 h-2">
                       <div
                         className="bg-blue-600 h-2 transition-all"
                         style={{
@@ -299,7 +299,7 @@ function DashboardContent({ session }: { session: any }) {
                     </div>
                   </div>
                   {feature.next_reset_at && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-gray-600">
                       Resets on: {new Date(feature.next_reset_at).toLocaleDateString()}
                     </p>
                   )}
@@ -307,13 +307,13 @@ function DashboardContent({ session }: { session: any }) {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 dark:text-gray-400">No usage data available</p>
+            <p className="text-gray-500">No usage data available</p>
           )}
         </div>
 
         {/* Available Plans */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Available Plans</h2>
+        <div className="bg-white border border-gray-200 p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Available Plans</h2>
           {!products ? (
             <div className="flex justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
@@ -326,10 +326,10 @@ function DashboardContent({ session }: { session: any }) {
                 const features = product.properties?.is_free ? product.items : product.items?.slice(1) || [];
 
                 return (
-                  <div key={product.id} className="border border-gray-200 dark:border-gray-700 p-4">
+                  <div key={product.id} className="border border-gray-200 p-4">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h3 className="font-medium text-lg text-gray-900 dark:text-white">
+                        <h3 className="font-medium text-lg text-gray-900">
                           {product.display?.name || product.name}
                           {isCurrentPlan && (
                             <span className="ml-2 text-sm text-blue-600">(Current Plan)</span>
@@ -339,7 +339,7 @@ function DashboardContent({ session }: { session: any }) {
                           )}
                         </h3>
                         {product.display?.description && (
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{product.display.description}</p>
+                          <p className="text-sm text-gray-600 mt-1">{product.display.description}</p>
                         )}
                         <ul className="mt-3 space-y-1">
                           {features.slice(0, 3).map((item, index) => (
@@ -347,9 +347,9 @@ function DashboardContent({ session }: { session: any }) {
                               {isCurrentPlan ? (
                                 <CheckCircle className="h-4 w-4 text-blue-600 mr-2 flex-shrink-0 mt-0.5" />
                               ) : (
-                                <Lock className="h-4 w-4 text-gray-400 dark:text-gray-500 mr-2 flex-shrink-0 mt-0.5" />
+                                <Lock className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" />
                               )}
-                              <span className={!isCurrentPlan ? 'text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-white'}>
+                              <span className={!isCurrentPlan ? 'text-gray-500' : 'text-gray-900'}>
                                 {item.display?.primary_text}
                               </span>
                             </li>
@@ -360,7 +360,7 @@ function DashboardContent({ session }: { session: any }) {
                         <Button
                           onClick={() => handleUpgrade(product.id)}
                           size="sm"
-                          className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
                           disabled={loadingProductId !== null}
                         >
                           {loadingProductId === product.id ? (
@@ -374,7 +374,7 @@ function DashboardContent({ session }: { session: any }) {
                         </Button>
                       )}
                       {isScheduledPlan && (
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                        <span className="text-sm text-gray-500">
                           Starts {new Date(scheduledProduct.started_at || scheduledProduct.current_period_end).toLocaleDateString()}
                         </span>
                       )}
@@ -402,10 +402,10 @@ export default function DashboardPage() {
 
   if (isPending || !session) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading...</p>
+          <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     );

@@ -27,7 +27,7 @@ export function VisibilityScoreTab({
       <VisibilityScoreExplanation score={brandData.visibilityScore} rank={brandRank} />
       
       {/* Main Content Card */}
-      <Card className="rounded-none border-2 border-gray-200 dark:border-gray-700 bg-card text-card-foreground gap-6 p-2 py-6 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+      <Card className="rounded-none border-2 border-gray-200 bg-card text-card-foreground gap-6 p-2 py-6 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
         <CardHeader className="border-b pb-5">
           <div className="flex justify-between items-center">
             <div>
@@ -39,7 +39,7 @@ export function VisibilityScoreTab({
             {/* Visibility Score in top right */}
             <div className="text-right">
               <p className="text-4xl font-bold text-orange-600">{brandData.visibilityScore}%</p>
-              <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-300 mt-2 font-semibold">Overall Score</p>
+              <p className="text-xs uppercase tracking-wider text-gray-500 mt-2 font-semibold">Overall Score</p>
             </div>
           </div>
         </CardHeader>
@@ -111,8 +111,8 @@ export function VisibilityScoreTab({
                 
                 {/* Center text showing relative performance */}
                 <div className="absolute top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                  <p className="text-4xl font-bold text-gray-900 dark:text-white">#{brandRank}</p>
-                  <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-300 mt-1 font-semibold">Rank</p>
+                  <p className="text-4xl font-bold text-gray-900">#{brandRank}</p>
+                  <p className="text-xs uppercase tracking-wider text-gray-500 mt-1 font-semibold">Rank</p>
                   {difference !== 0 && (
                     <p className={`text-xs mt-2 font-semibold ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {difference > 0 ? '+' : ''}{Math.abs(difference).toFixed(1)}% vs #1
@@ -142,7 +142,7 @@ export function VisibilityScoreTab({
                       style={{ backgroundColor: color }}
                     />
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-5 h-5 rounded-none flex items-center justify-center bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 flex-shrink-0">
+                      <div className="w-5 h-5 rounded-none flex items-center justify-center bg-gray-100 border border-gray-200 flex-shrink-0">
                         {faviconUrl ? (
                           <img 
                             src={faviconUrl}
@@ -163,11 +163,11 @@ export function VisibilityScoreTab({
                         </div>
                       </div>
                       <span className={`text-sm truncate ${
-                        competitor.isOwn ? 'font-bold text-orange-600 dark:text-orange-300' : 'font-medium text-gray-700 dark:text-gray-200'
+                        competitor.isOwn ? 'font-bold text-orange-600' : 'font-medium text-gray-700'
                       }`}>
                         {competitor.name}
                       </span>
-                      <span className="text-sm font-bold text-gray-900 dark:text-white ml-auto">
+                      <span className="text-sm font-bold text-gray-900 ml-auto">
                         {competitor.visibilityScore}%
                       </span>
                     </div>

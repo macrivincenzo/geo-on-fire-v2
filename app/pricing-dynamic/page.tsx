@@ -27,15 +27,15 @@ function DynamicPricingContent({ session }: { session: any }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-500 dark:text-gray-400" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">Error loading pricing</p>
           <Button onClick={() => window.location.reload()}>Try Again</Button>
@@ -45,11 +45,11 @@ function DynamicPricingContent({ session }: { session: any }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Choose Your Plan</h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">Select the perfect plan for your needs</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Plan</h1>
+          <p className="text-xl text-gray-600">Select the perfect plan for your needs</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -61,7 +61,7 @@ function DynamicPricingContent({ session }: { session: any }) {
             return (
               <div 
                 key={product.id} 
-                className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 ${
+                className={`bg-white rounded-lg shadow-lg p-8 ${
                   product.display?.recommend_text ? 'ring-2 ring-blue-600 transform scale-105' : ''
                 }`}
               >
@@ -71,13 +71,13 @@ function DynamicPricingContent({ session }: { session: any }) {
                   </div>
                 )}
                 
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{product.display?.name || product.name}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">{product.display?.name || product.name}</h2>
                 
                 {price && (
                   <div className="mb-6">
-                    <span className="text-4xl font-bold text-gray-900 dark:text-white">{price.display?.primary_text}</span>
+                    <span className="text-4xl font-bold text-gray-900">{price.display?.primary_text}</span>
                     {price.display?.secondary_text && (
-                      <span className="text-gray-600 dark:text-gray-400 ml-2">{price.display.secondary_text}</span>
+                      <span className="text-gray-600 ml-2">{price.display.secondary_text}</span>
                     )}
                   </div>
                 )}
@@ -116,8 +116,8 @@ export default function DynamicPricingPage() {
 
   if (isPending) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-500 dark:text-gray-400" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
       </div>
     );
   }

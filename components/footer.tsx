@@ -33,23 +33,23 @@ export function Footer() {
         }}
       />
       
-      <footer className="bg-white dark:bg-gray-900 text-zinc-600 dark:text-gray-300 border-t border-zinc-200 dark:border-zinc-800">
+      <footer className="bg-white text-zinc-600 border-t border-zinc-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
             {/* Brand and Description - SEO Rich */}
             <div className="col-span-1 lg:col-span-2">
               <div className="mb-4">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">
+                <h2 className="text-xl font-bold text-zinc-900">
                   AI Brand Track
                 </h2>
               </div>
-              <p className="text-sm mb-6 leading-relaxed dark:text-gray-300">
+              <p className="text-sm mb-6 leading-relaxed">
                 Track how AI models like <strong>ChatGPT, Claude, Perplexity, and Google Gemini</strong> rank your brand. Monitor your <strong>AI brand visibility</strong> across all major AI platforms. Get real-time <strong>AI brand monitoring</strong>, competitor analysis, and actionable insights for <strong>AI search optimization</strong> and <strong>GEO optimization</strong>.
               </p>
               <div className="flex space-x-4">
                 <a
                   href="https://github.com"
-                  className="text-zinc-400 hover:text-zinc-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                  className="text-zinc-400 hover:text-zinc-900 transition-colors"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub"
@@ -60,7 +60,7 @@ export function Footer() {
                 </a>
                 <a
                   href="https://twitter.com"
-                  className="text-zinc-400 hover:text-zinc-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                  className="text-zinc-400 hover:text-zinc-900 transition-colors"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Twitter"
@@ -74,25 +74,25 @@ export function Footer() {
 
             {/* Product - SEO Optimized Links */}
             <div>
-              <h3 className="text-zinc-900 dark:text-white font-semibold mb-4">Product</h3>
+              <h3 className="text-zinc-900 font-semibold mb-4">Product</h3>
               <ul className="space-y-3">
                 <li>
-                  <Link href="/plans" className="text-sm dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                  <Link href="/plans" className="text-sm hover:text-zinc-900 transition-colors">
                     Pricing Plans
                   </Link>
                 </li>
                 <li>
-                  <Link href="/brand-monitor" className="text-sm dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                  <Link href="/brand-monitor" className="text-sm hover:text-zinc-900 transition-colors">
                     Brand Monitor
                   </Link>
                 </li>
                 <li>
-<Link href="/" className="text-sm dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+<Link href="/" className="text-sm hover:text-zinc-900 transition-colors">
                   AI Brand Tracking
                 </Link>
                 </li>
                 <li>
-<Link href="/" className="text-sm dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+<Link href="/" className="text-sm hover:text-zinc-900 transition-colors">
                   AI Search Optimization
                 </Link>
                 </li>
@@ -101,50 +101,50 @@ export function Footer() {
 
             {/* Features - SEO Keywords */}
             <div>
-              <h3 className="text-zinc-900 dark:text-white font-semibold mb-4">Features</h3>
+              <h3 className="text-zinc-900 font-semibold mb-4">Features</h3>
               <ul className="space-y-3">
                 <li>
-                  <span className="text-sm dark:text-gray-300">ChatGPT Brand Tracking</span>
+                  <span className="text-sm">ChatGPT Brand Tracking</span>
                 </li>
                 <li>
-                  <span className="text-sm dark:text-gray-300">Claude Brand Monitoring</span>
+                  <span className="text-sm">Claude Brand Monitoring</span>
                 </li>
                 <li>
-                  <span className="text-sm dark:text-gray-300">Perplexity Brand Analysis</span>
+                  <span className="text-sm">Perplexity Brand Analysis</span>
                 </li>
                 <li>
-                  <span className="text-sm dark:text-gray-300">Google Gemini Brand Monitoring</span>
+                  <span className="text-sm">Google Gemini Brand Monitoring</span>
                 </li>
                 <li>
-                  <span className="text-sm dark:text-gray-300">AI Competitor Tracking</span>
+                  <span className="text-sm">AI Competitor Tracking</span>
                 </li>
                 <li>
-                  <span className="text-sm dark:text-gray-300">GEO Optimization</span>
+                  <span className="text-sm">GEO Optimization</span>
                 </li>
               </ul>
             </div>
 
             {/* Company - SEO Links */}
             <div>
-              <h3 className="text-zinc-900 dark:text-white font-semibold mb-4">Company</h3>
+              <h3 className="text-zinc-900 font-semibold mb-4">Company</h3>
               <ul className="space-y-3">
                 <li>
-                  <Link href="/about" className="text-sm dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                  <Link href="/about" className="text-sm hover:text-zinc-900 transition-colors">
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog" className="text-sm dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                  <Link href="/blog" className="text-sm hover:text-zinc-900 transition-colors">
                     Blog
                   </Link>
                 </li>
                 <li>
-                  <Link href="/privacy-policy" className="text-sm dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                  <Link href="/privacy-policy" className="text-sm hover:text-zinc-900 transition-colors">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms-of-service" className="text-sm dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                  <Link href="/terms-of-service" className="text-sm hover:text-zinc-900 transition-colors">
                     Terms of Service
                   </Link>
                 </li>
@@ -153,21 +153,21 @@ export function Footer() {
           </div>
 
           {/* SEO Rich Bottom Section */}
-          <div className="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="mt-12 pt-8 border-t border-zinc-200">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div className="text-sm text-center md:text-left">
-<p className="mb-2 dark:text-gray-300">
+<p className="mb-2">
                 © {currentYear} AI Brand Track. All rights reserved.
               </p>
-                <p className="text-xs text-zinc-500 dark:text-gray-400">
+                <p className="text-xs text-zinc-500">
                   AI Brand Visibility Monitoring • ChatGPT Tracking • Claude Monitoring • Perplexity Analysis • Google Gemini Monitoring • AI Search Optimization
                 </p>
               </div>
               <div className="flex flex-wrap justify-center md:justify-end gap-4 text-sm">
-                <Link href="/privacy-policy" className="dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                <Link href="/privacy-policy" className="hover:text-zinc-900 transition-colors">
                   Privacy Policy
                 </Link>
-                <Link href="/terms-of-service" className="dark:text-gray-300 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                <Link href="/terms-of-service" className="hover:text-zinc-900 transition-colors">
                   Terms of Service
                 </Link>
               </div>
