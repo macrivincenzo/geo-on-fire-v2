@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
 import { CookieConsent } from "@/components/cookie-consent";
+import { Toaster } from "sonner";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -220,6 +221,7 @@ export default function RootLayout({
             </main>
             <Footer />
             <CookieConsent />
+            <Toaster position="bottom-right" richColors closeButton />
           </div>
         </Providers>
       </body>

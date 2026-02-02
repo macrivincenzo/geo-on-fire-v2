@@ -157,7 +157,7 @@ Be very thorough in detecting company names - they might appear in different con
         system: 'You are an expert at analyzing text and extracting structured information about companies and rankings.',
         prompt: analysisPrompt,
         schema: RankingSchema,
-        temperature: 0.3,
+        temperature: 0, // Deterministic for consistent metrics
       });
       object = result.object;
     } catch (error) {

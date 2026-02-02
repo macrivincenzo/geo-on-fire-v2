@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { useSession } from '@/lib/auth-client';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { toast } from 'sonner';
 
 // Separate component that uses Autumn hooks
 function BrandMonitorContent({ session }: { session: any }) {
@@ -221,7 +222,12 @@ function BrandMonitorContent({ session }: { session: any }) {
               initialDraft={initialDraft}
               onSaveAnalysis={(analysis) => {
                 clearBrandMonitorDraft();
-                if (analysis?.id) setSelectedAndUpdateUrl(analysis.id);
+                if (analysis?.id) {
+                  setSelectedAndUpdateUrl(analysis.id);
+                  toast.success('Analysis saved', {
+                    description: 'Your analysis has been saved and is available in your analyses list.',
+                  });
+                }
               }}
             />
           </div>

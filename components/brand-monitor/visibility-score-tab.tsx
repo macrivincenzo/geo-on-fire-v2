@@ -5,6 +5,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { CompetitorRanking } from '@/lib/types';
 import { IdentifiedCompetitor } from '@/lib/brand-monitor-reducer';
 import { VisibilityScoreExplanation } from './explanation-card';
+import { AnalysisDisclaimer } from '@/components/analysis-disclaimer';
 
 interface VisibilityScoreTabProps {
   competitors: CompetitorRanking[];
@@ -23,6 +24,7 @@ export function VisibilityScoreTab({
   
   return (
     <div className="flex flex-col h-full">
+      <AnalysisDisclaimer variant="compact" className="mb-4" />
       {/* Simple Explanation Card */}
       <VisibilityScoreExplanation score={brandData.visibilityScore} rank={brandRank} />
       

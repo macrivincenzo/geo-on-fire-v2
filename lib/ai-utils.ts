@@ -10,9 +10,23 @@ import { extractSourcesFromResponse } from './source-tracker-utils';
 /**
  * Find the matching tracked company name for a given company string
  * Uses smart brand matching to handle variations like "Google Cloud Platform" -> "Google Cloud"
+ * Optional aliasMap maps alternative names -> canonical name (e.g. "YETI Coolers" -> "YETI")
  */
-function findMatchingTrackedCompany(companyName: string, trackedCompanies: Set<string>): string | null {
+function findMatchingTrackedCompany(
+  companyName: string,
+  trackedCompanies: Set<string>,
+  aliasMap?: Map<string, string>
+): string | null {
   const companyNameLower = companyName.toLowerCase().trim();
+
+  // Check aliases first (e.g. "YETI Coolers" -> "YETI")
+  if (aliasMap) {
+    for (const [alias, canonical] of aliasMap) {
+      if (alias.toLowerCase() === companyNameLower) return canonical;
+      const match = smartBrandMatch(companyName, alias);
+      if (match.found && match.confidence >= 0.7) return canonical;
+    }
+  }
   
   // First try exact match
   for (const tracked of trackedCompanies) {
@@ -193,7 +207,7 @@ IMPORTANT:
       model,
       schema: CompetitorSchema,
       prompt,
-      temperature: 0.3,
+      temperature: 0, // Deterministic for consistent competitor identification
     });
 
     // Extract competitor names and filter for direct competitors
@@ -867,7 +881,7 @@ Return a simple analysis:
           const { text: simpleResponse } = await generateText({
             model,
             prompt: simplePrompt,
-            temperature: 0.3,
+            temperature: 0, // Deterministic for consistent metrics
           });
           
           // Parse the simple response with enhanced detection
@@ -1120,6 +1134,12 @@ export async function analyzeCompetitors(
 ): Promise<CompetitorRanking[]> {
   // Create a set of companies to track (company + its known competitors)
   const trackedCompanies = new Set([company.name, ...knownCompetitors]);
+
+  // Build alias map for brand (e.g. "YETI Coolers" -> "YETI")
+  const aliasMap = new Map<string, string>();
+  if (company.aliases?.length) {
+    company.aliases.forEach(alias => aliasMap.set(alias.trim(), company.name));
+  }
   
   // Initialize competitor data
   const competitorMap = new Map<string, {
@@ -1176,7 +1196,7 @@ export async function analyzeCompetitors(
     if (response.rankings && response.rankings.length > 0) {
       response.rankings.forEach(ranking => {
         // Use smart matching to find the tracked company this ranking refers to
-        const matchedCompany = findMatchingTrackedCompany(ranking.company, trackedCompanies);
+        const matchedCompany = findMatchingTrackedCompany(ranking.company, trackedCompanies, aliasMap);
         
         if (matchedCompany) {
           const data = competitorMap.get(matchedCompany)!;
@@ -1209,7 +1229,7 @@ export async function analyzeCompetitors(
 
     // Count brand mentions - CRITICAL: Always count if brandMentioned is true, even if not in rankings
     // This ensures we capture all mentions, whether they're in structured rankings or just detected in text
-    const brandMatchedCompany = findMatchingTrackedCompany(company.name, trackedCompanies);
+    const brandMatchedCompany = findMatchingTrackedCompany(company.name, trackedCompanies, aliasMap);
     // Safety check: if matching fails, use company.name directly (it should always be in trackedCompanies)
     const brandToCount = brandMatchedCompany || company.name;
     
@@ -1341,7 +1361,7 @@ export async function analyzeCompetitors(
     // This ensures we capture all competitor mentions, not just those in structured rankings
     if (response.competitors && response.competitors.length > 0) {
       response.competitors.forEach(competitorName => {
-        const matchedCompetitor = findMatchingTrackedCompany(competitorName, trackedCompanies);
+        const matchedCompetitor = findMatchingTrackedCompany(competitorName, trackedCompanies, aliasMap);
         
         if (matchedCompetitor && !mentionedInResponse.has(matchedCompetitor)) {
           const competitorData = competitorMap.get(matchedCompetitor)!;
@@ -1518,6 +1538,11 @@ export async function analyzeCompetitorsByProvider(
   providerComparison: ProviderComparisonData[];
 }> {
   const trackedCompanies = new Set([company.name, ...knownCompetitors]);
+
+  const aliasMap = new Map<string, string>();
+  if (company.aliases?.length) {
+    company.aliases.forEach(alias => aliasMap.set(alias.trim(), company.name));
+  }
   
   // Get configured providers from centralized config
   const configuredProviders = getConfiguredProviders();
@@ -1561,7 +1586,7 @@ export async function analyzeCompetitorsByProvider(
     if (response.rankings && response.rankings.length > 0) {
       response.rankings.forEach(ranking => {
         // Use smart matching to find the tracked company
-        const matchedCompany = findMatchingTrackedCompany(ranking.company, trackedCompanies);
+        const matchedCompany = findMatchingTrackedCompany(ranking.company, trackedCompanies, aliasMap);
         
         if (matchedCompany) {
           const data = providerMap.get(matchedCompany)!;
@@ -1582,7 +1607,7 @@ export async function analyzeCompetitorsByProvider(
 
     // Count brand mentions - CRITICAL: Always count if brandMentioned is true
     // This ensures we capture all mentions, whether they're in structured rankings or just detected in text
-    const brandMatchedCompany = findMatchingTrackedCompany(company.name, trackedCompanies);
+    const brandMatchedCompany = findMatchingTrackedCompany(company.name, trackedCompanies, aliasMap);
     // Safety check: if matching fails, use company.name directly (it should always be in trackedCompanies)
     const brandToCount = brandMatchedCompany || company.name;
     if (response.brandMentioned && trackedCompanies.has(brandToCount)) {
@@ -1603,7 +1628,7 @@ export async function analyzeCompetitorsByProvider(
     // Also count competitors that are mentioned in the response.competitors array but not in rankings
     if (response.competitors && response.competitors.length > 0) {
       response.competitors.forEach(competitorName => {
-        const matchedCompetitor = findMatchingTrackedCompany(competitorName, trackedCompanies);
+        const matchedCompetitor = findMatchingTrackedCompany(competitorName, trackedCompanies, aliasMap);
         
         if (matchedCompetitor && !mentionedInResponse.has(matchedCompetitor)) {
           const competitorData = providerMap.get(matchedCompetitor)!;

@@ -273,7 +273,7 @@ export function generateActionItems(
       category: 'visibility',
       title: 'Critical: Zero AI Visibility',
       description: `Your brand "${brandName}" has 0% visibility across all AI providers. You were mentioned 0 times out of ${responses.length} AI responses analyzed. This means potential customers asking AI for recommendations won't find you.`,
-      impact: `Could increase leads by 50%+ once AI starts recommending you. Top competitors average ${topCompetitors[0]?.visibilityScore || 0}% visibility.`,
+      impact: `Getting recommended by AI can significantly improve discovery. Top competitors average ${topCompetitors[0]?.visibilityScore || 0}% visibility. Impact estimates are illustrative, not guaranteed.`,
       effort: 'medium'
     });
   } else if (brandData.visibilityScore < 20) {
@@ -286,7 +286,7 @@ export function generateActionItems(
       category: 'visibility',
       title: `Low AI Visibility: ${brandData.visibilityScore}% vs ${avgCompetitorVisibility}% Average`,
       description: `Your visibility score is ${brandData.visibilityScore}%, while top competitors average ${avgCompetitorVisibility}%. You're mentioned ${brandData.mentions} times vs ${topCompetitors[0]?.mentions || 0} times for the leader.`,
-      impact: `Increasing to 30%+ could double your AI-driven discovery. Currently missing ${Math.round((30 - brandData.visibilityScore) / 10)} potential mentions per analysis.`,
+      impact: `Improving visibility to 30%+ may help increase AI-driven discovery. Impact estimates are illustrative, not guaranteed.`,
       effort: 'medium'
     });
   } else if (brandData.visibilityScore < 40 && topCompetitors.length > 0) {
@@ -298,7 +298,7 @@ export function generateActionItems(
         category: 'visibility',
         title: `Boost Visibility from ${brandData.visibilityScore}% to 40%+`,
         description: `You're at ${brandData.visibilityScore}% visibility. ${leader.name} leads with ${leader.visibilityScore}% (${(leader.visibilityScore - brandData.visibilityScore).toFixed(1)}% gap). Target 40%+ to compete effectively.`,
-        impact: `40%+ visibility typically captures 60% of AI recommendations in your category`,
+        impact: `Higher visibility often correlates with more AI recommendations. Impact estimates are illustrative, not guaranteed.`,
         effort: 'medium'
       });
     }
@@ -312,7 +312,7 @@ export function generateActionItems(
       category: 'sentiment',
       title: `Negative Sentiment: ${brandData.sentimentScore}/100 Score`,
       description: `Your brand sentiment score is ${brandData.sentimentScore}/100 (negative). This is ${100 - brandData.sentimentScore} points below neutral. AI models are associating negative perceptions with your brand.`,
-      impact: `Improving sentiment to 60+ could increase conversion rates by 20-40%. Negative sentiment reduces AI recommendations by ~30%.`,
+      impact: `Improving sentiment may help increase AI recommendations. Impact estimates are illustrative, not guaranteed.`,
       effort: 'hard'
     });
   } else if (brandData.sentimentScore < 60) {
@@ -322,7 +322,7 @@ export function generateActionItems(
       category: 'sentiment',
       title: `Improve Sentiment from ${brandData.sentimentScore}/100 to 70+`,
       description: `Your sentiment score is ${brandData.sentimentScore}/100 (neutral). Top competitors average ${topCompetitors.length > 0 ? (topCompetitors.reduce((sum, c) => sum + c.sentimentScore, 0) / topCompetitors.length).toFixed(0) : 'N/A'}/100.`,
-      impact: `70+ sentiment score increases AI recommendation likelihood by 25%`,
+      impact: `Higher sentiment scores often correlate with better AI recommendations. Impact estimates are illustrative, not guaranteed.`,
       effort: 'medium'
     });
   }
@@ -339,7 +339,7 @@ export function generateActionItems(
       category: 'competitive',
       title: `Improve Average Position from #${Math.round(brandData.averagePosition)} to Top 3`,
       description: `You rank #${Math.round(brandData.averagePosition)} on average. Only ${top3Rate}% of your mentions are in top 3 positions. Top competitors average #${topCompetitors.length > 0 ? Math.round(topCompetitors.reduce((sum, c) => sum + c.averagePosition, 0) / topCompetitors.length) : 'N/A'}.`,
-      impact: `Top 3 positions get 70% of clicks. Moving from #${Math.round(brandData.averagePosition)} to #3 could increase visibility by ${Math.round((brandData.averagePosition - 3) * 15)}%.`,
+      impact: `Higher-ranked positions tend to receive more attention. Impact estimates are illustrative, not guaranteed.`,
       effort: 'medium'
     });
   } else if (brandData.averagePosition > 3) {
@@ -349,7 +349,7 @@ export function generateActionItems(
       category: 'competitive',
       title: `Push from #${Math.round(brandData.averagePosition)} to Top 3`,
       description: `You're close! Currently at #${Math.round(brandData.averagePosition)}. Focus on 2-3 key prompts where you rank #4-5 to break into top 3.`,
-      impact: `Top 3 positions receive 3x more mentions than positions 4-5`,
+      impact: `Higher-ranked positions tend to receive more mentions. Impact estimates are illustrative, not guaranteed.`,
       effort: 'easy'
     });
   }
@@ -364,7 +364,7 @@ export function generateActionItems(
       category: 'competitive',
       title: `Increase Share of Voice from ${brandData.shareOfVoice.toFixed(1)}% to 20%+`,
       description: `Your share of voice is ${brandData.shareOfVoice.toFixed(1)}%. ${leader.name} leads with ${leader.shareOfVoice.toFixed(1)}% (${gap.toFixed(1)}% gap). Identify and target key competitor mentions where ${leader.name} is mentioned more frequently. Focus on high-impact competitive keywords and content gaps.`,
-      impact: `Reaching 20%+ share of voice typically captures 1 in 5 AI recommendations in your category. Closing the ${gap.toFixed(1)}% gap with ${leader.name} could significantly improve your competitive position.`,
+      impact: `Increasing share of voice may improve your competitive position. Closing the ${gap.toFixed(1)}% gap with ${leader.name} is a reasonable target. Impact estimates are illustrative, not guaranteed.`,
       effort: gap > 15 ? 'hard' : 'medium'
     });
   }
@@ -379,7 +379,7 @@ export function generateActionItems(
         category: 'competitive',
         title: `Close ${visibilityGap.toFixed(1)}% Gap with ${competitor.name}`,
         description: `${competitor.name} has ${competitor.visibilityScore}% visibility vs your ${brandData.visibilityScore}% (${visibilityGap.toFixed(1)}% gap). They're mentioned ${competitor.mentions} times vs your ${brandData.mentions} times.`,
-        impact: `Closing this gap could capture ${Math.round(visibilityGap / 2)}% more market share`,
+        impact: `Closing this visibility gap may help improve competitive position. Impact estimates are illustrative, not guaranteed.`,
         effort: 'hard'
       });
     }
@@ -403,7 +403,7 @@ export function generateActionItems(
         category: 'visibility',
         title: `Boost Visibility from ${brandData.visibilityScore}% to ${(brandData.visibilityScore + 15).toFixed(0)}%+`,
         description: `Your visibility is ${brandData.visibilityScore}% vs ${avgCompetitorVisibility}% industry average (${visibilityGap.toFixed(1)}% gap). You're mentioned ${brandData.mentions} times. Target ${(brandData.visibilityScore + 15).toFixed(0)}%+ to compete effectively.`,
-        impact: `Each 10% visibility increase typically captures 15-20% more AI recommendations. Reaching ${(brandData.visibilityScore + 15).toFixed(0)}% could add ${Math.round(visibilityGap / 2)}% market share.`,
+        impact: `Visibility improvements may help increase AI recommendations. Target ${(brandData.visibilityScore + 15).toFixed(0)}%+ to compete. Impact estimates are illustrative, not guaranteed.`,
         effort: 'medium'
       });
     } else {
@@ -413,7 +413,7 @@ export function generateActionItems(
         category: 'visibility',
         title: `Maintain & Grow ${brandData.visibilityScore}% Visibility`,
         description: `You're at ${brandData.visibilityScore}% visibility with ${brandData.mentions} mentions. Competitors average ${avgCompetitorVisibility}%. Focus on maintaining your position and pushing to ${(brandData.visibilityScore + 10).toFixed(0)}%+.`,
-        impact: `Maintaining visibility leadership prevents competitors from gaining ground. Growing to ${(brandData.visibilityScore + 10).toFixed(0)}%+ could capture additional market share.`,
+        impact: `Maintaining visibility leadership helps prevent competitors from gaining ground. Impact estimates are illustrative, not guaranteed.`,
         effort: 'medium'
       });
     }
@@ -432,7 +432,7 @@ export function generateActionItems(
         category: 'competitive',
         title: `Improve Ranking from #${Math.round(brandData.averagePosition)} to Top 3`,
         description: `You rank #${Math.round(brandData.averagePosition)} on average. Only ${top3Rate}% of mentions are in top 3. Top competitors average #${topCompetitors.length > 0 ? Math.round(topCompetitors.reduce((sum, c) => sum + c.averagePosition, 0) / topCompetitors.length) : 'N/A'}.`,
-        impact: `Top 3 positions get 70% of clicks. Moving to #3 could increase visibility by ${Math.round((brandData.averagePosition - 3) * 10)}%.`,
+        impact: `Higher-ranked positions tend to receive more visibility. Impact estimates are illustrative, not guaranteed.`,
         effort: brandData.averagePosition <= 4 ? 'easy' : 'medium'
       });
     }
@@ -450,7 +450,7 @@ export function generateActionItems(
         category: 'competitive',
         title: `Increase Share of Voice from ${brandData.shareOfVoice.toFixed(1)}% to ${(brandData.shareOfVoice + 10).toFixed(1)}%+`,
         description: `Your share of voice is ${brandData.shareOfVoice.toFixed(1)}%. ${leader.name} leads with ${leader.shareOfVoice.toFixed(1)}% (${shareGap.toFixed(1)}% gap). Target ${(brandData.shareOfVoice + 10).toFixed(1)}%+ to compete.`,
-        impact: `Each 5% share increase typically captures 1 in 20 more AI recommendations. Reaching ${(brandData.shareOfVoice + 10).toFixed(1)}% could close ${Math.round(shareGap / 2)}% of the gap.`,
+        impact: `Share-of-voice improvements may help close the gap with competitors. Impact estimates are illustrative, not guaranteed.`,
         effort: 'hard'
       });
     }
@@ -470,7 +470,7 @@ export function generateActionItems(
         category: 'sentiment',
         title: `Improve Sentiment from ${brandData.sentimentScore}/100 to ${Math.min(100, brandData.sentimentScore + 15)}+`,
         description: `Your sentiment is ${brandData.sentimentScore}/100. Competitors average ${avgCompetitorSentiment}/100 (${sentimentGap > 0 ? sentimentGap.toFixed(0) : '0'} point gap). Target ${Math.min(100, brandData.sentimentScore + 15)}+ for better AI recommendations.`,
-        impact: `70+ sentiment increases AI recommendation likelihood by 25%. Each 10-point improvement can boost visibility by 5-8%.`,
+        impact: `Higher sentiment scores often correlate with better AI recommendations. Impact estimates are illustrative, not guaranteed.`,
         effort: 'medium'
       });
     }
@@ -485,7 +485,7 @@ export function generateActionItems(
         category: 'content',
         title: `Increase AI Mentions from ${mentionRate}% to 50%+`,
         description: `You're mentioned in ${mentionedInResponses.length}/${responses.length} responses (${mentionRate}% rate). Top brands achieve 50%+ mention rates. Create content that answers common questions in your industry.`,
-        impact: `50%+ mention rate typically results in 40%+ visibility score. Increasing from ${mentionRate}% to 50% could boost visibility by ${Math.round((50 - parseInt(mentionRate)) / 2)}%.`,
+        impact: `Higher mention rates often correlate with better visibility scores. Impact estimates are illustrative, not guaranteed.`,
         effort: 'medium'
       });
     }
@@ -503,7 +503,7 @@ export function generateActionItems(
       category: 'content',
       title: `Create Comparison Pages: ${brandName} vs ${top3Competitors[0]?.name || 'Top Competitors'}`,
       description: `Create detailed "vs" pages comparing ${brandName} to ${competitorNames}. These competitors are mentioned ${totalCompetitorMentions} times total. AI frequently references comparison content when users ask for alternatives.`,
-      impact: `Comparison content gets 3x more AI citations than standard pages. Top competitor ${top3Competitors[0]?.name || ''} has ${top3Competitors[0]?.mentions || 0} mentions - create content to compete.`,
+      impact: `Comparison content often receives more AI citations. Top competitor ${top3Competitors[0]?.name || ''} has ${top3Competitors[0]?.mentions || 0} mentions. Impact estimates are illustrative, not guaranteed.`,
       effort: 'easy'
     });
   }
@@ -515,7 +515,7 @@ export function generateActionItems(
     category: 'technical',
     title: `Optimize Website for AI Crawlers (Current: ${brandData.visibilityScore}% visibility)`,
     description: `Ensure structured data (Schema.org), semantic HTML, comprehensive meta descriptions, and clear content hierarchy. AI models reference well-structured content ${brandData.visibilityScore < 30 ? 'more frequently' : 'preferentially'}. Your current ${brandData.visibilityScore}% visibility suggests room for improvement.`,
-    impact: `Proper structure can improve AI comprehension by 25-30%. Well-structured sites see ${brandData.visibilityScore < 30 ? '2-3x' : '1.5-2x'} more AI citations than poorly structured ones.`,
+    impact: `Well-structured sites tend to be better understood by AI. Impact estimates are illustrative, not guaranteed.`,
     effort: 'easy'
   });
   
@@ -537,7 +537,7 @@ export function generateActionItems(
         category: 'visibility',
         title: `Improve ${weakProvider.provider} Visibility (${weakProvider.rate.toFixed(0)}% mention rate)`,
         description: `You're mentioned in only ${weakProvider.mentions}/${weakProvider.total} ${weakProvider.provider} responses (${weakProvider.rate.toFixed(0)}% rate). Other providers: ${providerMentions.filter(p => p.provider !== weakProvider.provider).map(p => `${p.provider} ${p.rate.toFixed(0)}%`).join(', ')}.`,
-        impact: `Improving ${weakProvider.provider} visibility to 50%+ could add ${Math.round((50 - weakProvider.rate) / 5)}% to overall visibility score`,
+        impact: `Improving ${weakProvider.provider} visibility may help increase overall score. Impact estimates are illustrative, not guaranteed.`,
         effort: 'medium'
       });
     }
@@ -563,7 +563,7 @@ export function generateActionItems(
         category: 'content',
         title: `Increase Own Domain Citations from ${brandSourceRate}% to ${targetRate}%+`,
         description: `Only ${brandSourceRate}% of ${totalSources} AI-cited sources are from your domain (${brandSources} yours). AI trusts brands that cite their own authoritative content. Focus on building high-quality backlinks from authoritative sources that cite ${brandName}.`,
-        impact: `30%+ own domain citations boost AI trust by 40% and recommendation frequency by 25%. Increasing from ${brandSourceRate}% to ${targetRate}% could improve visibility by 5-8%.`,
+        impact: `More own-domain citations may help improve AI trust. Impact estimates are illustrative, not guaranteed.`,
         effort: 'medium'
       });
     }
@@ -581,7 +581,7 @@ export function generateActionItems(
         category: 'competitive',
         title: `Analyze & Close ${gap.toFixed(1)}% Gap with ${biggestGap.name}`,
         description: `${biggestGap.name} leads with ${biggestGap.visibilityScore}% visibility vs your ${brandData.visibilityScore}% (${gap.toFixed(1)}% gap). They're mentioned ${biggestGap.mentions} times vs your ${brandData.mentions}. Analyze their content strategy, keywords, and online presence.`,
-        impact: `Closing this gap could capture ${Math.round(gap / 3)}% more market share. ${biggestGap.name} is ${(gap / brandData.visibilityScore * 100).toFixed(0)}% more visible - study their approach.`,
+        impact: `Closing this gap may improve competitive position. Study ${biggestGap.name}'s approach. Impact estimates are illustrative, not guaranteed.`,
         effort: 'hard'
       });
     }

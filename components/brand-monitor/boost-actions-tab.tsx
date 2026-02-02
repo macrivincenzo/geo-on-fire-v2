@@ -26,6 +26,7 @@ import { ActionItem, generateStrategicInsights } from '@/lib/strategic-insights'
 import { useCustomer, useRefreshCustomer } from '@/hooks/useAutumnCustomer';
 import { CREDITS_PER_ACTION } from '@/config/constants';
 import { useBuyCredits } from '@/hooks/useBuyCredits';
+import { AnalysisDisclaimer } from '@/components/analysis-disclaimer';
 
 interface BoostActionsTabProps {
   brandData: CompetitorRanking;
@@ -308,6 +309,9 @@ export function BoostActionsTab({
           </p>
           
           <div className="flex flex-wrap gap-2">
+            <Badge variant="outline" className="text-xs bg-blue-50 border-blue-200 text-blue-700">
+              AI-generated suggestion
+            </Badge>
             <Badge className={PRIORITY_COLORS[action.priority]}>
               {action.priority.toUpperCase()}
             </Badge>
@@ -740,6 +744,9 @@ export function BoostActionsTab({
             <p className="text-gray-700 text-sm md:text-base mb-2">
               Click &quot;Execute&quot; on any action below and we&apos;ll generate <strong className="text-gray-900">finished, ready-to-publish content</strong> for you.
             </p>
+            <div className="mb-4">
+              <AnalysisDisclaimer variant="compact" />
+            </div>
             <p className="text-gray-600 text-xs md:text-sm">
               Blog posts, comparison pages, FAQs, landing pages, and more — optimized for SEO. No placeholders — just finished content you can copy, download, and publish.
             </p>

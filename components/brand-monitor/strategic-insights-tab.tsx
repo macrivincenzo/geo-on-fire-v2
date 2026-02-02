@@ -590,6 +590,7 @@ export function StrategicInsightsTab({
   
   return (
     <div className="space-y-6">
+      <AnalysisDisclaimer />
       {/* AI Brand Strength Score (0-100) - Prominent Display */}
       <AIBrandStrengthCard 
         brandStrength={brandStrength}

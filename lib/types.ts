@@ -55,6 +55,8 @@ export interface Company {
   url: string;
   description?: string;
   industry?: string;
+  /** Alternative names for brand matching (e.g. "YETI Coolers" for "YETI") */
+  aliases?: string[];
   logo?: string;
   favicon?: string;
   scraped?: boolean;
