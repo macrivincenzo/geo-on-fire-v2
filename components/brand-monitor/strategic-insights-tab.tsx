@@ -36,6 +36,7 @@ import {
   calculateAIBrandStrengthForAll,
   AIBrandStrength 
 } from '@/lib/ai-brand-strength';
+import { AnalysisDisclaimer } from '@/components/analysis-disclaimer';
 
 interface StrategicInsightsTabProps {
   brandData: CompetitorRanking;
